@@ -109,7 +109,7 @@ public:
 				{
 					while (S_OK == (hr = cmdParam.MoveNext()))
 					{
-						IItemPtr ptr (new CItemParam(i++));
+						/*IItemPtr ptr (new CItemParam(i++));
 						ptr->SetPropertyValue(DevicePropUid, any(cmdMeter.m_nID));
 						ptr->SetPropertyValue(DevicePropTypeName, any(CString(cmdMeter.m_szName)));
 						ptr->SetPropertyValue(DevicePropSubClass, any(cmdMeter.m_nSubClass));
@@ -118,7 +118,7 @@ public:
 
 						ptr->SetPropertyValue(DevicePropProtoId, any(cmdMeter.m_nProtocol));
 						ptr->SetPropertyValue(DevicePropSelfPower, any(cmdMeter.m_lfSelf));
-						GetModel().GetDevs().insert(make_pair(i, ptr));
+						GetModel().GetDevs().insert(make_pair(i, ptr));*/
 					}
 
 					if (FAILED(hr))
