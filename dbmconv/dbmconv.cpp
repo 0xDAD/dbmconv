@@ -6,10 +6,9 @@
 #include <atlframe.h>
 #include <atlctrls.h>
 #include <atldlgs.h>
-
+#include "MainDlg.h"
 #include "resource.h"
 
-#include "MainDlg.h"
 
 CAppModule _Module;
 

@@ -1,7 +1,7 @@
 #pragma once
 #include <atldbcli.h>
 #include "NamespaceDatabaseDictionary.h"
-
+#include "DataModel.h"
 
 
 inline HRESULT FormatSystemMessage(HRESULT hr, CString& rstrMessage, LCID lcLocale = LOCALE_SYSTEM_DEFAULT, ...)
@@ -65,6 +65,7 @@ class CNamespace
 public:
 	static HRESULT ImportDictionary(LPCTSTR pszFilePath)
 	{
+		using namespace boost;
 		HRESULT hr;
 		CDataConnection Connection;
 		if (S_OK != (hr = OpenConnection(pszFilePath, false, Connection)))
@@ -79,9 +80,19 @@ public:
 					//OPCTLTRACE_HL_ET(hr, _T("Ошибка загрузки информации для прибора '%s'. %s"), GetItemFullNameSimple(rspMeter->GetID()), OPCTL::FormatOLEDBMessageSimple());
 				else
 				{
+					int i = 1;
 					while (S_OK == (hr = cmdMeter.MoveNext()))
 					{
-						
+						IItemPtr ptr (new CItemDevice(i++));
+						ptr->SetPropertyValue(DevicePropUid, any(cmdMeter.m_nID));
+						ptr->SetPropertyValue(DevicePropTypeName, any(CString(cmdMeter.m_szName)));
+						ptr->SetPropertyValue(DevicePropSubClass, any(cmdMeter.m_nSubClass));
+						ptr->SetPropertyValue(DevicePropClass, any(cmdMeter.m_nClass));
+						ptr->SetPropertyValue(DevicePropResource, any(cmdMeter.m_nResource));
+
+						ptr->SetPropertyValue(DevicePropProtoId, any(cmdMeter.m_nProtocol));
+						ptr->SetPropertyValue(DevicePropSelfPower, any(cmdMeter.m_lfSelf));
+						GetModel().GetDevs().insert(make_pair(i, ptr));
 					}
 
 					if (FAILED(hr))
@@ -98,7 +109,16 @@ public:
 				{
 					while (S_OK == (hr = cmdParam.MoveNext()))
 					{
-					
+						IItemPtr ptr (new CItemParam(i++));
+						ptr->SetPropertyValue(DevicePropUid, any(cmdMeter.m_nID));
+						ptr->SetPropertyValue(DevicePropTypeName, any(CString(cmdMeter.m_szName)));
+						ptr->SetPropertyValue(DevicePropSubClass, any(cmdMeter.m_nSubClass));
+						ptr->SetPropertyValue(DevicePropClass, any(cmdMeter.m_nClass));
+						ptr->SetPropertyValue(DevicePropResource, any(cmdMeter.m_nResource));
+
+						ptr->SetPropertyValue(DevicePropProtoId, any(cmdMeter.m_nProtocol));
+						ptr->SetPropertyValue(DevicePropSelfPower, any(cmdMeter.m_lfSelf));
+						GetModel().GetDevs().insert(make_pair(i, ptr));
 					}
 
 					if (FAILED(hr))

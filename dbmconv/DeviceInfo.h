@@ -1,29 +1,43 @@
 #pragma once
 #include "item.h"
-class CDeviceInfo
-{
-public:
-	CDeviceInfo(){
-		m_nId = 0;
-		m_nProtoId = 0;
-		m_lfSelfPower = 0.;		
-	}
-	CDeviceInfo(int nId, LPCTSTR szName, int nProto):m_strName(szName), m_nId(nId), m_nProtoId(nProto){
 
-	}
+enum ItemDeviceProperty {
+	DevicePropUid = 0,
+	DevicePropTypeName,
 
-protected:
-	int m_nId;
-	int m_nProtoId;
-	double m_lfSelfPower;
+	DevicePropSubClass,
+	DevicePropClass,
+	DevicePropResource,
 
-	int m_nClassOld;
-	int m_nSubClassOld;
-	int m_nResourceOld;
+	DevicePropProtoId,	
+	DevicePropSelfPower,
 
-
-	CString m_strName;
+	DevicePropFirst = DevicePropUid,
+	DevicePropLast = DevicePropSelfPower
 };
 
-//template <class T, class 
-//class IAbstractItem
+class CDeviceProperties: 
+	public CItemPropertiesMapBased<CDeviceProperties, DevicePropFirst, DevicePropLast>
+{
+	typedef CItemPropertiesMapBased<CDeviceProperties, DevicePropFirst, DevicePropLast> _Base;
+public:
+	using _Base::GetPropertyValue;
+	using _Base::GetPropertyValues;
+	using _Base::SetPropertyValue;
+	using _Base::HasPropertyValue;
+public:
+	CDeviceProperties(){}
+};
+
+class CItemDevice: public IItemImpl<CItemDevice, 0, CDeviceProperties>
+{
+	typedef IItemImpl<CItemDevice, 0, CDeviceProperties> _Base;
+public:
+	CItemDevice (int nId):_Base(nId){
+
+	}
+
+	
+};
+
+//class CDeviceInfo: IItemImpl<CDeviceInfo, 

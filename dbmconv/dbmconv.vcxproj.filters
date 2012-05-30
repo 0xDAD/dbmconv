@@ -24,6 +24,12 @@
     <ClCompile Include="maindlg.CPP">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="DataModel.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ParamInfo.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

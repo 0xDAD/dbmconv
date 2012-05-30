@@ -13,6 +13,7 @@ public:
 	int m_nClass;
 	int m_nResource;
 	int m_nProtocol;
+	float m_lfSelf;
 
 	//BEGIN_PARAM_MAP(CDictionaryMeterAccessor)
 	//	COLUMN_ENTRY(1, m_nID)
@@ -26,6 +27,7 @@ public:
 		COLUMN_ENTRY(5, m_nClass)
 		COLUMN_ENTRY(6, m_nResource)
 		COLUMN_ENTRY(7, m_nProtocol)
+		COLUMN_ENTRY(8, m_lfSelf)
 	END_COLUMN_MAP()
 
 	DEFINE_COMMAND_EX(CDictionaryMeterAccessor,
@@ -36,7 +38,8 @@ public:
 		L" Pribor.id_subclass,"
 		L" (select SubClass.id_class from SubClass where SubClass.id = Pribor.id_subclass) as id_class,"
 		L" (select Class.id_res from Class where Class.id = (select SubClass.id_class from SubClass where SubClass.id = Pribor.id_subclass)) as id_res,"
-		L" Pribor.id_protokol"
+		L" Pribor.id_protokol,"
+		L" Pribor.self_power"
 		L" from Pribor");
 	// where Pribor.id=?");
 };

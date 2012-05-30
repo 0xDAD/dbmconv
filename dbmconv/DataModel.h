@@ -1,19 +1,21 @@
 #pragma once
 #include "DeviceInfo.h"
-CDataModel& GetModel()
-{
-	return CDataModel::Instance();
-}
+
 class CDataModel
 {
-protected:
-	CDataModel();
+private:
+	CDataModel(){}	
 	static CDataModel m_instance;
+
 public:
 	static CDataModel& Instance(){
 		return m_instance;
 	}
-public:
-	
-
+	std::map<int, IItemPtr>& GetDevs(){
+		return m_mapDevs;
+	}
+protected:
+	std::map<int, IItemPtr> m_mapDevs;
 };
+
+CDataModel& GetModel();
