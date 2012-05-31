@@ -8,7 +8,10 @@
 using namespace std;
 using namespace boost;
 
-
+enum ItemType{
+	ItemDevice,
+	ItemTag
+};
 typedef std::map<int, boost::any> CItemPropertyValueMap;
 
 class ATL_NO_VTABLE IItem

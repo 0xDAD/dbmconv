@@ -1,5 +1,6 @@
 #pragma once
 #include <atldbcli.h>
+#include <vector>
 #include "NamespaceDatabaseDictionary.h"
 #include "DataModel.h"
 
@@ -83,7 +84,7 @@ public:
 					int i = 1;
 					while (S_OK == (hr = cmdMeter.MoveNext()))
 					{
-						IItemPtr ptr (new CItemDevice(i++));
+						IItemPtr ptr (new CItemDevice(cmdMeter.m_nID));
 						ptr->SetPropertyValue(DevicePropUid, any(cmdMeter.m_nID));
 						ptr->SetPropertyValue(DevicePropTypeName, any(CString(cmdMeter.m_szName)));
 						ptr->SetPropertyValue(DevicePropSubClass, any(cmdMeter.m_nSubClass));
@@ -92,7 +93,7 @@ public:
 
 						ptr->SetPropertyValue(DevicePropProtoId, any(cmdMeter.m_nProtocol));
 						ptr->SetPropertyValue(DevicePropSelfPower, any(cmdMeter.m_lfSelf));
-						GetModel().GetDevs().insert(make_pair(i, ptr));
+						GetModel().GetDevs().insert(make_pair(cmdMeter.m_nID, ptr));
 					}
 
 					if (FAILED(hr))
@@ -100,36 +101,75 @@ public:
 						
 					}
 				}
-
+				std::vector<int> vctAddress;
+				vctAddress.reserve(10);
 				CCmdDictionaryParam cmdParam;
 			//	cmdParam.m_nMeterType = nMeterType;
 				if (FAILED(hr = cmdParam.Open(Connection)))
 					AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
 				else
 				{
-					while (S_OK == (hr = cmdParam.MoveNext()))
+					while (S_OK == (hr = cmdParam.MoveNext()) && cmdParam.m_nIDStatus != DBSTATUS_S_ISNULL)
 					{
-						/*IItemPtr ptr (new CItemParam(i++));
-						ptr->SetPropertyValue(DevicePropUid, any(cmdMeter.m_nID));
-						ptr->SetPropertyValue(DevicePropTypeName, any(CString(cmdMeter.m_szName)));
-						ptr->SetPropertyValue(DevicePropSubClass, any(cmdMeter.m_nSubClass));
-						ptr->SetPropertyValue(DevicePropClass, any(cmdMeter.m_nClass));
-						ptr->SetPropertyValue(DevicePropResource, any(cmdMeter.m_nResource));
+						IItemPtr ptr (new CItemTag(cmdParam.m_nID));
+						ptr->SetPropertyValue(TagPropName, any(CString(cmdParam.m_szName)));
+						if (cmdParam.m_nIDStatus == DBSTATUS_S_OK)
+							ATLVERIFY(ptr->SetPropertyValue(TagPropCode,  any(cmdParam.m_nID)));
+						if (cmdParam.m_nTypeStatus == DBSTATUS_S_OK)
+							ATLVERIFY(ptr->SetPropertyValue(TagPropType, any(cmdParam.m_nType)));
+						if (cmdParam.m_nClassStatus == DBSTATUS_S_OK)
+							ATLVERIFY(ptr->SetPropertyValue(TagPropClass, any(cmdParam.m_nClass)));
+						if (cmdParam.m_nUnitsTypeStatus == DBSTATUS_S_OK)
+							ATLVERIFY(ptr->SetPropertyValue(TagPropUnitsType, any(cmdParam.m_nUnitsType)));
+						ATLVERIFY(ptr->SetPropertyValue(TagPropUnitsName, any(CString(cmdParam.m_szUnitsName))));
+						ATLVERIFY(ptr->SetPropertyValue(TagPropCharacter, any(cmdParam.m_nCharacter)));
+						ATLVERIFY(ptr->SetPropertyValue(TagPropAssignment, any(cmdParam.m_nAssignment)));
+						// Set collector address
+						ATLVERIFY(ptr->SetPropertyValue(TagPropAddress,  any(CString(cmdParam.m_szAddressInCollector))));
 
-						ptr->SetPropertyValue(DevicePropProtoId, any(cmdMeter.m_nProtocol));
-						ptr->SetPropertyValue(DevicePropSelfPower, any(cmdMeter.m_lfSelf));
-						GetModel().GetDevs().insert(make_pair(i, ptr));*/
+						CCmdDictionaryAddress cmdAddress;
+						cmdAddress.m_nParamID = cmdParam.m_nID;
+
+						HRESULT hrAddress;
+						if (FAILED(hrAddress = cmdAddress.Open(Connection))) {
+							AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
+						}
+						else {
+							vctAddress.clear();
+							while (S_OK == (hrAddress = cmdAddress.MoveNext())) {
+								if ((size_t)cmdAddress.m_nPosition >= vctAddress.size())
+									vctAddress.resize(cmdAddress.m_nPosition + 1, 0);
+								vctAddress[cmdAddress.m_nPosition] = cmdAddress.m_nAddress;
+							}
+							if (FAILED(hrAddress))
+								AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
+							cmdAddress.Close();
+							CString strAddress;
+							BuildAddress(vctAddress, strAddress);
+							ATLVERIFY(ptr->SetPropertyValue(TagPropAddressInMeter, any(strAddress)));
+						}
+						GetModel().InsertParam(cmdParam.m_nID, ptr);
+						
 					}
 
 					if (FAILED(hr))
 					{
 						AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());					
 					}
-				}
-			
-		
-		
+				}	
 		return S_OK;
+	}
+	static void BuildAddress(const std::vector<int>& rvctAddress, CString& rstrAddress) {
+		CString strNumber;
+		rstrAddress.Empty();
+		for (std::vector<int>::const_iterator it = rvctAddress.begin(); it != rvctAddress.end(); ++it) {
+			if (!rstrAddress.IsEmpty()) {
+				// Add separator
+				rstrAddress += _T('.');
+			}
+			strNumber.Format(_T("%d"), *it);
+			rstrAddress += strNumber;
+		}
 	}
 	static HRESULT OpenConnection(LPCTSTR szFilePath, bool bCreateFile, CDataConnection& rConnection)
 	{

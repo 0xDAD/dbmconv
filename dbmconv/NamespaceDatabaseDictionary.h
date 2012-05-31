@@ -63,10 +63,10 @@ public:
 	int m_nAssignment;			// назначение
 	TCHAR m_szAddressInCollector[256];
 
-	int m_nMeterType;
-	BEGIN_PARAM_MAP(CDictionaryParamAccessor)
-		COLUMN_ENTRY(1, m_nMeterType)
-	END_PARAM_MAP()
+	//int m_nMeterType;
+	//BEGIN_PARAM_MAP(CDictionaryParamAccessor)
+	//	COLUMN_ENTRY(1, m_nMeterType)
+	//END_PARAM_MAP()
 
 	BEGIN_COLUMN_MAP(CDictionaryParamAccessor)
 		COLUMN_ENTRY_STATUS(1, m_nID, m_nIDStatus)
@@ -91,7 +91,7 @@ public:
 		L" tag_name_id,"
 		L" tag_type_id,"
 		L" addr_in_uspd"
-		L" from Haracter where id_pribor=?");
+		L" from Haracter");
 };
 
 class CDictionaryAddressAccessor

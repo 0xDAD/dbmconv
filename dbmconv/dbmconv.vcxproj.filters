@@ -56,7 +56,7 @@
     <ClInclude Include="item.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ParamInfo.h">
+    <ClInclude Include="TagInfo.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
