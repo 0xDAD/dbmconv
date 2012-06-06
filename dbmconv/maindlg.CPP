@@ -33,23 +33,26 @@ void CMainDlg::UpdatePage()
 {
 	SetDlgItemText(IDC_EDIT1, Options::GetInFileName());
 	SetDlgItemText(IDC_EDIT2, Options::GetOutFileName());
-	//GetDlgItem(IDC_EDIT1)->SetWindowText(Options::GetInFileName());
-	//GetDlgItem(IDC_EDIT2)->SetWindowText(Options::GetOutFileName());
+
+
 }
 
 LRESULT CMainDlg::OnClose(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 {
 	CloseDialog(0);
-
 	return 0;
 }
 
 
 LRESULT CMainDlg::OnBnClickedButton2(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 {
-	
-	CNamespace::ImportDictionary(Options::GetInFileName());
-	
+	if(Options::GetInFileName().IsEmpty())
+		{
+			AtlMessageBox(NULL, L"Select dbmeter file");
+			return 0;
+	}
+	GetModel().LoadFromMDB(Options::GetInFileName());
+	m_wndList.RefreshData();
 	return 0;
 }
 
@@ -71,6 +74,11 @@ LRESULT CMainDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 	pLoop->AddIdleHandler(this);
 
 	UIAddChildWindowContainer(m_hWnd);
+	DoDataExchange(DDX_LOAD);
+	m_wndList.CreateColumns();
+	::SendMessage(m_wndList.m_hWnd, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (LPARAM) WS_VISIBLE | WS_CHILD | LVS_REPORT
+		| LVS_EX_GRIDLINES|LVS_EX_FLATSB/*| LVS_SHOWSELALWAYS*/ | LVS_EX_FULLROWSELECT
+		| LVS_EX_HEADERDRAGDROP);
 	UpdatePage();
 	return TRUE;
 }
@@ -101,3 +109,12 @@ BOOL CMainDlg::OnIdle()
 {
 	return FALSE;
 }
+
+LRESULT CMainDlg::OnBnClickedButton4(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+{
+	GetModel().SaveToXML(Options::GetOutFileName());
+	return 0;
+}
+
+
+

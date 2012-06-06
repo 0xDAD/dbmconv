@@ -13,6 +13,9 @@
       <UniqueIdentifier>{abbb4eeb-f7ef-432d-830c-63bffc17d078}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest</Extensions>
     </Filter>
+    <Filter Include="Header Files\DataModel">
+      <UniqueIdentifier>{bb50e0bf-5564-4564-bbc0-60a10e7b1ed1}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -44,20 +47,29 @@
     <ClInclude Include="NamespaceDatabaseDictionary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="MDBLoader.h">
+    <ClInclude Include="helpersXML.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HelpersMDB.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UniListView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DataModel.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\DataModel</Filter>
     </ClInclude>
     <ClInclude Include="DeviceInfo.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\DataModel</Filter>
     </ClInclude>
     <ClInclude Include="item.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\DataModel</Filter>
     </ClInclude>
     <ClInclude Include="TagInfo.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\DataModel</Filter>
+    </ClInclude>
+    <ClInclude Include="many.h">
+      <Filter>Header Files\DataModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

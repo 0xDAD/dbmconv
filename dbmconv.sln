@@ -3,6 +3,8 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dbmconv", "dbmconv\dbmconv.vcxproj", "{19B4C7F8-C503-40A6-8073-3CD26261BDCB}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "loctest", "loctest\loctest.vcxproj", "{496C75AE-5206-44E4-A19C-6AF73ADE6665}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -13,6 +15,10 @@ Global
 		{19B4C7F8-C503-40A6-8073-3CD26261BDCB}.Debug|Win32.Build.0 = Debug|Win32
 		{19B4C7F8-C503-40A6-8073-3CD26261BDCB}.Release|Win32.ActiveCfg = Release|Win32
 		{19B4C7F8-C503-40A6-8073-3CD26261BDCB}.Release|Win32.Build.0 = Release|Win32
+		{496C75AE-5206-44E4-A19C-6AF73ADE6665}.Debug|Win32.ActiveCfg = Debug|Win32
+		{496C75AE-5206-44E4-A19C-6AF73ADE6665}.Debug|Win32.Build.0 = Debug|Win32
+		{496C75AE-5206-44E4-A19C-6AF73ADE6665}.Release|Win32.ActiveCfg = Release|Win32
+		{496C75AE-5206-44E4-A19C-6AF73ADE6665}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
