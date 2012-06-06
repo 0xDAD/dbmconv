@@ -26,6 +26,26 @@ public:
 	using _Base::SetPropertyValue;
 	using _Base::HasPropertyValue;
 public:
+	static inline LPCTSTR GetPropertyName(int nPropId){
+		switch(nPropId){
+			case DevicePropUid:
+				return L"Uid";
+			case DevicePropTypeName:
+				return L"Name";
+			case DevicePropSubClass:
+				return L"SubClass";
+			case DevicePropClass:
+				return L"Class";
+			case DevicePropResource: 
+				return L"Resource";
+			case DevicePropProtoId:
+				return L"Proto";
+			case DevicePropSelfPower:
+				return L"SelfPower";
+			default: throw;
+		}
+	}
+public:
 	CDeviceProperties(){}
 };
 
@@ -36,7 +56,6 @@ public:
 	CItemDevice (int nId):_Base(nId){
 
 	}
-
 	
 };
 

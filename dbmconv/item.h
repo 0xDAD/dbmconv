@@ -1,6 +1,6 @@
 #pragma once
 
-#include <boost/any.hpp>
+#include "many.h"
 #include <boost/shared_ptr.hpp>
 #include <typeinfo>
 #include <map>
@@ -12,16 +12,16 @@ enum ItemType{
 	ItemDevice,
 	ItemTag
 };
-typedef std::map<int, boost::any> CItemPropertyValueMap;
+typedef std::map<int, many> CItemPropertyValueMap;
 
 class ATL_NO_VTABLE IItem
 {
 public:
 	virtual int GetTypeID()const = 0;
 	virtual void GetPropertyValues(CItemPropertyValueMap& rmapProperties) = 0;
-	virtual bool GetPropertyValue(int nPropID, boost::any& rValue/*, ItemPropertyGetType nGetType*/) = 0;
+	virtual bool GetPropertyValue(int nPropID, many& rValue/*, ItemPropertyGetType nGetType*/) = 0;
 	virtual bool HasPropertyValue(int nPropID) = 0;
-	virtual bool SetPropertyValue(int nPropID, boost::any& rValue) = 0;
+	virtual bool SetPropertyValue(int nPropID, many& rValue) = 0;
 };
 
 
@@ -36,7 +36,7 @@ public:
 public:
 	void GetPropertyValues(CItemPropertyValueMap& rmapProperties) {
 		T* pT = static_cast<T*>(this);
-		boost::any vValue;
+		many vValue;
 		for (int i = t_nMinPropID; i <= t_nMaxPropID; ++i) {
 			if (pT->GetPropertyValue(i, vValue))
 				rmapProperties.insert(CItemPropertyValueMap::value_type(i, vValue));
@@ -47,7 +47,7 @@ public:
 			return false;
 		return m_mapProperties.end() != m_mapProperties.find(nPropID);
 	}
-	bool GetPropertyValue(int nPropID, boost::any& vValue) {
+	bool GetPropertyValue(int nPropID, many& vValue) {
 		if (nPropID < t_nMinPropID || nPropID > t_nMaxPropID)
 			return false;
 		T* pT = static_cast<T*>(this);
@@ -58,7 +58,7 @@ public:
 		vValue = it->second;
 		return true;
 	}
-	bool SetPropertyValue(int nPropID, const boost::any& rValue) {
+	bool SetPropertyValue(int nPropID, const many& rValue) {
 		T* pT = static_cast<T*>(this);
 		if(nPropID < t_nMinPropID || nPropID > t_nMaxPropID)
 			return false;
@@ -72,6 +72,8 @@ private:
 template<class T, int t_nType, /*int t_nFlags,*/ class TProperties>
 class ATL_NO_VTABLE IItemImpl : public IItem
 {
+public: 
+	typedef TProperties PropertyHolder;
 public:
 	IItemImpl(int nID/*, int nParentID, LPCTSTR szName*/) :
 	  m_nID(nID)/*, m_nParentID(nParentID), m_strName(szName), m_bDisabled(false)*/ {
@@ -86,7 +88,7 @@ public:
 	{
 		return m_PropertiesHolder.GetPropertyValues(rmapProperties);
 	}
-	virtual bool GetPropertyValue(int nPropID, boost::any& rValue/*, ItemPropertyGetType nGetType*/){
+	virtual bool GetPropertyValue(int nPropID, many& rValue/*, ItemPropertyGetType nGetType*/){
 		return m_PropertiesHolder.GetPropertyValue(nPropID, rValue);
 
 	}
@@ -94,7 +96,7 @@ public:
 		return m_PropertiesHolder.HasPropertyValue(nPropID);
 	}
 
-	virtual bool SetPropertyValue(int nPropID, boost::any& rValue){
+	virtual bool SetPropertyValue(int nPropID, many& rValue){
 		return m_PropertiesHolder.SetPropertyValue(nPropID, rValue);
 	}
 private:
