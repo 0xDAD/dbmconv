@@ -52,7 +52,8 @@ LRESULT CMainDlg::OnBnClickedButton2(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*
 			return 0;
 	}
 	GetModel().LoadFromMDB(Options::GetInFileName());
-	m_wndList.RefreshData();
+	//m_wndList.SetCollection(new ILVDataManagerImpl<CItemDevice, CDeviceProperties>());
+	m_wndList.SetCollection(new ILVDataManagerImpl<CItemTag, CTagProperties>());
 	return 0;
 }
 
@@ -75,7 +76,6 @@ LRESULT CMainDlg::OnInitDialog( UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lPara
 
 	UIAddChildWindowContainer(m_hWnd);
 	DoDataExchange(DDX_LOAD);
-	m_wndList.CreateColumns();
 	::SendMessage(m_wndList.m_hWnd, LVM_SETEXTENDEDLISTVIEWSTYLE, 0, (LPARAM) WS_VISIBLE | WS_CHILD | LVS_REPORT
 		| LVS_EX_GRIDLINES|LVS_EX_FLATSB/*| LVS_SHOWSELALWAYS*/ | LVS_EX_FULLROWSELECT
 		| LVS_EX_HEADERDRAGDROP);

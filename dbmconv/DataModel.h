@@ -153,6 +153,21 @@ public:
 	static CDataModel& Instance(){
 		return m_instance;
 	}
+public:
+	bool GetItems(int nId, ItemMap& mapItems){
+		mapItems.clear();
+		switch(nId){
+			case ItemDevice:
+				mapItems = m_mapDevs;
+				return true;
+			case ItemTag:
+				mapItems = m_mapParams;
+				return true;
+			default: 
+				return false;
+		}
+		return true;
+	}
 	ItemMap& GetDevs(){
 		return m_mapDevs;
 	}

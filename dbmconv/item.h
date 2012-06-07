@@ -17,7 +17,7 @@ typedef std::map<int, many> CItemPropertyValueMap;
 class ATL_NO_VTABLE IItem
 {
 public:
-	virtual int GetTypeID()const = 0;
+	virtual int GetTypeID() const = 0;
 	virtual void GetPropertyValues(CItemPropertyValueMap& rmapProperties) = 0;
 	virtual bool GetPropertyValue(int nPropID, many& rValue/*, ItemPropertyGetType nGetType*/) = 0;
 	virtual bool HasPropertyValue(int nPropID) = 0;
@@ -32,6 +32,13 @@ class CItemPropertiesMapBased
 public:
 	CItemPropertiesMapBased(){
 
+	}
+public:
+	static int GetMinPropId(){
+		return t_nMinPropID;
+	}
+	static int GetMaxPropId(){
+		return t_nMaxPropID;
 	}
 public:
 	void GetPropertyValues(CItemPropertyValueMap& rmapProperties) {
@@ -65,6 +72,7 @@ public:
 		m_mapProperties[nPropID] = rValue;
 		return true;
 	}
+
 private:
 	CItemPropertyValueMap m_mapProperties;
 };
@@ -80,6 +88,11 @@ public:
 	  }
 	~IItemImpl() {
 	}
+public:
+	static int GetTypeID_static() {
+		return t_nType;
+	}
+
 public:
 	virtual int GetTypeID() const {
 		return t_nType;
