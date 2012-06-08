@@ -5,10 +5,15 @@
 
 #include <atlframe.h>
 #include <atlctrls.h>
+#include <atlctrlx.h>
 #include <atldlgs.h>
-#include "MainDlg.h"
-#include "resource.h"
+#include <atlctrlw.h>
+#include <atlsplit.h>
 
+
+#include "resource.h"
+#include "Options.h"
+#include "MainFrm.h"
 
 CAppModule _Module;
 
@@ -17,15 +22,15 @@ int Run(LPTSTR /*lpstrCmdLine*/ = NULL, int nCmdShow = SW_SHOWDEFAULT)
 	CMessageLoop theLoop;
 	_Module.AddMessageLoop(&theLoop);
 
-	CMainDlg dlgMain;
+	CMainFrame wndMain;
 
-	if(dlgMain.Create(NULL) == NULL)
+	if(wndMain.CreateEx() == NULL)
 	{
-		ATLTRACE(_T("Main dialog creation failed!\n"));
+		ATLTRACE(_T("Main window creation failed!\n"));
 		return 0;
 	}
 
-	dlgMain.ShowWindow(nCmdShow);
+	wndMain.ShowWindow(nCmdShow);
 
 	int nRet = theLoop.Run();
 
@@ -44,7 +49,7 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 	// this resolves ATL window thunking problem when Microsoft Layer for Unicode (MSLU) is used
 	::DefWindowProc(NULL, 0, 0, 0L);
 
-	AtlInitCommonControls(ICC_BAR_CLASSES);	// add flags to support other controls
+	AtlInitCommonControls(ICC_COOL_CLASSES | ICC_BAR_CLASSES);	// add flags to support other controls
 
 	hRes = _Module.Init(NULL, hInstance);
 	ATLASSERT(SUCCEEDED(hRes));
@@ -56,5 +61,6 @@ int WINAPI _tWinMain(HINSTANCE hInstance, HINSTANCE /*hPrevInstance*/, LPTSTR lp
 
 	return nRet;
 }
-CString Options::m_strInFile = L"";
-CString Options::m_strOutFile = L"";
+
+__declspec(selectany) CString Options::m_strOutFile;
+__declspec(selectany) CString Options::m_strInFile;

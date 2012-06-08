@@ -115,15 +115,19 @@
   <ItemGroup>
     <ClCompile Include="DataModel.cpp" />
     <ClCompile Include="dbmconv.cpp" />
-    <ClCompile Include="maindlg.CPP" />
+    <ClCompile Include="maindlg.CPP">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClInclude Include="helpersXML.h" />
+    <ClInclude Include="MainFrm.h" />
     <ClInclude Include="many.h" />
     <ClInclude Include="TagInfo.h" />
     <ClInclude Include="UniListView.h" />
+    <ClInclude Include="UniTreeView.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataModel.h" />
@@ -141,6 +145,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\dbmconv.ico" />
+    <None Include="res\Toolbar.bmp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

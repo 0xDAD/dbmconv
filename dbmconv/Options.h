@@ -19,5 +19,6 @@ public:
 private:
 	static CString m_strInFile;
 	static CString m_strOutFile;
-
 };
+
+

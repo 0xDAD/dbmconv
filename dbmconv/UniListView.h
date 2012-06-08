@@ -10,8 +10,8 @@
 using namespace std;
 using namespace boost;
 
-typedef ATL::CWinTraits<WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |LVS_EX_FULLROWSELECT|LVS_EX_GRIDLINES|
-	LVS_REPORT | LVS_SHOWSELALWAYS | LVS_EDITLABELS /*| LVS_OWNERDATA*/, WS_EX_CLIENTEDGE> CViewItemListTraits;
+typedef ATL::CWinTraits<WS_CHILD | WS_VISIBLE | WS_CLIPCHILDREN | WS_CLIPSIBLINGS |
+	LVS_REPORT | LVS_SHOWSELALWAYS | LVS_EDITLABELS, WS_EX_CLIENTEDGE> CViewItemListTraits;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -23,8 +23,6 @@ public:
 	virtual int GetMaxPropId() = 0;
 
 };
-
-
 
 template <class TItemClass, class TResourceHolder>
 class ILVDataManagerImpl: public ILVDataManager
@@ -60,7 +58,7 @@ public:
 
 	}
 	BEGIN_MSG_MAP(CUniListView)
-		//REFLECTED_NOTIFY_CODE_HANDLER(LVN_GETDISPINFO, OnGetDispInfo)
+		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 	END_MSG_MAP()
 public:
 	void SetCollection(ILVDataManager* fptr){
@@ -78,22 +76,13 @@ public:
 	}
 	void CreateColumns(){		
 		using namespace boost::lambda;
-		//struct ins_col{
-		//	ins_col(const CUniListView* pThis):n(0), m_lv(pThis){}
-		//	int n;
-		//	const CUniListView* m_lv;
-		//	void operator()(CString& str){
-		//		this->InsertColumn(n++, str);
-		//	}
-		//};
+
 		if(!m_dm)
 			return;
 		vector<CString> vctCols;
 		if(m_dm->GetColumns(vctCols)){
 			int n = 0;
-			//for_each(vctCols.begin(), vctCols.end(), ins_col());
-			for(auto x = vctCols.begin(); x != vctCols.end(); ++x)
-			{
+			for(auto x = vctCols.begin(); x != vctCols.end(); ++x){
 				InsertColumn(n++, *x);
 			}
 		}		
@@ -118,7 +107,7 @@ public:
 				it->second->GetPropertyValues(props);
 				int nItem = InsertItem(GetItemCount(), lexical_cast<wstring>(ni++).c_str());			
 				int nSi = 1;
-				for (int i = m_dm->GetMinPropId(); i != m_dm->GetMaxPropId(); i++)		{
+				for (int i = m_dm->GetMinPropId(); i <= m_dm->GetMaxPropId(); i++)		{
 					many rValue;
 					if(it->second->GetPropertyValue(i, rValue)){
 						SetItemText(nItem, nSi++, rValue.to_string().c_str());
@@ -129,6 +118,14 @@ public:
 		
 		AdjustColumnWidths();
 
+	}
+
+protected:
+	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
+	{
+		LRESULT lResult = DefWindowProc(uMsg, wParam, lParam);
+		SetExtendedListViewStyle(LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES, LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+		return lResult;
 	}
 private:
 	ILVDataManagerPtr m_dm;

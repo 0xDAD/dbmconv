@@ -27,7 +27,9 @@ static const LPCWSTR sc_cwszXmlNodeItemAttrDisabled = L"disabled";
 static const LPCWSTR sc_cwszXmlNodeItemProperty = L"prop";
 static const LPCWSTR sc_cwszXmlNodeItemPropertyAttrID = L"id";
 static const LPCWSTR sc_cwszXmlNodeItemPropertyAttrVariantType = L"vt";
+
 typedef std::map<int, IItemPtr> ItemMap;
+
 class CDataModel
 {
 protected:

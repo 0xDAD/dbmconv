@@ -71,6 +71,12 @@
     <ClInclude Include="many.h">
       <Filter>Header Files\DataModel</Filter>
     </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UniTreeView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dbmconv.rc">
@@ -79,6 +85,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="res\dbmconv.ico">
+      <Filter>Resource Files</Filter>
+    </None>
+    <None Include="res\Toolbar.bmp">
       <Filter>Resource Files</Filter>
     </None>
   </ItemGroup>
