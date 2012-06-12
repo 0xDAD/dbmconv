@@ -53,7 +53,7 @@ class CItemDevice: public IItemImpl<CItemDevice, ItemDevice, CDeviceProperties>
 {
 	typedef IItemImpl<CItemDevice, ItemDevice, CDeviceProperties> _Base;
 public:
-	CItemDevice (int nId):_Base(nId){
+	CItemDevice (int nId, int nParent):_Base(nId, nParent){
 
 	}
 	

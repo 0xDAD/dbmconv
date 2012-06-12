@@ -29,6 +29,36 @@ static const LPCWSTR sc_cwszXmlNodeItemPropertyAttrID = L"id";
 static const LPCWSTR sc_cwszXmlNodeItemPropertyAttrVariantType = L"vt";
 
 typedef std::map<int, IItemPtr> ItemMap;
+typedef std::list<IItemPtr> ItemList;
+typedef std::map<int, ItemList> ItemTree;
+
+class CItemFactory{
+public:
+	CItemFactory(){}
+	virtual ~CItemFactory(){};
+public:
+	bool CreateItem(int nType, int nId, int nParentId, IItem** ppItem){
+		if(!ppItem)
+			return false;		
+		switch(nType){
+			case ItemDevice:
+				*ppItem = new CItemDevice(nId, nParentId);
+				break;
+			case ItemTag:
+				*ppItem = new CItemTag(nId, nParentId);
+				break;
+			case OldImplNode:
+				*ppItem = new COldImplNode(nId, nParentId);
+				break;
+			case NewImplNode:
+				*ppItem = new CNewImplNode(nId, nParentId);
+				break;
+		default:
+			return false;
+		}
+		return true;
+	}
+};
 
 class CDataModel
 {
@@ -50,19 +80,22 @@ protected:
 					//OPCTLTRACE_HL_ET(hr, _T("Ошибка загрузки информации для прибора '%s'. %s"), GetItemFullNameSimple(rspMeter->GetID()), OPCTL::FormatOLEDBMessageSimple());
 				else
 				{
+					IItemPtr ptrNode;
+					m_instance.CreateItem(OldImplNode, ITEM_ID_ROOT, &ptrNode);
 					int i = 1;
 					while (S_OK == (hr = cmdMeter.MoveNext()))
 					{
-						IItemPtr ptr (new CItemDevice(cmdMeter.m_nID));
-						ptr->SetPropertyValue(DevicePropUid, many(cmdMeter.m_nID));
-						ptr->SetPropertyValue(DevicePropTypeName, many(wstring(cmdMeter.m_szName)));
-						ptr->SetPropertyValue(DevicePropSubClass, many(cmdMeter.m_nSubClass));
-						ptr->SetPropertyValue(DevicePropClass, many(cmdMeter.m_nClass));
-						ptr->SetPropertyValue(DevicePropResource, many(cmdMeter.m_nResource));
+						IItemPtr ptr;
+						if(m_instance.CreateItem(ItemDevice, ptrNode->GetID(), ptr)){
+							ptr->SetPropertyValue(DevicePropUid, many(cmdMeter.m_nID));
+							ptr->SetPropertyValue(DevicePropTypeName, many(wstring(cmdMeter.m_szName)));
+							ptr->SetPropertyValue(DevicePropSubClass, many(cmdMeter.m_nSubClass));
+							ptr->SetPropertyValue(DevicePropClass, many(cmdMeter.m_nClass));
+							ptr->SetPropertyValue(DevicePropResource, many(cmdMeter.m_nResource));
 
-						ptr->SetPropertyValue(DevicePropProtoId, many(cmdMeter.m_nProtocol));
-						ptr->SetPropertyValue(DevicePropSelfPower, many(cmdMeter.m_lfSelf));
-						m_instance.GetDevs().insert(make_pair(cmdMeter.m_nID, ptr));
+							ptr->SetPropertyValue(DevicePropProtoId, many(cmdMeter.m_nProtocol));
+							ptr->SetPropertyValue(DevicePropSelfPower, many(cmdMeter.m_lfSelf));
+						}						
 					}
 
 					if (FAILED(hr))
@@ -133,7 +166,6 @@ protected:
 		rstrAddress.Empty();
 		for (std::vector<int>::const_iterator it = rvctAddress.begin(); it != rvctAddress.end(); ++it) {
 			if (!rstrAddress.IsEmpty()) {
-				// Add separator
 				rstrAddress += _T('.');
 			}
 			strNumber.Format(_T("%d"), *it);
@@ -148,7 +180,9 @@ protected:
 	}
 	
 private:
-	CDataModel(){}	
+	CDataModel():m_nNextId(ITEM_ID_INVALID + 1){
+
+	}	
 	static CDataModel m_instance;
 
 public:
@@ -156,27 +190,56 @@ public:
 		return m_instance;
 	}
 public:
-	bool GetItems(int nId, ItemMap& mapItems){
-		mapItems.clear();
-		switch(nId){
-			case ItemDevice:
-				mapItems = m_mapDevs;
-				return true;
-			case ItemTag:
-				mapItems = m_mapParams;
-				return true;
-			default: 
-				return false;
+	//bool GetItems(int nId, ItemMap& mapItems){
+	//	mapItems.clear();
+	//	switch(nId){
+	//		case ItemDevice:
+	//			mapItems = m_mapDevs;
+	//			return true;
+	//		case ItemTag:
+	//			mapItems = m_mapParams;
+	//			return true;
+	//		default: 
+	//			return false;
+	//	}
+	//	return true;
+	//}
+
+	//ItemMap& GetDevs(){
+	//	return m_mapDevs;
+	//}
+	bool GetChildItems(int nParentId, int nItemType, ItemList& listItems){
+		if(m_treeItems.find(nParentId) == m_treeItems.end())
+			return false;
+		const ItemList& listChilds = m_treeItems[nParentId];
+		for(auto& x:listChilds){
+			const IItemPtr& ptr = *x;
+			if(nItemType == ItemTypeNone || ptr->GetType() == nItemType){
+				listItems.push_back(ptr);
+			}
 		}
 		return true;
 	}
-	ItemMap& GetDevs(){
-		return m_mapDevs;
-	}
-	bool InsertParam(int nId, IItemPtr param){
-		m_mapParams.insert(make_pair(nId, param));
-		return true;
-	}
+	bool CreateItem(int nType, int nParentId, IItem** ppItem){
+		int nId = m_nNextId;
+		IItemPtr ptr;
+		if(m_factory.CreateItem(nType, nId, nParentId, &ptr)){
+			m_nNextId++;
+			m_mapItems.insert(ItemMap::value_type(nId, ptr));
+			ItemList& brothers = m_treeItems[nParentId];
+			brothers.push_back(ptr);		
+			if(ppItem){
+				*ppItem = ptr;
+			}
+			return true;
+		}else
+			return false;
+	//}
+	//bool InsertParam(int nId, IItemPtr param){
+	//	m_mapParams.insert(make_pair(nId, param));
+	//	return true;
+	//}
+public:
 	bool LoadFromMDB(CString strFilePath){
 		return SUCCEEDED(ImportDictionary(strFilePath));
 	}
@@ -224,7 +287,13 @@ public:
 protected:
 	ItemMap m_mapDevs;
 	ItemMap m_mapParams;
+	ItemMap m_mapItems;
+	ItemTree m_treeItems;
 
+private:
+	int m_nNextId;
+private: 
+	CItemFactory m_factory;
 };
 CDataModel& GetModel();
 
