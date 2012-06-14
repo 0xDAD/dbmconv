@@ -14,7 +14,10 @@ enum ItemType{
 	ItemTag,
 	OldImplNode,
 	NewImplNode
-
+};
+enum BaseProperties{
+	BasePropName = 0,
+	UserPropsStart	
 };
 
 static const int ITEM_ID_INVALID = 0;
@@ -26,8 +29,11 @@ class ATL_NO_VTABLE IItem
 {
 public:
 	virtual int GetID() const = 0;
+	virtual CString GetName()  = 0;
+
 	virtual int GetParentID() const = 0;
 	virtual int GetType() const = 0;
+
 	virtual bool GetPropertyValues(CItemPropertyValueMap& rmapProperties) = 0;	
 	virtual bool GetPropertyValueText(int nPropID, CString& strRepr) = 0;
 	virtual bool HasPropertyValue(int nPropID) = 0;
@@ -42,12 +48,11 @@ public:
 	CItemPropertiesMapBased(){
 
 	}
-public:
-	static int GetMinPropId(){
-		return t_nMinPropID;
-	}
 	static int GetMaxPropId(){
 		return t_nMaxPropID;
+	}
+	static int GetMinPropId(){
+		return t_nMinPropID;
 	}
 public:
 	bool GetPropertyValues(CItemPropertyValueMap& rmapProperties) {
@@ -57,6 +62,7 @@ public:
 			if (pT->GetPropertyValue(i, vValue))
 				rmapProperties.insert(CItemPropertyValueMap::value_type(i, vValue));
 		}
+		return true;
 	}
 	bool HasPropertyValue(int nPropID) {
 		if (nPropID < t_nMinPropID || nPropID > t_nMaxPropID)
@@ -114,6 +120,11 @@ public:
 	}
 
 public:
+	virtual CString GetName() {
+		CString strRepr;
+		m_PropertiesHolder.GetPropertyValueText(BasePropName, strRepr);
+		return strRepr;
+	}
 	virtual int GetType() const {
 		return t_nType;
 	}
@@ -141,9 +152,11 @@ public:
 	virtual bool SetPropertyValue(int nPropID, many& rValue){
 		return m_PropertiesHolder.SetPropertyValue(nPropID, rValue);
 	}
+
 private:
 	int m_nID;
 	int m_nParentID;
+	CString m_strName;
 	TProperties m_PropertiesHolder;
 };
 

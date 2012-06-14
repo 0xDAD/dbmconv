@@ -127,6 +127,7 @@
     <ClInclude Include="many.h" />
     <ClInclude Include="SpecialItems.h" />
     <ClInclude Include="TagInfo.h" />
+    <ClInclude Include="UIMessages.h" />
     <ClInclude Include="UniListView.h" />
     <ClInclude Include="UniTreeView.h" />
   </ItemGroup>

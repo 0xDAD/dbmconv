@@ -1,10 +1,9 @@
 #pragma once
 #include "item.h"
 
-enum ItemDeviceProperty {
-	DevicePropUid = 0,
-	DevicePropTypeName,
-
+enum ItemDeviceProperty {	
+	DevicePropTypeName = BasePropName,
+	DevicePropUid = UserPropsStart,
 	DevicePropSubClass,
 	DevicePropClass,
 	DevicePropResource,
@@ -12,7 +11,7 @@ enum ItemDeviceProperty {
 	DevicePropProtoId,	
 	DevicePropSelfPower,
 
-	DevicePropFirst = DevicePropUid,
+	DevicePropFirst = BasePropName,
 	DevicePropLast = DevicePropSelfPower
 };
 
@@ -42,7 +41,8 @@ public:
 				return L"Proto";
 			case DevicePropSelfPower:
 				return L"SelfPower";
-			default: throw;
+			default: 
+				throw;
 		}
 	}
 public:

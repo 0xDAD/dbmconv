@@ -1,11 +1,9 @@
 #pragma once
 #include "item.h"
 
-enum ItemTagProperty {
-	
-	TagPropGuid,
-	TagPropName,
-	TagPropCode,
+enum ItemTagProperty {		
+	TagPropName = BasePropName,
+	TagPropGuid = UserPropsStart,
 	TagPropType,
 	TagPropClass,
 	TagPropUnitsType,
@@ -16,7 +14,7 @@ enum ItemTagProperty {
 
 	TagPropAddress,
 
-	TagPropFirst = TagPropGuid,
+	TagPropFirst = BasePropName,
 	TagPropLast = TagPropAddress
 };
 
@@ -34,7 +32,6 @@ public:
 		switch(nPropId){
 			case TagPropGuid: return L"Guid";
 			case TagPropName: return L"Name";
-			case TagPropCode: return L"Code";
 			case TagPropType: return L"Type";
 			case TagPropClass: return L"Class";
 			case TagPropUnitsType: return L"UnitsType";
@@ -54,7 +51,7 @@ class CItemTag: public IItemImpl<CItemTag, ItemTag, CTagProperties>
 {
 	typedef IItemImpl<CItemTag, ItemTag, CTagProperties> _Base;
 public:
-	CItemTag (int nId):_Base(nId){
+	CItemTag (int nId, int nParent):_Base(nId, nParent){
 	}
 };
 

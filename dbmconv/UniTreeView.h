@@ -1,5 +1,6 @@
 #pragma once
 
+
 typedef CWinTraits<WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN |
 	TVS_HASLINES | TVS_LINESATROOT | TVS_HASBUTTONS | TVS_EDITLABELS | TVS_SHOWSELALWAYS, WS_EX_CLIENTEDGE> CUniTreeViewTraits;
 
@@ -52,7 +53,71 @@ public:
 		}
 		return FALSE;
 	}
+	void InitView(){
+		DeleteAllItems();		
+		HTREEITEM hParent = InsertItem(TVIF_TEXT | TVIF_PARAM,
+			L"Root", 0, 0, 0, 0, static_cast<LPARAM>(ITEM_ID_ROOT), TVI_ROOT, TVI_LAST);
+		
+		_InsertItemWithChildren(hParent, ITEM_ID_ROOT);
+		Expand(hParent, TVE_EXPAND);
+	}
+	HTREEITEM _InsertItemWithChildren(HTREEITEM hParent, int nItemID){
+		ATLASSERT(hParent);
+		if (hParent == NULL)
+			return NULL;
+		IItemPtr spItem;
+		if (GetModel().GetItem(nItemID, spItem)) {
+			//int nImage = TResourceHolder::GetItemImageIndex(spItem->GetType(), spItem->IsDisabled(), spItem);
+			hParent = InsertItem(TVIF_TEXT | /*TVIF_IMAGE | TVIF_SELECTEDIMAGE |*/ TVIF_PARAM,
+				spItem->GetName(), 0, 0, 0, 0, static_cast<LPARAM>(nItemID), hParent, TVI_LAST);
+			if (hParent == NULL)
+				return NULL;
+		}
+		std::vector<int> vctItemIDs;
+		if (GetModel().GetChildItemsIDs(nItemID, ItemTypeNone, vctItemIDs)) {
+			
+			for (auto it = vctItemIDs.begin(); vctItemIDs.end() != it; ++it)
+				_InsertItemWithChildren(hParent, *it);
+		}
+		return hParent;
+	}
+	void _ExpandItem(HTREEITEM hParent) {
+		if (ItemHasChildren(hParent)) {
+			HTREEITEM hNextItem;
+			HTREEITEM hChildItem = GetChildItem(hParent);
+			
+			while (hChildItem != NULL) {
+				_ExpandItem(hChildItem);
+				hNextItem = GetNextItem(hChildItem, TVGN_NEXT);
+				hChildItem = hNextItem;
+			}
+			Expand(hParent, TVE_EXPAND);
+		}
+	}
+	void _CollapseItem(HTREEITEM hParent) {
+		if (ItemHasChildren(hParent)) {
+			Expand(hParent, TVE_COLLAPSE);
+			HTREEITEM hNextItem;
+			HTREEITEM hChildItem = GetChildItem(hParent);
+			
+			while (hChildItem != NULL) {
+				_CollapseItem(hChildItem);
+				hNextItem = GetNextItem(hChildItem, TVGN_NEXT);
+				hChildItem = hNextItem;
+			}
+		}
+	}
 protected:
 	BEGIN_MSG_MAP(thisClass)
+		REFLECTED_NOTIFY_CODE_HANDLER(TVN_SELCHANGED, OnSelChanged)
+		DEFAULT_REFLECTION_HANDLER()
 	END_MSG_MAP()
+protected:
+	LRESULT OnSelChanged(int /*idCtrl*/, LPNMHDR pnmh, BOOL& /*bHandled*/)
+	{
+		NMTREEVIEW* pNMTV = (NMTREEVIEW*)pnmh;
+		int nItemID = (int)pNMTV->itemNew.lParam;				
+		::SendMessage(GetTopLevelWindow(), WM_MFRAME_NOTIFY, UpdateSelection, nItemID);
+		return 0;
+	}
 };

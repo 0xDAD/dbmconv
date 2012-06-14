@@ -2,6 +2,7 @@
 //
 /////////////////////////////////////////////////////////////////////////////
 #pragma once
+#include "UIMessages.h"
 #include "MultiPaneStatusBarEx.h"
 #include "UniListView.h"
 #include "UniTreeView.h"
@@ -49,6 +50,9 @@ public:
 	BEGIN_MSG_MAP(CMainFrame)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
 		MESSAGE_HANDLER(WM_DESTROY, OnDestroy)
+
+		MESSAGE_HANDLER(WM_MFRAME_NOTIFY, OnInternalNotify)
+
 		COMMAND_ID_HANDLER(ID_POPUP_LOADMDB, OnLoadDBM)
 		COMMAND_ID_HANDLER(ID_APP_EXIT, OnFileExit)
 		COMMAND_ID_HANDLER(ID_FILE_NEW, OnFileNew)
@@ -57,12 +61,25 @@ public:
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
 		CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
 		CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
+		//REFLECT_NOTIFY_CODE(TVN_SELCHANGED)
+		REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
 //	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 //	LRESULT CommandHandler(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 //	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
+
+	LRESULT OnInternalNotify(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/){
+		int nItemId = (int)lParam;
+		switch(wParam){
+		case UpdateSelection:
+			m_wndItemList.SetParentId(nItemId);
+			break;		
+		}
+		return 0;
+	}
+
 
 	LRESULT OnCreate(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
@@ -247,9 +264,10 @@ public:
 		if (nRes != IDOK)
 			return 0;
 		Options::SetInFileName(CString(dlg.m_szFileName));		
-		GetModel().LoadFromMDB(dlg.m_szFileName);
-
-		m_wndItemList.SetCollection(new ILVDataManagerImpl<CItemTag, CTagProperties>());
+		if(GetModel().LoadFromMDB(dlg.m_szFileName)){
+			m_wndItemTree.InitView();
+			m_wndItemList.SetParentId(ITEM_ID_ROOT);
+		}
 
 		return 0;
 	}

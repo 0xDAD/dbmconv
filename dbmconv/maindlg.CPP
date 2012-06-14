@@ -53,7 +53,7 @@ LRESULT CMainDlg::OnBnClickedButton2(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*
 	}
 	GetModel().LoadFromMDB(Options::GetInFileName());
 	//m_wndList.SetCollection(new ILVDataManagerImpl<CItemDevice, CDeviceProperties>());
-	m_wndList.SetCollection(new ILVDataManagerImpl<CItemTag, CTagProperties>());
+	m_wndList.SetDataManager(new ILVDataManagerImpl<CItemTag, CTagProperties>());
 	return 0;
 }
 

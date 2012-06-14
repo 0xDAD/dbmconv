@@ -80,6 +80,9 @@
     <ClInclude Include="SpecialItems.h">
       <Filter>Header Files\DataModel</Filter>
     </ClInclude>
+    <ClInclude Include="UIMessages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dbmconv.rc">

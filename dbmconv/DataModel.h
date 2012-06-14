@@ -1,10 +1,14 @@
 #pragma once
+
 #include <vector>
+#include <list>
 #include <atldbcli.h>
 #include <ATLComTime.h>
 #include "item.h"
+#include "SpecialItems.h"
 #include "DeviceInfo.h"
 #include "TagInfo.h"
+
 #include "NamespaceDatabaseDictionary.h"
 
 #include "HelpersMDB.h"
@@ -37,21 +41,19 @@ public:
 	CItemFactory(){}
 	virtual ~CItemFactory(){};
 public:
-	bool CreateItem(int nType, int nId, int nParentId, IItem** ppItem){
-		if(!ppItem)
-			return false;		
+	bool CreateItem(int nType, int nId, int nParentId, IItemPtr& rpItem){
 		switch(nType){
 			case ItemDevice:
-				*ppItem = new CItemDevice(nId, nParentId);
+				rpItem = IItemPtr(new CItemDevice(nId, nParentId));
 				break;
 			case ItemTag:
-				*ppItem = new CItemTag(nId, nParentId);
+				rpItem = IItemPtr(new CItemTag(nId, nParentId));
 				break;
 			case OldImplNode:
-				*ppItem = new COldImplNode(nId, nParentId);
+				rpItem =  IItemPtr(new COldImplNode(nId, nParentId));
 				break;
 			case NewImplNode:
-				*ppItem = new CNewImplNode(nId, nParentId);
+				rpItem = IItemPtr( new CNewImplNode(nId, nParentId));
 				break;
 		default:
 			return false;
@@ -68,97 +70,92 @@ protected:
 		using namespace boost;
 		HRESULT hr;
 		CDataConnection Connection;
+		vector<int> vctAddress;
+		vctAddress.reserve(10);
 		if (S_OK != (hr = OpenConnection(pszFilePath, false, Connection)))
 		{
 			AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
 			return E_FAIL;
 		}
-
-				CCmdDictionaryMeter cmdMeter;
-				if (FAILED(hr = cmdMeter.Open(Connection)))
-					AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
-					//OPCTLTRACE_HL_ET(hr, _T("Ошибка загрузки информации для прибора '%s'. %s"), GetItemFullNameSimple(rspMeter->GetID()), OPCTL::FormatOLEDBMessageSimple());
-				else
+			CCmdDictionaryMeter cmdMeter;
+			if (FAILED(hr = cmdMeter.Open(Connection)))
+				AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
+			else
+			{
+				IItemPtr ptrNode;
+				m_instance.CreateItem(OldImplNode, ITEM_ID_ROOT, ptrNode);
+				ptrNode->SetPropertyValue(BasePropName, many(wstring(L"Old Implementation")));
+				int i = 1;
+				while (S_OK == (hr = cmdMeter.MoveNext()))
 				{
-					IItemPtr ptrNode;
-					m_instance.CreateItem(OldImplNode, ITEM_ID_ROOT, &ptrNode);
-					int i = 1;
-					while (S_OK == (hr = cmdMeter.MoveNext()))
-					{
-						IItemPtr ptr;
-						if(m_instance.CreateItem(ItemDevice, ptrNode->GetID(), ptr)){
-							ptr->SetPropertyValue(DevicePropUid, many(cmdMeter.m_nID));
-							ptr->SetPropertyValue(DevicePropTypeName, many(wstring(cmdMeter.m_szName)));
-							ptr->SetPropertyValue(DevicePropSubClass, many(cmdMeter.m_nSubClass));
-							ptr->SetPropertyValue(DevicePropClass, many(cmdMeter.m_nClass));
-							ptr->SetPropertyValue(DevicePropResource, many(cmdMeter.m_nResource));
+					IItemPtr ptrDev;
+					if(m_instance.CreateItem(ItemDevice, ptrNode->GetID(), ptrDev)){
+						ptrDev->SetPropertyValue(DevicePropUid, many(cmdMeter.m_nID));
+						ptrDev->SetPropertyValue(DevicePropTypeName, many(wstring(cmdMeter.m_szName)));
+						ptrDev->SetPropertyValue(DevicePropSubClass, many(cmdMeter.m_nSubClass));
+						ptrDev->SetPropertyValue(DevicePropClass, many(cmdMeter.m_nClass));
+						ptrDev->SetPropertyValue(DevicePropResource, many(cmdMeter.m_nResource));
 
-							ptr->SetPropertyValue(DevicePropProtoId, many(cmdMeter.m_nProtocol));
-							ptr->SetPropertyValue(DevicePropSelfPower, many(cmdMeter.m_lfSelf));
-						}						
-					}
-
-					if (FAILED(hr))
-					{
+						ptrDev->SetPropertyValue(DevicePropProtoId, many(cmdMeter.m_nProtocol));
+						ptrDev->SetPropertyValue(DevicePropSelfPower, many(cmdMeter.m_lfSelf));
+					}	
 						
-					}
-				}
-				std::vector<int> vctAddress;
-				vctAddress.reserve(10);
-				CCmdDictionaryParam cmdParam;
-			//	cmdParam.m_nMeterType = nMeterType;
-				if (FAILED(hr = cmdParam.Open(Connection)))
-					AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
-				else
-				{
-					while (S_OK == (hr = cmdParam.MoveNext()) && cmdParam.m_nIDStatus != DBSTATUS_S_ISNULL)
+					CCmdDictionaryParam cmdParam;
+					cmdParam.m_nMeterType = cmdMeter.m_nID;
+					if (FAILED(hr = cmdParam.Open(Connection)))
+						AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
+					else
 					{
-						IItemPtr ptr (new CItemTag(cmdParam.m_nID));
-						ptr->SetPropertyValue(TagPropName, many(wstring(cmdParam.m_szName)));
-						if (cmdParam.m_nIDStatus == DBSTATUS_S_OK)
-							ATLVERIFY(ptr->SetPropertyValue(TagPropCode,  many(cmdParam.m_nID)));
-						if (cmdParam.m_nTypeStatus == DBSTATUS_S_OK)
-							ATLVERIFY(ptr->SetPropertyValue(TagPropType, many(cmdParam.m_nType)));
-						if (cmdParam.m_nClassStatus == DBSTATUS_S_OK)
-							ATLVERIFY(ptr->SetPropertyValue(TagPropClass, many(cmdParam.m_nClass)));
-						if (cmdParam.m_nUnitsTypeStatus == DBSTATUS_S_OK)
-							ATLVERIFY(ptr->SetPropertyValue(TagPropUnitsType, many(cmdParam.m_nUnitsType)));
-						ATLVERIFY(ptr->SetPropertyValue(TagPropUnitsName, many(wstring(cmdParam.m_szUnitsName))));
-						ATLVERIFY(ptr->SetPropertyValue(TagPropCharacter, many(cmdParam.m_nCharacter)));
-						ATLVERIFY(ptr->SetPropertyValue(TagPropAssignment, many(cmdParam.m_nAssignment)));
-						// Set collector address
-						ATLVERIFY(ptr->SetPropertyValue(TagPropAddress,  many(wstring(cmdParam.m_szAddressInCollector))));
+						while (S_OK == (hr = cmdParam.MoveNext()) && cmdParam.m_nIDStatus != DBSTATUS_S_ISNULL)
+						{
+							IItemPtr ptrParam;
+							if(m_instance.CreateItem(ItemTag, ptrDev->GetID(), ptrParam)){
+								ptrParam->SetPropertyValue(TagPropName, many(wstring(cmdParam.m_szName)));
+								if (cmdParam.m_nIDStatus == DBSTATUS_S_OK)
+									ATLVERIFY(ptrParam->SetPropertyValue(TagPropGuid,  many(cmdParam.m_nID)));
+								if (cmdParam.m_nTypeStatus == DBSTATUS_S_OK)
+									ATLVERIFY(ptrParam->SetPropertyValue(TagPropType, many(cmdParam.m_nType)));
+								if (cmdParam.m_nClassStatus == DBSTATUS_S_OK)
+									ATLVERIFY(ptrParam->SetPropertyValue(TagPropClass, many(cmdParam.m_nClass)));
+								if (cmdParam.m_nUnitsTypeStatus == DBSTATUS_S_OK)
+									ATLVERIFY(ptrParam->SetPropertyValue(TagPropUnitsType, many(cmdParam.m_nUnitsType)));
+								ATLVERIFY(ptrParam->SetPropertyValue(TagPropUnitsName, many(wstring(cmdParam.m_szUnitsName))));
+								ATLVERIFY(ptrParam->SetPropertyValue(TagPropCharacter, many(cmdParam.m_nCharacter)));
+								ATLVERIFY(ptrParam->SetPropertyValue(TagPropAssignment, many(cmdParam.m_nAssignment)));
+								// Set collector address
+								ATLVERIFY(ptrParam->SetPropertyValue(TagPropAddress,  many(wstring(cmdParam.m_szAddressInCollector))));
 
-						CCmdDictionaryAddress cmdAddress;
-						cmdAddress.m_nParamID = cmdParam.m_nID;
+								CCmdDictionaryAddress cmdAddress;
+								cmdAddress.m_nParamID = cmdParam.m_nID;
 
-						HRESULT hrAddress;
-						if (FAILED(hrAddress = cmdAddress.Open(Connection))) {
-							AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
-						}
-						else {
-							vctAddress.clear();
-							while (S_OK == (hrAddress = cmdAddress.MoveNext())) {
-								if ((size_t)cmdAddress.m_nPosition >= vctAddress.size())
-									vctAddress.resize(cmdAddress.m_nPosition + 1, 0);
-								vctAddress[cmdAddress.m_nPosition] = cmdAddress.m_nAddress;
+								HRESULT hrAddress;
+								if (FAILED(hrAddress = cmdAddress.Open(Connection))) {
+									AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
+								}
+								else {
+									vctAddress.clear();
+									while (S_OK == (hrAddress = cmdAddress.MoveNext())) {
+										if ((size_t)cmdAddress.m_nPosition >= vctAddress.size())
+											vctAddress.resize(cmdAddress.m_nPosition + 1, 0);
+										vctAddress[cmdAddress.m_nPosition] = cmdAddress.m_nAddress;
+									}
+									if (FAILED(hrAddress))
+										AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
+									cmdAddress.Close();
+									CString strAddress;
+									BuildAddress(vctAddress, strAddress);
+									ATLVERIFY(ptrParam->SetPropertyValue(TagPropAddressInMeter, many(strAddress, new atlstr_conv())));
+								}
 							}
-							if (FAILED(hrAddress))
-								AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());
-							cmdAddress.Close();
-							CString strAddress;
-							BuildAddress(vctAddress, strAddress);
-							ATLVERIFY(ptr->SetPropertyValue(TagPropAddressInMeter, many(strAddress, new atlstr_conv())));
-						}
-						m_instance.InsertParam(cmdParam.m_nID, ptr);
-						
-					}
 
-					if (FAILED(hr))
-					{
-						AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());					
-					}
-				}	
+							if (FAILED(hr))
+							{
+								AtlMessageBox(NULL, FormatOLEDBMessageSimple().GetBuffer());					
+							}
+						}
+					}	
+				}
+			}				
 		return S_OK;
 	}
 	static void BuildAddress(const std::vector<int>& rvctAddress, CString& rstrAddress) {
@@ -190,29 +187,11 @@ public:
 		return m_instance;
 	}
 public:
-	//bool GetItems(int nId, ItemMap& mapItems){
-	//	mapItems.clear();
-	//	switch(nId){
-	//		case ItemDevice:
-	//			mapItems = m_mapDevs;
-	//			return true;
-	//		case ItemTag:
-	//			mapItems = m_mapParams;
-	//			return true;
-	//		default: 
-	//			return false;
-	//	}
-	//	return true;
-	//}
-
-	//ItemMap& GetDevs(){
-	//	return m_mapDevs;
-	//}
 	bool GetChildItems(int nParentId, int nItemType, ItemList& listItems){
-		if(m_treeItems.find(nParentId) == m_treeItems.end())
+		if(!HasChilds(nParentId))
 			return false;
 		const ItemList& listChilds = m_treeItems[nParentId];
-		for(auto& x:listChilds){
+		for(auto x = listChilds.begin(); x!=listChilds.end();++x){
 			const IItemPtr& ptr = *x;
 			if(nItemType == ItemTypeNone || ptr->GetType() == nItemType){
 				listItems.push_back(ptr);
@@ -220,25 +199,42 @@ public:
 		}
 		return true;
 	}
-	bool CreateItem(int nType, int nParentId, IItem** ppItem){
-		int nId = m_nNextId;
-		IItemPtr ptr;
-		if(m_factory.CreateItem(nType, nId, nParentId, &ptr)){
-			m_nNextId++;
-			m_mapItems.insert(ItemMap::value_type(nId, ptr));
-			ItemList& brothers = m_treeItems[nParentId];
-			brothers.push_back(ptr);		
-			if(ppItem){
-				*ppItem = ptr;
+	bool GetChildItemsIDs(int nParentId, int nItemType, std::vector<int>& vctItemIDs){
+		if(!HasChilds(nParentId))
+			return false;
+		const ItemList& listChilds = m_treeItems[nParentId];
+		for(auto x = listChilds.begin(); x!=listChilds.end();++x){
+			const IItemPtr& ptr = *x;
+			if(nItemType == ItemTypeNone || ptr->GetType() == nItemType){
+				vctItemIDs.push_back(ptr->GetID());
 			}
+		}
+		return true;
+	}
+
+	bool HasChilds( int nParentId ){
+		return m_treeItems.find(nParentId) != m_treeItems.end();			
+	}
+	bool CreateItem(int nType, int nParentId, IItemPtr& rpItem){
+		int nId = m_nNextId;
+		if(m_factory.CreateItem(nType, nId, nParentId, rpItem)){
+			m_nNextId++;
+			m_mapItems.insert(ItemMap::value_type(nId, rpItem));
+			ItemList& brothers = m_treeItems[nParentId];
+			brothers.push_back(rpItem);		
 			return true;
 		}else
 			return false;
-	//}
-	//bool InsertParam(int nId, IItemPtr param){
-	//	m_mapParams.insert(make_pair(nId, param));
-	//	return true;
-	//}
+	}
+	bool GetItem(int nId, IItemPtr& rpItem){
+		if(!HasItem(nId))
+			return false;
+		rpItem = m_mapItems[nId];
+		return true;
+	}
+	bool HasItem(int nId){
+		return m_mapItems.find(nId) != m_mapItems.end();
+	}
 public:
 	bool LoadFromMDB(CString strFilePath){
 		return SUCCEEDED(ImportDictionary(strFilePath));
@@ -285,15 +281,13 @@ public:
 		return S_OK;
 	}
 protected:
-	ItemMap m_mapDevs;
-	ItemMap m_mapParams;
 	ItemMap m_mapItems;
 	ItemTree m_treeItems;
-
 private:
 	int m_nNextId;
 private: 
 	CItemFactory m_factory;
 };
+
 CDataModel& GetModel();
 
