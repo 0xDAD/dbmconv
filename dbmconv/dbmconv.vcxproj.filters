@@ -16,6 +16,9 @@
     <Filter Include="Header Files\DataModel">
       <UniqueIdentifier>{bb50e0bf-5564-4564-bbc0-60a10e7b1ed1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Header Files\Helpers">
+      <UniqueIdentifier>{9d0af084-119a-4a79-9f94-520972b0d2fa}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -47,12 +50,6 @@
     <ClInclude Include="NamespaceDatabaseDictionary.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="helpersXML.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="HelpersMDB.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="UniListView.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -81,6 +78,18 @@
       <Filter>Header Files\DataModel</Filter>
     </ClInclude>
     <ClInclude Include="UIMessages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HelpersMDB.h">
+      <Filter>Header Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="helpersXML.h">
+      <Filter>Header Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="SAXContentHandler.h">
+      <Filter>Header Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

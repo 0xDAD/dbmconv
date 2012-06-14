@@ -11,6 +11,7 @@
 
 #include "NamespaceDatabaseDictionary.h"
 
+#include "ContentHandler.h"
 #include "HelpersMDB.h"
 #include "HelpersXML.h"
 
@@ -32,9 +33,7 @@ static const LPCWSTR sc_cwszXmlNodeItemProperty = L"prop";
 static const LPCWSTR sc_cwszXmlNodeItemPropertyAttrID = L"id";
 static const LPCWSTR sc_cwszXmlNodeItemPropertyAttrVariantType = L"vt";
 
-typedef std::map<int, IItemPtr> ItemMap;
-typedef std::list<IItemPtr> ItemList;
-typedef std::map<int, ItemList> ItemTree;
+
 
 class CItemFactory{
 public:
@@ -211,7 +210,6 @@ public:
 		}
 		return true;
 	}
-
 	bool HasChilds( int nParentId ){
 		return m_treeItems.find(nParentId) != m_treeItems.end();			
 	}
@@ -236,8 +234,36 @@ public:
 		return m_mapItems.find(nId) != m_mapItems.end();
 	}
 public:
-	bool LoadFromMDB(CString strFilePath){
+	bool ImportMDB(CString strFilePath){
 		return SUCCEEDED(ImportDictionary(strFilePath));
+	}
+	HRESULT LoadFromXML(CString strFilePath){
+		ItemMap newMap;
+
+		ISAXXMLReader* pRdr = NULL;
+		HRESULT hr = CoCreateInstance(
+			__uuidof(SAXXMLReader60), 
+			NULL, 
+			CLSCTX_ALL, 
+			__uuidof(ISAXXMLReader), 
+			(void **)&pRdr);
+
+		if(!FAILED(hr)) 
+		{
+			CDataModelContentHandler * pMc = new CDataModelContentHandler();
+			hr = pRdr->putContentHandler(pMc);
+
+			// Set error handler
+			//SAXErrorHandlerImpl * pEc = new SAXErrorHandlerImpl();
+			//hr = pRdr->putErrorHandler(pEc);
+
+
+
+			hr = pRdr->parseURL(strFilePath);
+			pRdr->Release();
+		}
+		return hr;
+
 	}
 	HRESULT SaveToXML(CString strFilePath){
 		HRESULT hr;
@@ -263,23 +289,66 @@ public:
 		if (FAILED(hr = Doc.SetAttributeValue(spNodeRoot, sc_cwszXmlNodeRootAttrDate, CComVariant(odt.Format()))))
 			return hr;
 
-		//CString strDate;
-		//if (FAILED(hr = ToString(CComVariant((DATE)COleDateTime::GetCurrentTime(), VT_DATE), strDate)))
-		//	return hr;
-		//if (FAILED(hr = Doc.SetAttributeValue(spNodeRoot, sc_cwszXmlNodeRootAttrDate, strDate)))
-		//	return hr;
+		ItemList lstItems;
+		ATLVERIFY(GetChildItems(ITEM_ID_ROOT, ItemTypeNone, lstItems));
 
-		//OPCTL::CItemList lstItems;
-		//ATLVERIFY(GetChildItems(OPCTL::ITEM_ID_ROOT, lstItems));
-
-		/*if (FAILED(hr = SaveItems(Doc, spNodeRoot, lstItems)))
+		if (FAILED(hr = SaveItems(Doc, spNodeRoot, lstItems)))
 			return hr;
-		*/
+
 		if (FAILED(hr = Doc.Save(strFilePath)))
 			return hr;
 
 		return S_OK;
 	}
+	HRESULT SaveItems(CXMLDOMDocument& rDoc, IXMLDOMNode* pParent, ItemList& rlstItems){
+		HRESULT hr;
+		CString strValue;
+		for (auto it = rlstItems.begin(); rlstItems.end() != it; ++it)
+		{
+			const IItemPtr& rspItem = *it;
+
+			CComPtr<IXMLDOMElement> spElement;
+			if (FAILED(hr = rDoc.AddElementWithEndl(pParent, sc_cwszXmlNodeItem, &spElement)))
+				return hr;
+			if (FAILED(hr = rDoc.SetAttributeValue(spElement, sc_cwszXmlNodeItemAttrType, CComVariant(rspItem->GetType()))))
+				return hr;
+			if (FAILED(hr = rDoc.SetAttributeValue(spElement, sc_cwszXmlNodeItemAttrID, CComVariant(rspItem->GetID()))))
+				return hr;
+			/*if (FAILED(hr = rDoc.SetAttributeValue(spElement, sc_cwszXmlNodeItemAttrName, rspItem->GetName())))
+				return hr;*/
+			
+
+			// Save custom properties
+			CItemPropertyValueMap mapProperties;
+			rspItem->GetPropertyValues(mapProperties);
+			for (auto it_prop = mapProperties.begin(); it_prop != mapProperties.end(); ++it_prop) {
+				// Check for default
+				bool bDefault = false;
+				many rValue;
+				rspItem->GetPropertyValue(it_prop->first, rValue);
+				if (FAILED(hr = SaveItemProperty(rDoc, spElement, it_prop->first, rValue.to_string().c_str()))){
+					return hr;
+				}
+			}			
+			ItemList lstChildren;
+			if (GetChildItems(rspItem->GetID(), ItemTypeNone, lstChildren))
+				if (FAILED(hr = SaveItems(rDoc, pParent, lstChildren)))
+					return hr;
+		}
+		return S_OK;
+	}
+	HRESULT SaveItemProperty(CXMLDOMDocument& rDoc, IXMLDOMNode* pItem, int nPropID, LPCTSTR pszValue)
+	{
+		HRESULT hr;
+		CComPtr<IXMLDOMElement> spElement;
+		if (FAILED(hr = rDoc.AddElementWithText(pItem, sc_cwszXmlNodeItemProperty, pszValue, false, &spElement)))
+			return hr;
+		if (FAILED(hr = rDoc.SetAttributeValue(spElement, sc_cwszXmlNodeItemPropertyAttrID, CComVariant(nPropID))))
+			return hr;		
+		return S_OK;
+	}
+
+	
 protected:
 	ItemMap m_mapItems;
 	ItemTree m_treeItems;

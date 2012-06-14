@@ -161,3 +161,6 @@ private:
 };
 
 typedef boost::shared_ptr<IItem> IItemPtr;
+typedef std::map<int, IItemPtr> ItemMap;
+typedef std::list<IItemPtr> ItemList;
+typedef std::map<int, ItemList> ItemTree;

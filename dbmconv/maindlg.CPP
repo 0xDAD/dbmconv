@@ -51,7 +51,7 @@ LRESULT CMainDlg::OnBnClickedButton2(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*
 			AtlMessageBox(NULL, L"Select dbmeter file");
 			return 0;
 	}
-	GetModel().LoadFromMDB(Options::GetInFileName());
+	GetModel().ImportMDB(Options::GetInFileName());
 	//m_wndList.SetCollection(new ILVDataManagerImpl<CItemDevice, CDeviceProperties>());
 	m_wndList.SetDataManager(new ILVDataManagerImpl<CItemTag, CTagProperties>());
 	return 0;

@@ -55,20 +55,24 @@ public:
 
 		COMMAND_ID_HANDLER(ID_POPUP_LOADMDB, OnLoadDBM)
 		COMMAND_ID_HANDLER(ID_APP_EXIT, OnFileExit)
+		COMMAND_ID_HANDLER(ID_FILE_OPEN, OnFileOpen)
 		COMMAND_ID_HANDLER(ID_FILE_NEW, OnFileNew)
+		COMMAND_ID_HANDLER(ID_FILE_SAVE_AS, OnFileSaveAs)
 		COMMAND_ID_HANDLER(ID_VIEW_TOOLBAR, OnViewToolBar)
 		COMMAND_ID_HANDLER(ID_VIEW_STATUS_BAR, OnViewStatusBar)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
 		CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
 		CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
-		//REFLECT_NOTIFY_CODE(TVN_SELCHANGED)
-		REFLECT_NOTIFICATIONS()
+		REFLECT_NOTIFY_CODE(TVN_SELCHANGED)
+		//REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
 //	LRESULT MessageHandler(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 //	LRESULT CommandHandler(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 //	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
+
+
 
 	LRESULT OnInternalNotify(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/){
 		int nItemId = (int)lParam;
@@ -254,7 +258,20 @@ public:
 		PostMessage(WM_CLOSE);
 		return 0;
 	}
-
+	LRESULT OnFileOpen(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		LPCTSTR pszDefExt = _T("xml");
+		CFileDialog dlg(TRUE, pszDefExt, NULL, OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST, L"XML-פאיכû (*.xml)\0*.xml\0");
+		INT_PTR nRes = dlg.DoModal();
+		ATLASSERT(nRes > 0);
+		if (nRes != IDOK)
+			return 0;
+		if(GetModel().LoadFromXML(dlg.m_szFileName)){
+			m_wndItemTree.InitView();
+			m_wndItemList.SetParentId(ITEM_ID_ROOT);
+		}
+		return 0;
+	}
 	LRESULT OnLoadDBM(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
 		LPCTSTR pszDefExt = _T("mdb");
@@ -264,7 +281,7 @@ public:
 		if (nRes != IDOK)
 			return 0;
 		Options::SetInFileName(CString(dlg.m_szFileName));		
-		if(GetModel().LoadFromMDB(dlg.m_szFileName)){
+		if(GetModel().ImportMDB(dlg.m_szFileName)){
 			m_wndItemTree.InitView();
 			m_wndItemList.SetParentId(ITEM_ID_ROOT);
 		}
@@ -278,6 +295,14 @@ public:
 
 		return 0;
 	}
+
+	LRESULT OnFileSaveAs(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		_FileSave();
+
+		return 0;
+	}
+
 
 	LRESULT OnViewToolBar(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
@@ -303,5 +328,38 @@ public:
 	LRESULT OnAppAbout(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
 		return 0;
+	}
+
+	bool _FileSave(LPCTSTR pszPath = NULL)
+	{
+		if (NULL == pszPath)
+			pszPath = _T("");
+		CString strFilePath;
+		//GetNamespace().GetConfigFileName(strFilePath);
+		//if (!GetNamespace().IsModified() && !strFilePath.IsEmpty() && strFilePath == pszPath)
+		//	return true;
+
+		CString strPath(pszPath);
+		if (strPath.IsEmpty())
+		{
+			//CFileDialogFilter strFltr;
+			//ATLVERIFY(strFltr.SetFilter(IDS_FILTER_MDB_XML));
+			LPCTSTR pszDefExt = _T("xml");
+			CFileDialog dlg(FALSE, pszDefExt, NULL, OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files\0*.xml");
+			INT_PTR nRes = dlg.DoModal();
+			ATLASSERT(nRes > 0);
+			if (nRes != IDOK)
+				return false;
+			strPath = dlg.m_szFileName;
+		}
+
+		CWaitCursor wc;
+		if (FAILED(GetModel().SaveToXML(strPath)))
+		{
+			AtlMessageBox(m_hWnd, L"Unable to save", IDR_MAINFRAME, MB_OK | MB_ICONSTOP);
+			return false;
+		}
+		//_UpdateWindowTitle();
+		return true;
 	}
 };

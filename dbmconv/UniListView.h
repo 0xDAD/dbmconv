@@ -81,6 +81,7 @@ public:
 
 class CUniListView: public CSortListViewCtrlImpl<CUniListView, CListViewCtrl, CViewItemListTraits>
 {
+	typedef CSortListViewCtrlImpl<CUniListView, CListViewCtrl, CViewItemListTraits> baseClass;
 public:
 	DECLARE_WND_CLASS(L"UniListView");
 public:
@@ -89,20 +90,24 @@ public:
 	}
 	BEGIN_MSG_MAP(CUniListView)
 		MESSAGE_HANDLER(WM_CREATE, OnCreate)
+		CHAIN_MSG_MAP(baseClass)
 		DEFAULT_REFLECTION_HANDLER()
 	END_MSG_MAP()
 public:
 	void DeleteAllColumns(){
-		int nCols = GetHeader().GetItemCount() - 1;
+		int nCols = GetColumnCount() - 1;
 		while(nCols >=0 ){
-			GetHeader().DeleteItem(nCols--);
+			DeleteColumn(nCols--);
 		}
+		
 	}
 	void SetParentId(int nId)
 	{
 		if(nId && m_nParentId != nId && GetModel().HasChilds(nId)){
 			m_nParentId = nId;
 			if(m_dmFact.CreateDataManager(m_nParentId, m_dm)){
+				DeleteAllItems();
+				DeleteAllColumns();
 				CreateColumns();
 				RefreshData();
 				RedrawWindow();
@@ -110,7 +115,7 @@ public:
 		}			
 	}
 	void CreateColumns(){	
-		DeleteAllColumns();
+		
 		using namespace boost::lambda;
 		if(!m_dm)
 			return;
@@ -131,8 +136,7 @@ public:
 	}
 	void RefreshData(){
 		if(!m_dm)
-			return;
-		DeleteAllItems();
+			return;		
 
 		ItemList items;
 		if(m_dm->GetItems(items)){

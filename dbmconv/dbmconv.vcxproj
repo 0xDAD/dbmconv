@@ -39,6 +39,7 @@
     <OutDir>Debug\</OutDir>
     <LinkIncremental>true</LinkIncremental>
     <IncludePath>C:\Development\Libraries\boost_1_47_0;C:\Development\Libraries\WTL80\Include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\Microsoft SDKs\Windows\v6.0A\Lib\;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <IntDir>Release\</IntDir>
@@ -55,11 +56,13 @@
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_WINDOWS;STRICT;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalOptions>%(AdditionalOptions)</AdditionalOptions>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <TargetMachine>MachineX86</TargetMachine>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>msxml6.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ResourceCompile>
       <Culture>0x0409</Culture>
@@ -122,9 +125,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClInclude Include="ContentHandler.h" />
     <ClInclude Include="helpersXML.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="many.h" />
+    <ClInclude Include="SAXContentHandler.h" />
     <ClInclude Include="SpecialItems.h" />
     <ClInclude Include="TagInfo.h" />
     <ClInclude Include="UIMessages.h" />
