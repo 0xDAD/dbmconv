@@ -2,12 +2,12 @@
 
 #include <vector>
 #include <list>
+#include <algorithm>
 #include <atldbcli.h>
 #include <ATLComTime.h>
-#include "item.h"
-#include "SpecialItems.h"
-#include "DeviceInfo.h"
-#include "TagInfo.h"
+
+#include "ItemFactory.h"
+#include "XMLDefs.h"
 
 #include "NamespaceDatabaseDictionary.h"
 
@@ -15,51 +15,7 @@
 #include "HelpersMDB.h"
 #include "HelpersXML.h"
 
-static const int sc_nCurrentVersion = 1;
 
-static const LPCWSTR sc_cwszXmlNodeRoot = L"dictroot";
-static const LPCWSTR sc_cwszXmlNodeRootAttrVersion = L"version";
-static const LPCWSTR sc_cwszXmlNodeRootAttrDate = L"date";
-static const LPCWSTR sc_cwszXmlNodeRootAttrRevision = L"rev";
-
-
-static const LPCWSTR sc_cwszXmlNodeItem = L"item";
-static const LPCWSTR sc_cwszXmlNodeItemAttrType = L"type";
-static const LPCWSTR sc_cwszXmlNodeItemAttrID = L"id";
-static const LPCWSTR sc_cwszXmlNodeItemAttrName = L"name";
-static const LPCWSTR sc_cwszXmlNodeItemAttrDisabled = L"disabled";
-
-static const LPCWSTR sc_cwszXmlNodeItemProperty = L"prop";
-static const LPCWSTR sc_cwszXmlNodeItemPropertyAttrID = L"id";
-static const LPCWSTR sc_cwszXmlNodeItemPropertyAttrVariantType = L"vt";
-
-
-
-class CItemFactory{
-public:
-	CItemFactory(){}
-	virtual ~CItemFactory(){};
-public:
-	bool CreateItem(int nType, int nId, int nParentId, IItemPtr& rpItem){
-		switch(nType){
-			case ItemDevice:
-				rpItem = IItemPtr(new CItemDevice(nId, nParentId));
-				break;
-			case ItemTag:
-				rpItem = IItemPtr(new CItemTag(nId, nParentId));
-				break;
-			case OldImplNode:
-				rpItem =  IItemPtr(new COldImplNode(nId, nParentId));
-				break;
-			case NewImplNode:
-				rpItem = IItemPtr( new CNewImplNode(nId, nParentId));
-				break;
-		default:
-			return false;
-		}
-		return true;
-	}
-};
 
 class CDataModel
 {
@@ -215,7 +171,7 @@ public:
 	}
 	bool CreateItem(int nType, int nParentId, IItemPtr& rpItem){
 		int nId = m_nNextId;
-		if(m_factory.CreateItem(nType, nId, nParentId, rpItem)){
+		if(CItemFactory::CreateItem(nType, nId, nParentId, rpItem)){
 			m_nNextId++;
 			m_mapItems.insert(ItemMap::value_type(nId, rpItem));
 			ItemList& brothers = m_treeItems[nParentId];
@@ -233,13 +189,31 @@ public:
 	bool HasItem(int nId){
 		return m_mapItems.find(nId) != m_mapItems.end();
 	}
+	void RebuildItemsTree(){
+		//struct rebuilder{
+		//	void operator()(const ItemMap::value_type& rec){
+		//		int nParent = ITEM_ID_INVALID;
+		//		
+		//		ItemList& brothers = m_treeItems[nParentId];
+		//		brothers.push_back(rpItem);	
+		//	}
+		//};
+		//m_treeItems.clear();
+		//std::for_each(m_mapItems.begin(), m_mapItems.end(), rebuilder());
+		m_treeItems.clear();
+		for (auto it = m_mapItems.begin(); it != m_mapItems.end(); ++it){
+			int nParent = it->second->GetParentID();
+			ItemList& brothers = m_treeItems[nParent];
+			brothers.push_back(it->second);	
+		}
+		
+		
+	}
 public:
 	bool ImportMDB(CString strFilePath){
 		return SUCCEEDED(ImportDictionary(strFilePath));
 	}
 	HRESULT LoadFromXML(CString strFilePath){
-		ItemMap newMap;
-
 		ISAXXMLReader* pRdr = NULL;
 		HRESULT hr = CoCreateInstance(
 			__uuidof(SAXXMLReader60), 
@@ -252,14 +226,17 @@ public:
 		{
 			CDataModelContentHandler * pMc = new CDataModelContentHandler();
 			hr = pRdr->putContentHandler(pMc);
-
 			// Set error handler
 			//SAXErrorHandlerImpl * pEc = new SAXErrorHandlerImpl();
 			//hr = pRdr->putErrorHandler(pEc);
-
-
-
 			hr = pRdr->parseURL(strFilePath);
+			if(FAILED(hr)){
+				AtlMessageBox(NULL, L"Unable to parse!!!");
+			}
+			else{
+				m_mapItems.swap(pMc->GetItems());
+				RebuildItemsTree();
+			}
 			pRdr->Release();
 		}
 		return hr;
@@ -314,8 +291,8 @@ public:
 				return hr;
 			if (FAILED(hr = rDoc.SetAttributeValue(spElement, sc_cwszXmlNodeItemAttrID, CComVariant(rspItem->GetID()))))
 				return hr;
-			/*if (FAILED(hr = rDoc.SetAttributeValue(spElement, sc_cwszXmlNodeItemAttrName, rspItem->GetName())))
-				return hr;*/
+			if (FAILED(hr = rDoc.SetAttributeValue(spElement, sc_cwszXmlNodeItemAttrParID, rspItem->GetParentID())))
+				return hr;
 			
 
 			// Save custom properties
@@ -347,15 +324,13 @@ public:
 			return hr;		
 		return S_OK;
 	}
-
+	
 	
 protected:
 	ItemMap m_mapItems;
 	ItemTree m_treeItems;
 private:
 	int m_nNextId;
-private: 
-	CItemFactory m_factory;
 };
 
 CDataModel& GetModel();

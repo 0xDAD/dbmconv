@@ -266,10 +266,13 @@ public:
 		ATLASSERT(nRes > 0);
 		if (nRes != IDOK)
 			return 0;
-		if(GetModel().LoadFromXML(dlg.m_szFileName)){
+		if(SUCCEEDED(GetModel().LoadFromXML(dlg.m_szFileName))){
 			m_wndItemTree.InitView();
 			m_wndItemList.SetParentId(ITEM_ID_ROOT);
 		}
+		else
+			AtlMessageBox(NULL, L"Unknown error occured while parsing xml");
+
 		return 0;
 	}
 	LRESULT OnLoadDBM(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)

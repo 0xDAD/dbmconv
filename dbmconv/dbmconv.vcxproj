@@ -127,14 +127,17 @@
     </ClCompile>
     <ClInclude Include="ContentHandler.h" />
     <ClInclude Include="helpersXML.h" />
+    <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="many.h" />
     <ClInclude Include="SAXContentHandler.h" />
     <ClInclude Include="SpecialItems.h" />
+    <ClInclude Include="TagClassItem.h" />
     <ClInclude Include="TagInfo.h" />
     <ClInclude Include="UIMessages.h" />
     <ClInclude Include="UniListView.h" />
     <ClInclude Include="UniTreeView.h" />
+    <ClInclude Include="XMLDefs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="DataModel.h" />

@@ -7,3 +7,4 @@ CDataModel& GetModel()
 	return CDataModel::Instance();
 }
 
+

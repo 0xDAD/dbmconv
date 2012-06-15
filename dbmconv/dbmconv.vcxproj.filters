@@ -92,6 +92,15 @@
     <ClInclude Include="ContentHandler.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ItemFactory.h">
+      <Filter>Header Files\DataModel</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLDefs.h">
+      <Filter>Header Files\DataModel</Filter>
+    </ClInclude>
+    <ClInclude Include="TagClassItem.h">
+      <Filter>Header Files\DataModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dbmconv.rc">

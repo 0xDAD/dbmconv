@@ -13,11 +13,14 @@ enum ItemType{
 	ItemDevice,
 	ItemTag,
 	OldImplNode,
-	NewImplNode
+	NewImplNode,
+	ItemTagClass,
+
 };
 enum BaseProperties{
+	BasePropUndefined = -1,
 	BasePropName = 0,
-	UserPropsStart	
+	UserPropsStart = 100
 };
 
 static const int ITEM_ID_INVALID = 0;
@@ -112,7 +115,12 @@ public:
 	IItemImpl(int nID, int nParentID) :
 	  m_nID(nID), m_nParentID(nParentID)/*, m_strName(szName), m_bDisabled(false)*/ {
 	  }
-	~IItemImpl() {
+	virtual ~IItemImpl() {
+//#ifdef DEBUG
+//		CString str;
+//		str.Format(L"del #%d\n", m_nID);
+//		::OutputDebugString(str);
+//#endif
 	}
 public:
 	static int GetTypeID_static() {
