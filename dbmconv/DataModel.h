@@ -132,7 +132,9 @@ protected:
 	}
 	
 private:
-	CDataModel():m_nNextId(ITEM_ID_INVALID + 1){
+	CDataModel():m_nNextId(ITEM_ID_INVALID + 1),
+		m_bModified(false)
+	{
 
 	}	
 	static CDataModel m_instance;
@@ -190,24 +192,61 @@ public:
 		return m_mapItems.find(nId) != m_mapItems.end();
 	}
 	void RebuildItemsTree(){
-		//struct rebuilder{
-		//	void operator()(const ItemMap::value_type& rec){
-		//		int nParent = ITEM_ID_INVALID;
-		//		
-		//		ItemList& brothers = m_treeItems[nParentId];
-		//		brothers.push_back(rpItem);	
-		//	}
-		//};
-		//m_treeItems.clear();
-		//std::for_each(m_mapItems.begin(), m_mapItems.end(), rebuilder());
 		m_treeItems.clear();
+		int nMaxId = 0;
 		for (auto it = m_mapItems.begin(); it != m_mapItems.end(); ++it){
 			int nParent = it->second->GetParentID();
 			ItemList& brothers = m_treeItems[nParent];
 			brothers.push_back(it->second);	
+			nMaxId = max(nMaxId, it->second->GetID());
 		}
+		m_nNextId = nMaxId + 1;	
+	}
+	bool CollectTagClasses(){
+		ItemList ilist;
+		if(!m_instance.GetChildItems(ITEM_ID_ROOT, OldImplNode, ilist))
+			return false;
+		if(!ilist.size() || ilist.size() > 1)
+			return false;
+		if(!m_instance.GetChildItems(ilist.front()->GetID(), ItemDevice, ilist))
+			return false;
 		
-		
+		std::map<CString, std::list<int>> mapTagClassRef;
+		for (auto it = ilist.begin(); it != ilist.end(); ++it){
+			ItemList tagList;
+			if(!m_instance.GetChildItems((*it)->GetID(), ItemTag, tagList))
+				return false;
+			for(auto ti = tagList.begin(); ti != tagList.end(); ++ti){
+				list<int>& idsl = mapTagClassRef[(*ti)->GetName()];
+				idsl.push_back((*ti)->GetID());				
+			}
+		}
+
+		IItemPtr ptrNewNode;
+		if(!m_instance.CreateItem(NewImplNode, ITEM_ID_ROOT, ptrNewNode))
+			return false;
+		ptrNewNode->SetPropertyValue(BasePropName, many(wstring(L"New Implementation")));
+
+		if(!m_instance.CreateItem(TagClassNode, ptrNewNode->GetID(), ptrNewNode))
+			return false;
+		ptrNewNode->SetPropertyValue(BasePropName, many(wstring(L"Tag Classes")));
+		int nTagClassNodeId = ptrNewNode->GetID();
+
+		for (auto it = mapTagClassRef.begin(); it != mapTagClassRef.end(); ++it){
+			IItemPtr ptr;
+			if(!m_instance.CreateItem(ItemTagClass, nTagClassNodeId, ptr))
+				return false;
+			ptr->SetName(it->first);
+			ptr->SetPropertyValue(TagClassPropRefCnt, many(it->second.size()));
+			for (auto ti = it->second.begin(); ti != it->second.end(); ++ti){
+				IItemPtr ptrTag;
+				if(GetItem(*ti, ptrTag)){
+					ptrTag->SetPropertyValue(TagPropRef, many(ptr->GetID()));					
+				}
+			}
+		}
+		return true;
+
 	}
 public:
 	bool ImportMDB(CString strFilePath){
@@ -234,10 +273,11 @@ public:
 				AtlMessageBox(NULL, L"Unable to parse!!!");
 			}
 			else{
-				m_mapItems.swap(pMc->GetItems());
+				m_mapItems.swap(pMc->GetItems());			
 				RebuildItemsTree();
 			}
 			pRdr->Release();
+			m_bModified = false;
 		}
 		return hr;
 
@@ -324,13 +364,21 @@ public:
 			return hr;		
 		return S_OK;
 	}
-	
+
+	void SetModified(bool bModified){
+		m_bModified = bModified;
+	}
+	bool GetModified()
+	{
+		return m_bModified;
+	}
 	
 protected:
 	ItemMap m_mapItems;
 	ItemTree m_treeItems;
 private:
 	int m_nNextId;
+	bool m_bModified;
 };
 
 CDataModel& GetModel();

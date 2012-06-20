@@ -14,13 +14,14 @@ enum ItemType{
 	ItemTag,
 	OldImplNode,
 	NewImplNode,
+	TagClassNode,
 	ItemTagClass,
 
 };
 enum BaseProperties{
 	BasePropUndefined = -1,
 	BasePropName = 0,
-	UserPropsStart = 100
+	UserPropsStart = 1
 };
 
 static const int ITEM_ID_INVALID = 0;
@@ -33,6 +34,7 @@ class ATL_NO_VTABLE IItem
 public:
 	virtual int GetID() const = 0;
 	virtual CString GetName()  = 0;
+	virtual bool SetName(LPCTSTR szName) = 0;
 
 	virtual int GetParentID() const = 0;
 	virtual int GetType() const = 0;
@@ -132,6 +134,9 @@ public:
 		CString strRepr;
 		m_PropertiesHolder.GetPropertyValueText(BasePropName, strRepr);
 		return strRepr;
+	}
+	virtual bool SetName(LPCTSTR szName){
+		return m_PropertiesHolder.SetPropertyValue(BasePropName, many(std::wstring(szName)));
 	}
 	virtual int GetType() const {
 		return t_nType;

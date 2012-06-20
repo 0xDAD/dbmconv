@@ -61,6 +61,9 @@ public:
 		COMMAND_ID_HANDLER(ID_VIEW_TOOLBAR, OnViewToolBar)
 		COMMAND_ID_HANDLER(ID_VIEW_STATUS_BAR, OnViewStatusBar)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
+
+		COMMAND_ID_HANDLER(ID_POPUP_CNV_MAKETAGS, OnMakeTagClasses)
+
 		CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
 		CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
 		REFLECT_NOTIFY_CODE(TVN_SELCHANGED)
@@ -256,6 +259,14 @@ public:
 	LRESULT OnFileExit(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
 		PostMessage(WM_CLOSE);
+		return 0;
+	}
+	LRESULT OnMakeTagClasses(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		if(GetModel().CollectTagClasses())
+		{
+			m_wndItemTree.InitView();
+		}
 		return 0;
 	}
 	LRESULT OnFileOpen(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)

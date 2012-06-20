@@ -15,19 +15,29 @@ public:
 };
 
 
-class CNewImplNode: public IItemImpl<CNewImplNode,  NewImplNode, CEmptyProperties>
-{
-	typedef IItemImpl<CNewImplNode,  NewImplNode, CEmptyProperties> _Base;
+//class CNewImplNode: public IItemImpl<CNewImplNode,  NewImplNode, CEmptyProperties>
+//{
+//	typedef IItemImpl<CNewImplNode,  NewImplNode, CEmptyProperties> _Base;
+//public:
+//	CNewImplNode (int nId, int nParent):_Base(nId, nParent){
+//	}
+//};
+//
+//class COldImplNode: public IItemImpl<COldImplNode, OldImplNode , CEmptyProperties>
+//{
+//	typedef IItemImpl<COldImplNode, OldImplNode, CEmptyProperties> _Base;
+//public:
+//	COldImplNode (int nId, int nParent):_Base(nId, nParent){
+//	}
+//};
+template <int t_nNodeType>
+class CTreeNode: public IItemImpl<CTreeNode<t_nNodeType>, t_nNodeType , CEmptyProperties>{
+	typedef IItemImpl<CTreeNode<t_nNodeType>, t_nNodeType , CEmptyProperties> _Base;
 public:
-	CNewImplNode (int nId, int nParent):_Base(nId, nParent){
+	CTreeNode (int nId, int nParent):_Base(nId, nParent){
 	}
 };
 
-class COldImplNode: public IItemImpl<COldImplNode, OldImplNode , CEmptyProperties>
-{
-	typedef IItemImpl<COldImplNode, OldImplNode, CEmptyProperties> _Base;
-public:
-	COldImplNode (int nId, int nParent):_Base(nId, nParent){
-	}
-};
-
+typedef CTreeNode<NewImplNode> CNewImplNode;
+typedef CTreeNode<OldImplNode> COldImplNode;
+typedef CTreeNode<TagClassNode> CTagClassNode;

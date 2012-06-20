@@ -5,6 +5,7 @@
 enum ItemTagClassProperty {		
 	TagClassPropName = BasePropName,
 	TagClassPropGuid = UserPropsStart,
+	TagClassPropRefCnt,
 	TagClassPropType,
 	TagClassPropClass,
 	TagClassPropUnitsType,
@@ -41,6 +42,7 @@ public:
 		case TagClassPropAssignment: return L"Assignment";
 		case TagClassPropAddressInMeter: return L"AddressInMeter";
 		case TagClassPropAddress: return L"Address";
+		case TagClassPropRefCnt: return L"RefCnt";
 		default: throw;
 		}
 	}

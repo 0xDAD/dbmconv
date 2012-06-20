@@ -215,7 +215,7 @@ BEGIN
     END
     POPUP "Конвертация"
     BEGIN
-        MENUITEM "Создать классы тегов",        ID_32778
+        MENUITEM "Создать классы тегов",        ID_POPUP_CNV_MAKETAGS
     END
     POPUP "&View"
     BEGIN

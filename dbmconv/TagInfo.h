@@ -13,9 +13,10 @@ enum ItemTagProperty {
 	TagPropAddressInMeter,
 
 	TagPropAddress,
+	TagPropRef,
 
 	TagPropFirst = BasePropName,
-	TagPropLast = TagPropAddress
+	TagPropLast = TagPropRef
 };
 
 class CTagProperties: 
@@ -40,6 +41,7 @@ public:
 			case TagPropAssignment: return L"Assignment";
 			case TagPropAddressInMeter: return L"AddressInMeter";
 			case TagPropAddress: return L"Address";
+			case TagPropRef: return L"Ref";
 		default: throw;
 		}
 	}

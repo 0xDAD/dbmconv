@@ -68,9 +68,16 @@ public:
 			case OldImplNode:			
 				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CItemDevice, CDeviceProperties>(nParent));
 				return true;
+			case NewImplNode:			
+				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CNewImplNode, CEmptyProperties>(nParent));
+				return true;
+			case TagClassNode:
+				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CItemTagClass, CTagClassProperties>(nParent));
+				return true;
 			case ItemDevice:
 				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CItemTag, CTagProperties>(nParent));
 				return true;
+
 			default:
 				return false;
 			}
