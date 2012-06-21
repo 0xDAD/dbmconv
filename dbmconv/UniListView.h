@@ -108,8 +108,7 @@ public:
 		}
 		
 	}
-	void SetParentId(int nId)
-	{
+	void SetParentId(int nId){
 		if(nId && m_nParentId != nId && GetModel().HasChilds(nId)){
 			m_nParentId = nId;
 			if(m_dmFact.CreateDataManager(m_nParentId, m_dm)){
@@ -121,19 +120,21 @@ public:
 			}
 		}			
 	}
-	void CreateColumns(){	
-		
+	void CreateColumns(){			
 		using namespace boost::lambda;
 		if(!m_dm)
 			return;
 		InsertColumn(0, L"ID");
+		SetColumnSortType(0, LVCOLSORT_LONG);
+		//SetColumnSortType(1, LVCOLSORT_LONG);
 		vector<CString> vctCols;
 		if(m_dm->GetColumns(vctCols)){
 			int n = 1;
-			for(auto x = vctCols.begin(); x != vctCols.end(); ++x){
-				InsertColumn(n++, *x);
+			for(auto x = vctCols.begin(); x != vctCols.end(); ++x, n++){
+				InsertColumn(n, *x);			
 			}
-		}		
+		}
+
 	}
 	void AdjustColumnWidths(){
 		int nCols = GetHeader().GetItemCount();
@@ -152,10 +153,10 @@ public:
 
 				int nItem = InsertItem(GetItemCount(), (boost::lexical_cast<wstring>((*it)->GetID())).c_str());			
 				int nSi = 1;
-				for (int i = m_dm->GetMinPropId(); i <= m_dm->GetMaxPropId(); i++)		{
-					many rValue;
-					if((*it)->GetPropertyValue(i, rValue)){
-						SetItemText(nItem, nSi++, rValue.to_string().c_str());
+				for (int i = m_dm->GetMinPropId(); i <= m_dm->GetMaxPropId(); i++, nSi++)		{
+					CString strValue;
+					if((*it)->GetPropertyValueText(i, strValue)){
+						SetItemText(nItem, nSi, strValue);
 					}
 				}	
 			}

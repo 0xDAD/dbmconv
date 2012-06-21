@@ -1,6 +1,6 @@
 #pragma once
-
 #include "item.h"
+#include "TagInfo.h"
 
 enum ItemTagClassProperty {		
 	TagClassPropName = BasePropName,
@@ -8,11 +8,10 @@ enum ItemTagClassProperty {
 	TagClassPropRefCnt,
 	TagClassPropType,
 	TagClassPropClass,
-	TagClassPropUnitsType,
-	TagClassPropUnitsName,
-	TagClassPropCharacter,
-	TagClassPropAssignment,
-	TagClassPropAddressInMeter,
+	TagClassPropUnitsTypeId,	
+	TagClassPropHar,
+	TagClassDirection,
+	TagClassTariff,
 
 	TagClassPropAddress,
 
@@ -36,11 +35,10 @@ public:
 		case TagClassPropName: return L"Name";
 		case TagClassPropType: return L"Type";
 		case TagClassPropClass: return L"Class";
-		case TagClassPropUnitsType: return L"UnitsType";
-		case TagClassPropUnitsName: return L"UnitsName";
-		case TagClassPropCharacter: return L"Character";
-		case TagClassPropAssignment: return L"Assignment";
-		case TagClassPropAddressInMeter: return L"AddressInMeter";
+		case TagClassPropUnitsTypeId: return L"Units";
+		case TagClassPropHar: return L"Haracter";
+		case TagClassTariff: return L"Tariff";
+		case TagClassDirection: return L"Dir";
 		case TagClassPropAddress: return L"Address";
 		case TagClassPropRefCnt: return L"RefCnt";
 		default: throw;

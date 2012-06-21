@@ -99,7 +99,8 @@ protected:
 									cmdAddress.Close();
 									CString strAddress;
 									BuildAddress(vctAddress, strAddress);
-									ATLVERIFY(ptrParam->SetPropertyValue(TagPropAddressInMeter, many(strAddress, new atlstr_conv())));
+								//	ATLVERIFY(ptrParam->SetPropertyValue(TagPropAddressInMeter, many(strAddress, new atlstr_conv())));
+										ATLVERIFY(ptrParam->SetPropertyValue(TagPropAddressInMeter, many(wstring(strAddress.GetBuffer()))));
 								}
 							}
 
@@ -211,43 +212,101 @@ public:
 		if(!m_instance.GetChildItems(ilist.front()->GetID(), ItemDevice, ilist))
 			return false;
 		
-		std::map<CString, std::list<int>> mapTagClassRef;
+		map<CString,vector<int>> mapTagClassRef;
 		for (auto it = ilist.begin(); it != ilist.end(); ++it){
 			ItemList tagList;
 			if(!m_instance.GetChildItems((*it)->GetID(), ItemTag, tagList))
 				return false;
 			for(auto ti = tagList.begin(); ti != tagList.end(); ++ti){
-				list<int>& idsl = mapTagClassRef[(*ti)->GetName()];
-				idsl.push_back((*ti)->GetID());				
+				vector<int>& vctIds = mapTagClassRef[(*ti)->GetName()];
+				vctIds.push_back((*ti)->GetID());				
 			}
 		}
 
 		IItemPtr ptrNewNode;
-		if(!m_instance.CreateItem(NewImplNode, ITEM_ID_ROOT, ptrNewNode))
-			return false;
-		ptrNewNode->SetPropertyValue(BasePropName, many(wstring(L"New Implementation")));
-
-		if(!m_instance.CreateItem(TagClassNode, ptrNewNode->GetID(), ptrNewNode))
-			return false;
-		ptrNewNode->SetPropertyValue(BasePropName, many(wstring(L"Tag Classes")));
+		ATLVERIFY(m_instance.CreateItem(NewImplNode, ITEM_ID_ROOT, ptrNewNode));			
+		ptrNewNode->SetName(L"New Implementation");
+		ATLVERIFY(m_instance.CreateItem(TagClassNode, ptrNewNode->GetID(), ptrNewNode));			
+		ptrNewNode->SetName(L"Tag Classes");
 		int nTagClassNodeId = ptrNewNode->GetID();
 
 		for (auto it = mapTagClassRef.begin(); it != mapTagClassRef.end(); ++it){
+
 			IItemPtr ptr;
+			
 			if(!m_instance.CreateItem(ItemTagClass, nTagClassNodeId, ptr))
 				return false;
+
 			ptr->SetName(it->first);
-			ptr->SetPropertyValue(TagClassPropRefCnt, many(it->second.size()));
+			_SetItemValue(ptr, TagClassPropRefCnt, it->second.size());			
+			
+			bool bDifferent = false;
+			CString strValue;
+			if(GetMultiItemPropertyValueStr(it->second, TagPropType, strValue, bDifferent) && !bDifferent){
+				if (!_SetItemValue(ptr, TagClassPropType, wstring(strValue.GetBuffer()))) 
+					return false;
+			}
+
 			for (auto ti = it->second.begin(); ti != it->second.end(); ++ti){
 				IItemPtr ptrTag;
 				if(GetItem(*ti, ptrTag)){
-					ptrTag->SetPropertyValue(TagPropRef, many(ptr->GetID()));					
+					_SetItemValue(ptrTag, TagPropRef, ptr->GetID());									
 				}
 			}
 		}
 		return true;
 
 	}
+
+protected:
+
+	template <class Type>
+	bool _SetItemValue(IItemPtr& ptr, int nPropId, const Type& tval){
+		if(ptr->SetPropertyValue(nPropId, many(tval))){
+			_SetModified(true);
+			return true;
+		}
+		return false;
+	}
+
+	template <class Type>
+	bool _SetItemValue(int nID, int nPropId, const Type& tval){		
+		IItemPtr ptr;
+		if(!GetItem(nID, ptr))
+			return false;
+		return _SetItemValue(ptr, nPropId, tval);
+	}
+
+	bool GetMultiItemPropertyValueStr(vector<int>& vctIds, int nPropId, CString& rstrValue, bool& rbDifferent){
+		rbDifferent = false;
+		rstrValue.Empty();
+		CString strLocValue;
+		size_t nSucceded = 0;
+		for(auto it = vctIds.begin(); it != vctIds.end(); ++it){
+			IItemPtr ptrItem;
+			if(GetItem(*it, ptrItem)){
+				CString strVal;
+				if(ptrItem->GetPropertyValueText(nPropId, strVal)){
+					if(nSucceded == 0){
+						strLocValue = strVal;
+						nSucceded++;
+					}
+					else{
+						if(strVal != strLocValue){
+							rbDifferent = true;
+							return true;
+						}
+						nSucceded++;
+					}
+				}
+			}
+		}
+		if(!nSucceded)
+			return false;
+		rstrValue = strLocValue;
+		return true;
+	}
+
 public:
 	bool ImportMDB(CString strFilePath){
 		return SUCCEEDED(ImportDictionary(strFilePath));
@@ -365,14 +424,15 @@ public:
 		return S_OK;
 	}
 
-	void SetModified(bool bModified){
+private:
+	void _SetModified(bool bModified){
 		m_bModified = bModified;
 	}
-	bool GetModified()
+	bool _GetModified()
 	{
 		return m_bModified;
 	}
-	
+
 protected:
 	ItemMap m_mapItems;
 	ItemTree m_treeItems;

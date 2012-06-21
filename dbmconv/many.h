@@ -19,22 +19,25 @@ struct pod_conv : public conv
 	}
 };
 
-struct atlstr_conv : public conv
-{
-	std::wstring operator() (const boost::any* lpany) const{
-		return std::wstring(boost::any_cast<CString>(*lpany).GetBuffer());
-	}
-};
+//struct atlstr_conv : public conv
+//{
+//	std::wstring operator() (const boost::any* lpany) const{
+//		return std::wstring(boost::any_cast<CString>(*lpany).GetBuffer());
+//	}
+//};
 class many: public boost::any
 {
 	typedef boost::any _base;
 	public:
 		many(){}
+
 		many( const many& rhs):boost::any((const boost::any&)rhs), pFnPtr(rhs.pFnPtr){}
+
 		template<typename T> 
 		many(const T& t, conv* ptr = new pod_conv<T>()) : boost::any(t){
 			pFnPtr = boost::shared_ptr<conv>(ptr);
 		}
+
 		virtual ~many() { }
 public:
 		std::wstring to_string() const { 	
