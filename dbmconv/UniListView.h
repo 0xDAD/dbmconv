@@ -120,20 +120,25 @@ public:
 			}
 		}			
 	}
+	int GetParentId(){
+		return m_nParentId;
+	}
 	void CreateColumns(){			
 		using namespace boost::lambda;
 		if(!m_dm)
 			return;
 		InsertColumn(0, L"ID");
-		SetColumnSortType(0, LVCOLSORT_LONG);
-		//SetColumnSortType(1, LVCOLSORT_LONG);
+			
 		vector<CString> vctCols;
 		if(m_dm->GetColumns(vctCols)){
 			int n = 1;
 			for(auto x = vctCols.begin(); x != vctCols.end(); ++x, n++){
 				InsertColumn(n, *x);			
+				SetColumnSortType(n, LVCOLSORT_LONG);
 			}
 		}
+		SetColumnSortType(0, LVCOLSORT_LONG);	
+		SetColumnSortType(1, LVCOLSORT_TEXTNOCASE);
 
 	}
 	void AdjustColumnWidths(){

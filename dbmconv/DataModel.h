@@ -306,7 +306,29 @@ protected:
 		rstrValue = strLocValue;
 		return true;
 	}
-
+	bool GetMultiItemType(vector<int>& vctIds, int& rnType){
+		int nType = ItemTypeNone, nIType= ItemTypeNone;
+		size_t nSucceded = 0;
+		for(auto it = vctIds.begin(); it != vctIds.end(); ++it){
+			IItemPtr ptrItem;
+			if(GetItem(*it, ptrItem)){								
+				nIType = ptrItem->GetType();
+				if(nSucceded == 0){
+					nType = nIType;					
+				}
+				else
+					if(nType != nIType){
+						rnType = ItemTypeNone;
+						return true;
+					}					
+				nSucceded++;
+			}
+		}
+		if(!nSucceded)
+			return false;
+		rnType = nType;
+		return true;
+	}
 public:
 	bool ImportMDB(CString strFilePath){
 		return SUCCEEDED(ImportDictionary(strFilePath));

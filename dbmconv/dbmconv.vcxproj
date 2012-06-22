@@ -130,6 +130,9 @@
     <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="many.h" />
+    <ClInclude Include="MultiPaneStatusBarEx.h" />
+    <ClInclude Include="PropertyPageTagClass.h" />
+    <ClInclude Include="ResourceHolder.h" />
     <ClInclude Include="SAXContentHandler.h" />
     <ClInclude Include="SpecialItems.h" />
     <ClInclude Include="TagClassItem.h" />
@@ -137,6 +140,8 @@
     <ClInclude Include="UIMessages.h" />
     <ClInclude Include="UniListView.h" />
     <ClInclude Include="UniTreeView.h" />
+    <ClInclude Include="WtlExResizePropertySheet.h" />
+    <ClInclude Include="WtlExWindowSettings.h" />
     <ClInclude Include="XMLDefs.h" />
   </ItemGroup>
   <ItemGroup>

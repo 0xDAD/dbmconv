@@ -16,6 +16,9 @@
 #include <atltypes.h>
 
 #include <atlapp.h>
+#include <atlddx.h>
+
+#define _WTL_NEW_PAGE_NOTIFY_HANDLERS
 
 extern CAppModule _Module;
 

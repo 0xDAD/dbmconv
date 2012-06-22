@@ -13,11 +13,17 @@
       <UniqueIdentifier>{abbb4eeb-f7ef-432d-830c-63bffc17d078}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;jpg;jpeg;jpe;manifest</Extensions>
     </Filter>
-    <Filter Include="Header Files\DataModel">
+    <Filter Include="DataModel">
       <UniqueIdentifier>{bb50e0bf-5564-4564-bbc0-60a10e7b1ed1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files\Helpers">
+    <Filter Include="Helpers">
       <UniqueIdentifier>{9d0af084-119a-4a79-9f94-520972b0d2fa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI">
+      <UniqueIdentifier>{18b7df42-6d49-4fd6-8ca2-20b850f7f566}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UI\PropertyPages">
+      <UniqueIdentifier>{4b3581a0-cfdf-4419-9a6c-044ba60cc25d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -31,14 +37,11 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="DataModel.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>DataModel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="MainDlg.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="resource.h">
@@ -47,59 +50,77 @@
     <ClInclude Include="Options.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NamespaceDatabaseDictionary.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UniListView.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="DataModel.h">
-      <Filter>Header Files\DataModel</Filter>
+      <Filter>DataModel</Filter>
     </ClInclude>
     <ClInclude Include="DeviceInfo.h">
-      <Filter>Header Files\DataModel</Filter>
+      <Filter>DataModel</Filter>
     </ClInclude>
     <ClInclude Include="item.h">
-      <Filter>Header Files\DataModel</Filter>
+      <Filter>DataModel</Filter>
     </ClInclude>
     <ClInclude Include="TagInfo.h">
-      <Filter>Header Files\DataModel</Filter>
+      <Filter>DataModel</Filter>
     </ClInclude>
     <ClInclude Include="many.h">
-      <Filter>Header Files\DataModel</Filter>
-    </ClInclude>
-    <ClInclude Include="MainFrm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UniTreeView.h">
-      <Filter>Header Files</Filter>
+      <Filter>DataModel</Filter>
     </ClInclude>
     <ClInclude Include="SpecialItems.h">
-      <Filter>Header Files\DataModel</Filter>
-    </ClInclude>
-    <ClInclude Include="UIMessages.h">
-      <Filter>Header Files</Filter>
+      <Filter>DataModel</Filter>
     </ClInclude>
     <ClInclude Include="HelpersMDB.h">
-      <Filter>Header Files\Helpers</Filter>
+      <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="helpersXML.h">
-      <Filter>Header Files\Helpers</Filter>
+      <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="SAXContentHandler.h">
-      <Filter>Header Files\Helpers</Filter>
-    </ClInclude>
-    <ClInclude Include="ContentHandler.h">
-      <Filter>Header Files</Filter>
+      <Filter>Helpers</Filter>
     </ClInclude>
     <ClInclude Include="ItemFactory.h">
-      <Filter>Header Files\DataModel</Filter>
+      <Filter>DataModel</Filter>
     </ClInclude>
     <ClInclude Include="XMLDefs.h">
-      <Filter>Header Files\DataModel</Filter>
+      <Filter>DataModel</Filter>
     </ClInclude>
     <ClInclude Include="TagClassItem.h">
-      <Filter>Header Files\DataModel</Filter>
+      <Filter>DataModel</Filter>
+    </ClInclude>
+    <ClInclude Include="UniTreeView.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UniListView.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MainFrm.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="UIMessages.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MainDlg.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="ContentHandler.h">
+      <Filter>DataModel</Filter>
+    </ClInclude>
+    <ClInclude Include="NamespaceDatabaseDictionary.h">
+      <Filter>DataModel</Filter>
+    </ClInclude>
+    <ClInclude Include="WtlExWindowSettings.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="WtlExResizePropertySheet.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="MultiPaneStatusBarEx.h">
+      <Filter>UI</Filter>
+    </ClInclude>
+    <ClInclude Include="PropertyPageTagClass.h">
+      <Filter>UI\PropertyPages</Filter>
+    </ClInclude>
+    <ClInclude Include="ResourceHolder.h">
+      <Filter>DataModel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

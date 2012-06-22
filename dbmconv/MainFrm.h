@@ -6,7 +6,7 @@
 #include "MultiPaneStatusBarEx.h"
 #include "UniListView.h"
 #include "UniTreeView.h"
-
+#include "PropertyPageTagClass.h"
 
 
 class CMainFrame : 
@@ -39,12 +39,16 @@ public:
 	virtual BOOL OnIdle()
 	{
 		UIUpdateToolBar();
+		UIUpdateStatusBar();
 		return FALSE;
 	}
 
 	BEGIN_UPDATE_UI_MAP(CMainFrame)
 		UPDATE_ELEMENT(ID_VIEW_TOOLBAR, UPDUI_MENUPOPUP)
 		UPDATE_ELEMENT(ID_VIEW_STATUS_BAR, UPDUI_MENUPOPUP)
+
+		UPDATE_ELEMENT(0, UPDUI_STATUSBAR)
+		UPDATE_ELEMENT(1, UPDUI_STATUSBAR)
 	END_UPDATE_UI_MAP()
 
 	BEGIN_MSG_MAP(CMainFrame)
@@ -66,8 +70,10 @@ public:
 
 		CHAIN_MSG_MAP(CUpdateUI<CMainFrame>)
 		CHAIN_MSG_MAP(CFrameWindowImpl<CMainFrame>)
-		REFLECT_NOTIFY_CODE(TVN_SELCHANGED)
-		//REFLECT_NOTIFICATIONS()
+
+		NOTIFY_CODE_HANDLER(LVN_ITEMCHANGED, OnItemChanged)
+		//REFLECT_NOTIFY_CODE(TVN_SELCHANGED)
+		REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
 // Handler prototypes (uncomment arguments if needed):
@@ -75,13 +81,21 @@ public:
 //	LRESULT CommandHandler(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 //	LRESULT NotifyHandler(int /*idCtrl*/, LPNMHDR /*pnmh*/, BOOL& /*bHandled*/)
 
-
+protected:
+	void _UpdateStatusBar(){
+		UISetText(0, L"1");
+		CString strSel;
+		strSel.Format(ID_STATUSBARPANE_LVINFO, m_wndItemList.GetSelectedCount());
+		UISetText(1, strSel);
+	}
+protected:
 
 	LRESULT OnInternalNotify(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/){
 		int nItemId = (int)lParam;
 		switch(wParam){
 		case UpdateSelection:
 			m_wndItemList.SetParentId(nItemId);
+			_UpdateStatusBar();
 			break;		
 		}
 		return 0;
@@ -123,12 +137,12 @@ public:
 		m_wndStatusBar.SubclassWindow(m_hWndStatusBar);
 		int nArrayStatusBarParts[] =
 		{
-			ID_DEFAULT_PANE
-			/*ID_STATUSBAR_PANE_STATUS,
-			ID_STATUSBAR_PANE_OPC_OBJECTS,
+			ID_DEFAULT_PANE,
+			ID_STATUSBARPANE_LVINFO,
+			ID_STATUSBARPANE_PROG
+			/*
 			ID_STATUSBAR_PANE_TRANSACTIONS,
-			ID_STATUSBAR_PANE_CHANNELS,
-			ID_STATUSBAR_PANE_CURRENT_TIME*/
+			ID_STATUSBAR_PANE_CHANNELS,*/
 		};
 		m_wndStatusBar.SetPanes(nArrayStatusBarParts, _countof(nArrayStatusBarParts), false);
 		/*CString strToolTip;
@@ -276,14 +290,14 @@ public:
 		INT_PTR nRes = dlg.DoModal();
 		ATLASSERT(nRes > 0);
 		if (nRes != IDOK)
-			return 0;
-		if(SUCCEEDED(GetModel().LoadFromXML(dlg.m_szFileName))){
+			return 0;	
+		if(SUCCEEDED(GetModel().LoadFromXML(dlg.m_szFileName))){			
 			m_wndItemTree.InitView();
 			m_wndItemList.SetParentId(ITEM_ID_ROOT);
 		}
 		else
 			AtlMessageBox(NULL, L"Unknown error occured while parsing xml");
-
+	
 		return 0;
 	}
 	LRESULT OnLoadDBM(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
@@ -343,6 +357,14 @@ public:
 	{
 		return 0;
 	}
+	LRESULT OnItemChanged(int /*idCtrl*/, LPNMHDR pnmh, BOOL& bHandled)
+	{
+		//if(hWndCtl == m_wndItemList.m_hWnd){
+			_UpdateStatusBar();
+		//}
+		bHandled = FALSE;
+		return 0;
+	}
 
 	bool _FileSave(LPCTSTR pszPath = NULL)
 	{
@@ -376,4 +398,5 @@ public:
 		//_UpdateWindowTitle();
 		return true;
 	}
+	
 };
