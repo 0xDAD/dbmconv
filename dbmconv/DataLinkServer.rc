@@ -1,0 +1,512 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "dlsres.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "atlres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Russian (Russia) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE
+BEGIN
+    IDS_FRMT_TRANSACTIONS   "Транзакции: %d"
+    IDS_FRMT_STATUS         "Статус: %s"
+    ID_STATUSBAR_PANE_STATUS "XXX XXXXXXXXXX"
+    IDS_REMOTE_SET_TARIF    "Удалённо была послана команда установки тарифов"
+    IDS_REMOTE_DISABLE      "Удалённо была послана команда отключения(включения) счётчика"
+    IDS_REMOTE_SET_PARAM    "Удалённо была послана команда установки параметра"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_MODULE_VERSION      "Версия"
+    IDS_STRING_FUN1         "Прямой доступ к ПУ"
+    ID_STATUSBAR_PANE_CHANNELS "Каналы: 00/00"
+    IDS_FRMT_CHANNELS       "Каналы: %d/%d"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_FILTERALL           "Все файлы (*.*)"
+    ID_STATUSBAR_PANE_CURRENT_TIME "+0000-00-00 00.00.00+"
+    ID_STATUSBAR_PANE_OPC_OBJECTS "Объекты OPC: 00/00"
+    ID_STATUSBAR_PANE_TRANSACTIONS "Транзакции: 000"
+    IDS_FRMT_OPC_OBJECTS    "Объекты OPC: %d/%d"
+END
+
+STRINGTABLE
+BEGIN
+    IDP_EXIT_CONFIRM        "Вы действительно хотите закрыть сервер?"
+    IDP_EXIT_ANYWAY_CONFIRM "В данный момент подключены клиенты.\nВы действительно хотите закрыть сервер?"
+    IDS_REMOTE_GET_ARCH301  "Удалённо была послана команда выборки архивов событий"
+    IDS_REMOTE_GET_PARAM    "Удалённо была послана команда выборки параметра"
+    IDS_REMOTE_GET_CALENDAR "Удалённо была послана команда выборки календаря"
+    IDS_REMOTE_GET_TARIF    "Удалённо была послана команда выборки тарифов"
+    IDS_REMOTE_SET_CALENDAR "Удалённо была послана команда установки календаря"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_NEW             "Создать новую конфигурацию\nСоздать"
+    ID_FILE_OPEN            "Открыть существующую конфигурацию\nОткрыть"
+    ID_FILE_CLOSE           "Save the active document\nSave"
+    ID_FILE_SAVE            "Сохранить конфигурацию\nСохранить"
+    ID_FILE_SAVE_AS         "Сохранить конфигурацию под новым именем\nСохранить как"
+    ID_FILE_PAGE_SETUP      "Change the printing options\nPage Setup"
+    ID_FILE_PRINT_SETUP     "Change the printer and printing options\nPrint Setup"
+    ID_FILE_PRINT           "Print the active document\nPrint"
+    ID_FILE_PRINT_PREVIEW   "Display full pages\nPrint Preview"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_ABOUT            "Отображение информации о программе, версия и лицензия\nО программе"
+    ID_APP_EXIT             "Закрыть программу\nВыход"
+END
+
+STRINGTABLE
+BEGIN
+    ID_NEXT_PANE            "Переключиться на следующую панель\nСледующая панель"
+    ID_PREV_PANE            "Переключиться на предыдущую панель\nПредыдущая панель"
+END
+
+STRINGTABLE
+BEGIN
+    ID_WINDOW_NEW           "Open another window for the active document\nNew Window"
+    ID_WINDOW_ARRANGE       "Arrange icons at the bottom of the window\nArrange Icons"
+    ID_WINDOW_CASCADE       "Arrange windows so they overlap\nCascade Windows"
+    ID_WINDOW_TILE_HORZ     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_TILE_VERT     "Arrange windows as non-overlapping tiles\nTile Windows"
+    ID_WINDOW_SPLIT         "Split the active window into panes\nSplit"
+END
+
+STRINGTABLE
+BEGIN
+    ID_EDIT_CLEAR           "Удалить выбранные элементы\nУдалить"
+    ID_EDIT_CLEAR_ALL       "Удалить все\nУдалить все"
+    ID_EDIT_COPY            "Копировать выбранные элементы\nКопировать"
+    ID_EDIT_CUT             "Вырезать выбранные элементы\nВырезать"
+    ID_EDIT_FIND            "Find the specified text\nFind"
+    ID_EDIT_PASTE           "Вставить элементы\nВставить"
+    ID_EDIT_REPEAT          "Repeat the last action\nRepeat"
+    ID_EDIT_REPLACE         "Replace specific text with different text\nReplace"
+    ID_EDIT_SELECT_ALL      "Выделить все элементы\nВыделить все"
+    ID_EDIT_UNDO            "Undo the last action\nUndo"
+    ID_EDIT_REDO            "Redo the previously undone action\nRedo"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_TOOLBAR         "Показать или спрятать панель инструментов \nПанель инструментов"
+    ID_VIEW_STATUS_BAR      "Показать или спрятать панель состояния\nПанель состояния"
+END
+
+STRINGTABLE
+BEGIN
+    ATL_IDS_SCSIZE          "Change the window size"
+    ATL_IDS_SCMOVE          "Change the window position"
+    ATL_IDS_SCMINIMIZE      "Reduce the window to an icon"
+    ATL_IDS_SCMAXIMIZE      "Enlarge the window to full size"
+    ATL_IDS_SCNEXTWINDOW    "Switch to the next document window"
+    ATL_IDS_SCPREVWINDOW    "Switch to the previous document window"
+    ATL_IDS_SCCLOSE         "Close the active window and prompts to save the documents"
+END
+
+STRINGTABLE
+BEGIN
+    ATL_IDS_SCRESTORE       "Restore the window to normal size"
+    ATL_IDS_SCTASKLIST      "Activate Task List"
+    ATL_IDS_MDICHILD        "Activate this window"
+END
+
+STRINGTABLE
+BEGIN
+    ATL_IDS_IDLEMESSAGE     "Готово"
+END
+
+STRINGTABLE
+BEGIN
+    ID_TOOL_OPTIONS         "Отобразить параметры программы\nПараметры"
+    ID_VIEW_NAMESPACE_TREE  "Показать или спрятать панель конфигурации\nКонфигурация"
+    ID_FILE_EXPORT_HDA      "Экспорт конфигурации для сервера архивации\nЭкспорт конфигурации"
+END
+
+STRINGTABLE
+BEGIN
+    ID_FILE_IMPORT_METERS   "Импорт приборов из конфигурации УСПД\nИмпорт приборов"
+    ID_FILE_IMPORT_DICTIONARY 
+                            "Импорт данных из справочника\nИмпорт данных из справочника"
+    ID_VIEW_PROPERTIES      "Показать свойства выбранных элементов\nСвойства"
+    ID_ACTION_RUN           "Запустить сервер\nЗапустить сервер"
+END
+
+STRINGTABLE
+BEGIN
+    ID_ACTION_STOP          "Остановить сервер\nОстановить сервер"
+    ID_VIEW_OUTPUT          "Показать или спрятать окно диагностики\nДиагностика"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_FILTERMDB           "Базы данных Microsoft Access (*.mdb)"
+END
+
+STRINGTABLE
+BEGIN
+    ID_APP_SHOWHIDE         "Показать или скрыть главное окно\nПоказать или скрыть"
+    ID_VIEW_TAGS_OPTIONAL   "Показать или спрятать дополнительные теги\nДополнительные теги"
+END
+
+STRINGTABLE
+BEGIN
+    ID_VIEW_ITEM_VALUES     "Показывать значения или свойства тегов\nЗначения тегов"
+    ID_FILE_EXPORT_TAGS     "Экспорт архивируемых тегов в XML\nЭкспорт архивируемых тегов"
+    ID_ACTION_POLL          "Опросить все выбранные элементы\nОпросить все"
+    ID_ACTION_CUSTOM_POLL   "Опросить..."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_TAG_TYPE_INVALID    "не задано"
+    IDS_TAG_TYPE_CURRENT    "текущий"
+    IDS_TAG_TYPE_ARCHIVAL   "архивный"
+    IDS_TAG_TYPE_EVENT      "событие"
+    IDS_TAG_CLASS_INVALID   "не задано"
+    IDS_TAG_CLASS_BASE      "основной"
+    IDS_TAG_CLASS_OPTIONAL  "дополнительный"
+    IDS_TAG_CLASS_BASE2     "основной 2"
+    IDS_TAG_UNITS_TYPE_INVALID "не задано"
+    IDS_TAG_UNITS_TYPE_ANALOG "аналоговый"
+    IDS_TAG_UNITS_TYPE_DISCRETE "дискретный"
+    IDS_TAG_ASSiGNMENT_INVALID "не задано"
+    IDS_TAG_CHAR_INVALID    "не задано"
+    IDS_TAG_CHAR_30MIN      "получасовой"
+    IDS_TAG_CHAR_HOUR       "часовой"
+    IDS_TAG_CHAR_DAY        "суточный"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_TAG_CHAR_MONTH      "месячный"
+    IDS_TAG_CHAR_BEG_OF_MONTH "на начало месяца"
+    IDS_TAG_CHAR_SUM        "суммарный"
+    IDS_TAG_CHAR_BEG_OF_DAY "на начало суток"
+    IDS_TAG_PROP_GUID       "Уник. идентификатор"
+    IDS_TAG_PROP_ADDRESS    "Адрес"
+    IDS_TAG_PROP_CODE       "Код"
+    IDS_TAG_PROP_TYPE       "Тип"
+    IDS_TAG_PROP_CLASS      "Класс"
+    IDS_TAG_PROP_UNITS_TYPE "Вид"
+    IDS_TAG_PROP_UNITS_NAME "Размерность"
+    IDS_TAG_PROP_CHAR       "Характер"
+    IDS_TAG_PROP_ASSIGNMENT "Назначение"
+    IDS_TAG_PROP_ADDRESS_IN_METER "Адрес в приборе"
+    IDS_TAG_PROP_POLL_ENABLE "Опрос"
+    IDS_TAG_PROP_POLL_GROUP "Группа опроса"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_TAG_PROP_ARCH_ENABLE "Архивирование"
+    IDS_TAG_PROP_ARCH_TAG   "Архивный тег"
+    IDS_CHAN_PROP_TYPE      "Тип"
+    IDS_CHAN_PROP_PORT_NAME "Порт"
+    IDS_CHAN_PROP_PORT_BAUD_RATE "Скорость обмена"
+    IDS_CHAN_PROP_PORT_BYTE_SIZE "Длина слова"
+    IDS_CHAN_PROP_PORT_PARITY "Четность"
+    IDS_CHAN_PROP_PORT_STOP_BITS "Стоп-биты"
+    IDS_CHAN_PROP_PORT_FLOW_CONTROL "Управление потоками"
+    IDS_CHAN_PROP_PORT_READ_INT_TIMEOUT 
+                            "Макс. таймаут чтения между двумя байтами"
+    IDS_CHAN_PROP_PORT_READ_TIMEOUT_MULT "Таймаут чтения (множитель)"
+    IDS_CHAN_PROP_PORT_READ_TIMEOUT_CONST "Таймаут чтения (константа)"
+    IDS_CHAN_PROP_PORT_WRITE_TIMEOUT_MULT "Таймаут записи (множитель)"
+    IDS_CHAN_PROP_PORT_WRITE_TIMEOUT_CONST "Таймаут записи (константа)"
+    IDS_CHAN_PROP_SEND      "Общий таймаут отправки данных"
+    IDS_CHAN_PROP_RECV      "Общий таймаут получения данных"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_CHAN_PROP_AUTOCLOSE_EN "Автоматическое закрытие канала связи"
+    IDS_CHAN_PROP_AUTOCLOSE_TIMEOUT "Таймаут простоя"
+    IDS_CHAN_PROP_RASCONN_NAME "Контролируемое RAS-соединение"
+    IDS_CHAN_TYPE_INVALID   "Не задан"
+    IDS_CHAN_TYPE_SERIAL    "Канал связи по последовательному порту"
+    IDS_CHAN_TYPE_DIALUP    "Коммутируемый телефонный (проводной) канал"
+    IDS_CHAN_TYPE_GSM       "Коммутируемый GSM канал"
+    IDS_CHAN_TYPE_ETH_UDP   "Ethernet, протокол UDP"
+    IDS_CHAN_TYPE_ETH_TCP   "Ethernet, протокол TCP"
+    IDS_CHAN_TYPE_RAS       "GPRS (RAS), протокол TCP"
+    IDS_CHAN_PORT_PARITY_NONE "Нет"
+    IDS_CHAN_PORT_PARITY_ODD "Нечетный"
+    IDS_CHAN_PORT_PARITY_EVEN "Четный"
+    IDS_CHAN_PORT_PARITY_MARK "Метка"
+    IDS_CHAN_PORT_PARITY_SPACE "Пробел"
+    IDS_CHAN_FLOWCTTRL_NONE "None"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_CHAN_FLOWCTRL_HARDWARE "Hardware"
+    IDS_CHAN_FLOWCTRL_MODEM "Xon/Xoff (Modem)"
+    IDS_DEV_PROP_GUID       "Уник. идентификатор"
+    IDS_DEV_PROP_ADDR       "Адрес"
+    IDS_DEV_PROP_POLLGR     "Группы опроса"
+    IDS_DEV_PROP_CHANSET    "Каналы"
+    IDS_COLL_PROP_GUID      "Уник. идентификатор"
+    IDS_COLL_PROP_ADDR      "Адрес"
+    IDS_COLL_PROP_CONF_MODE "Режим конфигурирования"
+    IDS_COLL_PROP_PASS_1    "Пароль 1"
+    IDS_COLL_PROP_PASS_2    "Пароль 2"
+    IDS_COLL_PROP_TYPE      "Тип"
+    IDS_COLL_PROP_FACT_NUMBER "Заводской номер"
+    IDS_COLL_PROP_VERS      "Версия"
+    IDS_COLL_PROP_ISSDATE   "Дата изготовления"
+    IDS_COLL_PROP_CHANSET   "Параметры каналов"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_COLL_PROP_POLLGR    "Группы опроса"
+    IDS_METER_PROP_GUID     "Уник. идентификатор"
+    IDS_METER_PROP_ID       "Идентификатор"
+    IDS_METER_PROP_RES      "Тип ресурса"
+    IDS_METER_PROP_TYPE_NUM "Номер типа прибора"
+    IDS_METER_PROP_TYPE     "Тип прибора"
+    IDS_METER_PROP_SERIAL   "Серийный номер"
+    IDS_METER_PROP_ADDR     "Адрес"
+    IDS_METER_PROP_INDEX    "Индекс"
+    IDS_METER_PROP_PORT     "Порт"
+    IDS_METER_PROP_DATE_POLL_START "Дата начала опроса"
+    IDS_METER_PROP_DATE_POLL_END "Дата снятия опроса"
+    IDS_METER_PROP_PROT_TYPE "Тип протокола"
+    IDS_METER_PROP_PASS_1   "Пароль 1"
+    IDS_METER_PROP_PASS_2   "Пароль 2"
+    IDS_METER_PROP_POLLGR   "Группы опроса"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_METER_RESTYPE_UNKNOWN "<не определено>"
+    IDS_METER_RESTYPE_ELECTR "Электричество"
+    IDS_METER_RESTYPE_HEAT  "Тепло"
+    IDS_METER_RESTYPE_WATER "Вода"
+    IDS_METER_RESTYPE_GAS   "Газ"
+    IDS_DEFAULT_USPD_NAME   "УСПД #%d"
+    IDS_EVTLOG_ITEM_NAME    "Журнал событий #%d"
+    IDS_DEFAULT_METER_NAME  "Прибор #%d"
+    IDS_DEFAULT_TAG_NAME    "Параметр #%d"
+    IDS_CHAN_ITEM_NAME_PREF "Канал"
+    IDS_CHANGR_ITEM_NAME    "Каналы"
+    IDS_COLLGR_ITEM_NAME    "Приборы"
+    IDS_DEVGR_ITEM_NAME     "Устройства"
+    IDS_DEV_ITEM_NAME_PREF  "Устройство"
+    IDS_TAG_ITEM_NAME_PREF  "Тег"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_ITEM_BASENAME       "OPC.HDA.Server.1\\Конфигурация.База данных.Архив"
+    IDS_FUNC_NAME_01_DIRACCESS "УСПД:Прямой доступ"
+    IDS_FUNC_NAME_02_UPDATETIME "УСПД:Корректировка времени"
+    IDS_FUNC_NAME_03_ARCHVALUE "УСПД:Архивное показание (архив 0)"
+    IDS_FUNC_NAME_04_ARCHVALUES "УСПД:Архивные показания (архив 0)"
+    IDS_FUNC_NAME_05_CURVALUES "УСПД:Текущие показания (блок 0)"
+    IDS_FUNC_NAME_06_EVENTS "УСПД:Журнал событий"
+    IDS_FUNC_NAME_07_ARCHVALUES_MASK "УСПД:Маска архивных показаний"
+    IDS_FUNC_NAME_14_ARCHVALUES "УСПД:Архивные показания"
+    IDS_FUNC_NAME_15_CURVALUES "УСПД:Текущие показания"
+    IDS_FUNC_NAME_16_EVENTS "УСПД:Журнал событий"
+    IDS_FUNC_NAME_P2_04_VALUES "САВ:Основные данные"
+    IDS_ERROR_NOERR         "Нет ошибки"
+    IDS_ERROR_NODATA        "Получен ответ ""нет данных"""
+    IDS_ERROR_NULLDATA      "Получен нулевой ответ"
+    IDS_ERROR_UNKNOWN       "Неизвестная ошибка"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_FILTER_4SAVE        "Файлы конфигурации (*.xml)|*.xml|Все файлы (*.*)|*.*|"
+    IDS_FILTER_4LOAD        "Файлы конфигурации (*.xml;*.mdb)|*.xml;*.mdb|Все файлы (*.*)|*.*|"
+    IDS_FUNC_NAME_17_ARCHVALUES "УСПД:Архивные показания (расшир.)"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_ERROR_TIMEOUT       "Таймаут"
+    IDS_ERROR_SELECT_CHAN   "Ошибка выбора канала связи"
+    IDS_ERROR_OPEN_CHAN     "Ошибка открытия канала связи"
+    IDS_ERROR_SEND_DATA     "Ошибка отправки данных"
+    IDS_ERROR_RECV_DATA     "Ошибка получения данных"
+    IDS_ERROR_WAIT_DATA     "Ошибка ожидания данных"
+    IDS_ERROR_INVALID_REPLY_DATA "Получен неправильный ответ"
+    IDS_ERROR_INVALID_REPLY_SIZE "Получен ответ неправильной длины"
+    IDS_ERROR_INVALID_REPLY_FORMAT "Получен ответ неправильного формата"
+    IDS_ERROR_BUILD_PACKET  "Ошибка формирования пакета"
+    IDS_ERROR_PARSE_PACKET  "Ошибка разбора пакета"
+    IDS_SHEDULE_TYPE_TASK_STARTUP "При запуске"
+    IDS_SHEDULE_TYPE_TASK_DAILY "Ежедневно"
+    IDS_SHEDULE_TYPE_TASK_MONTHLY "Ежемесячно"
+    IDS_SHEDULE_TYPE_TASK_WEEKLY "Еженедельно"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_SHEDULE_TYPE_TASK_STARTUP_FORMAT 
+                            "При запуске начиная с %02d:%02d:%02d каждые %d секунд"
+    IDS_SHEDULE_TYPE_TASK_DAILY_FORMAT_ED "В %02d:%02d:%02d ежедневно"
+    IDS_SHEDULE_TYPE_TASK_WEEKLY_FORMAT_EW "В %02d:%02d:%02d еженедельно"
+    IDS_SHEDULE_TYPE_TASK_MONTHLY_FORMAT 
+                            "В %02d:%02d:%02d ежемесячно %d-го числа"
+    IDS_SHEDULE_TYPE_TASK_DAILY_FORMAT_NED "В %02d:%02d:%02d каждый %d-й день"
+    IDS_SHEDULE_TYPE_TASK_WEEKLY_FORMAT_NEW 
+                            "В %02d:%02d:%02d каждую %d-ю неделю"
+    IDS_WNDCOMBO_TABLE      "Табличный вид"
+    IDS_WNDCOMBO_TEXT       "Текстовый вид"
+    IDS_NAMESPACE_COLUMNS_NUMBER "#"
+    IDS_NAMESPACE_COLUMNS_ID "Идентификатор"
+    IDS_NAMESPACE_COLUMNS_NAME "Название"
+    IDS_NAMESPACE_COLUMNS_DESCR "Описание"
+    IDS_NAMESPACE_COLUMNS_DISABLED "Запретить"
+    IDS_NAMESPACE_COLUMNS_DISABLED_YES "Да"
+    IDS_NAMESPACE_COLUMNS_DISABLED_NO "Нет"
+    IDS_NAMESPACE_COLUMNS_TYPE "Тип"
+END
+
+STRINGTABLE
+BEGIN
+    IDP_ERROR_FILE_IMPORT_METERS "Ошибка импорта приборов из файла '%s'"
+    IDP_ERROR_FILE_IMPORT_DICT "Ошибка импорта данных из справочника '%s'"
+    IDP_ERROR_FILE_EXPORT_HDA 
+                            "Ошибка при создании или активизации конфигурации сервера архивации."
+    IDP_ERROR_FILE_EXPORT_TAGS "Ошибка при экспорте тегов."
+    IDP_ERROR_FILE_SAVE     "Ошибка сохранения конфигурации в файл '%s'"
+    IDP_ERROR_FILE_CLOSE    "Сохранить текущую конфигурацию?"
+    IDP_ERROR_FILE_OPEN     "Ошибка загрузки конфигурации из файла '%s'"
+    IDP_ERROR_SAVE_OPTIONS  "Ошибка сохранения настроек.\nВозможно доступ к файлу настроек ограничен или установлен атрибут ""только для чтения""."
+END
+
+STRINGTABLE
+BEGIN
+    IDP_ERROR_TESTCONN_CHAN "Канал не задан или задан неправильно."
+    IDP_ERROR_TESTCONN_CHAN_CREATE 
+                            "Ошибка создания канала (возможно канал не поддерживается)."
+    IDP_ERROR_TESTCONN_TRANS_EXEC "Ошибка выполнения транзакции."
+    IDP_ERROR_TESTCONN_TRANS_NOTCOMPLETE 
+                            "Обнаружена ошибка при тестировании канала.\nТранзакция не была вылолнена."
+    IDP_ERROR_TESTCONN_NOERR "Ошибок не обнаружено"
+    IDP_ERROR_TESTCONN_CHAN_DEFAULT 
+                            "Обнаружена ошибка при тестировании канала.\n%s."
+    IDP_DELETE_REQUEST      "Удалить выделенный элемент(ы)?"
+    IDP_DELETE_WARNING      "Не все выделенные элементы были удалены."
+    IDP_ERROR_COPY_TO_CLIP  "Ошибка копирования данных в буфер обмена."
+    IDP_ERROR_PASTE_FROM_CLIP "Ошибка получения данных из буфера обмена"
+    IDP_ERROR_RENAME        "Ошибка изменения названия элемента."
+END
+
+STRINGTABLE
+BEGIN
+    IDS_NAMESPACE_COLUMNS_SYMBOL "Обозначение"
+    IDS_NAMESPACE_COLUMNS_UNITS "Единицы измерения"
+    IDS_NAMESPACE_COLUMNS_VALUE "Значение"
+    IDS_NAMESPACE_COLUMNS_VALUE_DATA_TYPE "Значение (тип данных)"
+    IDS_NAMESPACE_COLUMNS_VALUE_QUALITY "Значение (качество)"
+    IDS_NAMESPACE_COLUMNS_VALUE_TIMESTAMP "Значение (метка времени)"
+    IDS_NAMESPACE_CONSTS_ROOT_NAME "Конфигурация"
+    IDS_SERVER_STATUS_RUNNING "Запущен"
+    IDS_SERVER_STATUS_FAILED "Ошибка"
+    IDS_SERVER_STATUS_NOCONFIG "Нет конфигурации"
+    IDS_SERVER_STATUS_STOPPED "Остановлен"
+    IDS_SERVER_STATUS_TEST  "Тест"
+    IDS_SERVER_STATUS_COMERR "Ошибка связи"
+    IDS_OUTPUT_COLUMNS_DATE "Дата"
+    IDS_OUTPUT_COLUMNS_TIME "Время"
+END
+
+STRINGTABLE
+BEGIN
+    IDS_OUTPUT_COLUMNS_LEVEL "Уровень"
+    IDS_OUTPUT_COLUMNS_ERROR "Ошибка"
+    IDS_OUTPUT_COLUMNS_MESSAGE "Сообщение"
+    IDS_CONST_PROP_TEXT_ERROR "<ошибка>"
+    IDS_CONST_PROP_TEXT_UNAVAILABLE "<не доступно>"
+    IDS_CONST_PROP_TEXT_NOTSPECIFIED "<не задано>"
+    IDS_CONST_PROP_TEXT_YES "Да"
+    IDS_CONST_PROP_TEXT_NO  "Нет"
+    IDS_CONST_WND_DEFAULT_TITLE "<не задано>"
+    IDS_CONST_WND_CONFIG_LIST_PANE "Конфигурация (список)"
+    IDS_CONST_WND_CONFIG_LIST_TREE "Конфигурация (дерево)"
+    IDS_CONST_WND_OUT_TREE  "Диагностика"
+    IDS_CONST_WND_OPT_DIALOG "Параметры"
+    IDS_CONST_WND_PROP_DIALOG "Свойства"
+    IDS_FILTER_MDB          "Файлы конфигурации (*.mdb)|*.mdb|Все файлы (*.*)|*.*|"
+    IDS_FILTER_XML          "Файлы конфигурации (*.xml)|*.xml|Все файлы (*.*)|*.*|"
+END
+
+#endif    // Russian (Russia) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (United States) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "dlsres.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""atlres.h""\r\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+#endif    // English (United States) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+
