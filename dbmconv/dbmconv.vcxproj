@@ -126,6 +126,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
     </ClCompile>
     <ClInclude Include="ContentHandler.h" />
+    <ClInclude Include="dlsres.h" />
     <ClInclude Include="helpersXML.h" />
     <ClInclude Include="ItemFactory.h" />
     <ClInclude Include="MainFrm.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="stdafx.h" />
   </ItemGroup>
   <ItemGroup>
+    <ResourceCompile Include="DataLinkServer.rc" />
     <ResourceCompile Include="dbmconv.rc" />
   </ItemGroup>
   <ItemGroup>

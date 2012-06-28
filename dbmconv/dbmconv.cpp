@@ -12,6 +12,7 @@
 
 
 #include "resource.h"
+#include "dlsres.h"
 #include "Options.h"
 #include "MainFrm.h"
 

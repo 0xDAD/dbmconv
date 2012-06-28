@@ -19,7 +19,7 @@ public:
 			rpItem = IItemPtr(new CItemTag(nId, nParentId));
 			break;
 		case OldImplNode:
-			rpItem =  IItemPtr(new COldImplNode(nId, nParentId));
+			rpItem = IItemPtr(new COldImplNode(nId, nParentId));
 			break;
 		case NewImplNode:
 			rpItem = IItemPtr( new CNewImplNode(nId, nParentId));

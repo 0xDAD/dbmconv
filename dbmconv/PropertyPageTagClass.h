@@ -4,12 +4,14 @@
 #include <atldlgs.h>
 #include "DataModel.h"
 #include "ResourceHolder.h"
+#include <boost/function.hpp>
 //////////////////////////////////////////////////////////////////////////
 
 #ifndef _WTL_NEW_PAGE_NOTIFY_HANDLERS
 #error CPropertyPageTagClass requires _WTL_NEW_PAGE_NOTIFY_HANDLERS
 #endif // _WTL_NEW_PAGE_NOTIFY_HANDLERS
 
+#define DIFF_ARGS_IDX -2
 //////////////////////////////////////////////////////////////////////////
 
 class CPropertyPageTagClass : public CPropertyPageImpl<CPropertyPageTagClass>,
@@ -58,13 +60,20 @@ protected:
 
 	BEGIN_DLGRESIZE_MAP(CPropertyPageTagClass)
 		DLGRESIZE_CONTROL(IDC_EDIT_NAME, DLSZ_SIZE_X)
-		//DLGRESIZE_CONTROL(IDC_EDT_FULL_NAME, DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_COMBO_TYPE, DLSZ_SIZE_X)
 		//DLGRESIZE_CONTROL(IDC_EDT_DESCRIPTION, DLSZ_SIZE_X | DLSZ_SIZE_Y)
 		//DLGRESIZE_CONTROL(IDC_CHK_DISABLED, DLSZ_MOVE_Y)
 	END_DLGRESIZE_MAP()
 
 	BEGIN_DDX_MAP(CPropertyPageTagClass)
 		DDX_TEXT(IDC_EDIT_NAME, m_strName)
+		DDX_TEXT(IDC_EDIT_UID, m_nID)
+
+		DDX_CONTROL_HANDLE(IDC_COMBO_TYPE, m_wndCmbType)
+		DDX_CONTROL_HANDLE(IDC_COMBO_CLASS, m_wndCmbClass)
+		DDX_CONTROL_HANDLE(IDC_COMBO_FAMILY, m_wndCmbAssignment)
+		DDX_CONTROL_HANDLE(IDC_COMBO_DIRECTION, m_wndCmbDirection)
+		DDX_CONTROL_HANDLE(IDC_COMBO_TARIFF, m_wndCmbTariff)
 		//DDX_TEXT(IDC_EDT_FULL_NAME, m_strFullName)
 		//DDX_TEXT(IDC_EDT_DESCRIPTION, m_strDescription)
 		//DDX_CHECK(IDC_CHK_DISABLED, m_nDisabled)
@@ -74,64 +83,18 @@ protected:
 public:
 	LRESULT OnInitDialog(UINT /*uMsg*/, WPARAM /*wParam*/, LPARAM /*lParam*/, BOOL& /*bHandled*/)
 	{
-		// Is single item selected?
-		if (IsSingleItemSelected()) {
-		/*	OPCTL::IItemPtr spItem;
-			if (GetNamespace().GetItem(m_rvctItemIDs.front(), &spItem)) {
-				m_strName = spItem->GetName();
-				m_strFullName  = GetNamespace().GetItemFullNameSimple(m_rvctItemIDs.front());
-				m_strDescription = spItem->GetDescription();
-				m_nDisabled = spItem->IsDisabled()? 1 : 0;
-
-				CEdit wndEdtControl;
-				wndEdtControl = GetDlgItem(IDC_EDT_NAME);
-				ATLASSERT(wndEdtControl.IsWindow());
-				if (GetNamespace().CanModifyItem(spItem->GetID(), OPCTL::ItemPropName))
-					ATLVERIFY(wndEdtControl.SetReadOnly(FALSE));
-				else
-					ATLVERIFY(wndEdtControl.SetReadOnly(TRUE));
-
-				wndEdtControl = GetDlgItem(IDC_EDT_DESCRIPTION);
-				ATLASSERT(wndEdtControl.IsWindow());
-				if (GetNamespace().CanModifyItem(spItem->GetID(), OPCTL::ItemPropDescription))
-					ATLVERIFY(wndEdtControl.SetReadOnly(FALSE));
-				else
-					ATLVERIFY(wndEdtControl.SetReadOnly(TRUE));
-			}*/
-		}
-		else {
-			//m_strName = CResourceHolder::GetControlTextUnavailableStr();
-			//m_strFullName = CResourceHolder::GetControlTextUnavailableStr();
-
-			//CComVariant vValue;
-			//bool bDifferent = false;
-
-			//ATLVERIFY(GetNamespace().GetMultiItemPropertyValueStr(m_rvctItemIDs, OPCTL::ItemPropDescription, m_strDescription, OPCTL::ItemPropGetTypeAlways, bDifferent));
-			//ATLVERIFY(GetNamespace().GetMultiItemPropertyValue(m_rvctItemIDs, OPCTL::ItemPropDisabled, vValue, OPCTL::ItemPropGetTypeAlways, bDifferent));
-			//if (bDifferent || FAILED(vValue.ChangeType(VT_BOOL)))
-			//	m_nDisabled = 2;
-			//else
-			//	m_nDisabled = (V_BOOL(&vValue) != VARIANT_FALSE)? 1: 0;
-
-			//// Disable some controls
-			//CWindow wndControl;
-			//wndControl = GetDlgItem(IDC_EDT_NAME);
-			//ATLASSERT(wndControl.IsWindow());
-			//wndControl.EnableWindow(FALSE);
-
-			//wndControl = GetDlgItem(IDC_EDT_FULL_NAME);
-			//ATLASSERT(wndControl.IsWindow());
-			//wndControl.EnableWindow(FALSE);
-		}
-
 		// Initialize resize
 		DlgResize_Init(false);
 		// Initialize data exchange
 		DoDataExchange(DDX_LOAD);
-
+		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
+		InitCombo(m_wndCmbAssignment, TagAssignmentNone, TagAssignment96, &CItemTagClass::Assignment2String);
+		/*InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
+		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
+		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);*/
+		InitData();
 		m_nChanged = 0;
 		SetModified(FALSE);
-
 		return TRUE;
 	}
 	//LRESULT OnChangeEditName(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
@@ -201,11 +164,87 @@ public:
 		// PSNRET_INVALID_NOCHANGEPAGE = apply not OK, don't change focus
 		return PSNRET_NOERROR;
 	}
+
+
+	void InitCombo(CComboBox& rBox, int nStart, int nEnd, boost::function<void (int, CString&)> f) 
+	{
+		int nItem = 0;
+		CString str;
+		if(!IsSingleItemSelected())	{
+			nItem = rBox.AddString(str);
+			rBox.SetItemData(nItem, DIFF_ARGS_IDX);
+		}		
+		for (auto i = nStart; i <= nEnd ;i++){
+			f(i, str);
+			nItem = rBox.AddString(str);
+			rBox.SetItemData(nItem, i);
+		}
+	}
+
+	void InitData() 
+	{
+			// Is single item selected?
+		if (IsSingleItemSelected()) {
+		/*	OPCTL::IItemPtr spItem;
+			if (GetNamespace().GetItem(m_rvctItemIDs.front(), &spItem)) {
+				m_strName = spItem->GetName();
+				m_strFullName  = GetNamespace().GetItemFullNameSimple(m_rvctItemIDs.front());
+				m_strDescription = spItem->GetDescription();
+				m_nDisabled = spItem->IsDisabled()? 1 : 0;
+
+				CEdit wndEdtControl;
+				wndEdtControl = GetDlgItem(IDC_EDT_NAME);
+				ATLASSERT(wndEdtControl.IsWindow());
+				if (GetNamespace().CanModifyItem(spItem->GetID(), OPCTL::ItemPropName))
+					ATLVERIFY(wndEdtControl.SetReadOnly(FALSE));
+				else
+					ATLVERIFY(wndEdtControl.SetReadOnly(TRUE));
+
+				wndEdtControl = GetDlgItem(IDC_EDT_DESCRIPTION);
+				ATLASSERT(wndEdtControl.IsWindow());
+				if (GetNamespace().CanModifyItem(spItem->GetID(), OPCTL::ItemPropDescription))
+					ATLVERIFY(wndEdtControl.SetReadOnly(FALSE));
+				else
+					ATLVERIFY(wndEdtControl.SetReadOnly(TRUE));
+			}*/
+		}
+		else {
+			m_strName = CResourceHolder::GetControlTextUnavailableStr();
+			//m_strFullName = CResourceHolder::GetControlTextUnavailableStr();
+
+			//CComVariant vValue;
+			//bool bDifferent = false;
+
+			//ATLVERIFY(GetNamespace().GetMultiItemPropertyValueStr(m_rvctItemIDs, OPCTL::ItemPropDescription, m_strDescription, OPCTL::ItemPropGetTypeAlways, bDifferent));
+			//ATLVERIFY(GetNamespace().GetMultiItemPropertyValue(m_rvctItemIDs, OPCTL::ItemPropDisabled, vValue, OPCTL::ItemPropGetTypeAlways, bDifferent));
+			//if (bDifferent || FAILED(vValue.ChangeType(VT_BOOL)))
+			//	m_nDisabled = 2;
+			//else
+			//	m_nDisabled = (V_BOOL(&vValue) != VARIANT_FALSE)? 1: 0;
+
+			//// Disable some controls
+			//CWindow wndControl;
+			//wndControl = GetDlgItem(IDC_EDT_NAME);
+			//ATLASSERT(wndControl.IsWindow());
+			//wndControl.EnableWindow(FALSE);
+
+			//wndControl = GetDlgItem(IDC_EDT_FULL_NAME);
+			//ATLASSERT(wndControl.IsWindow());
+			//wndControl.EnableWindow(FALSE);
+		}
+	}
+
 protected:
 	const std::vector<int>& m_rvctItemIDs;
 	int m_nChanged;
 protected:
 	CString m_strName;
-	CString m_strFullName;
+	CString m_nID;
 	CString m_strDescription;
+protected:
+	CComboBox m_wndCmbType;
+	CComboBox m_wndCmbClass;
+	CComboBox m_wndCmbAssignment;
+	CComboBox m_wndCmbDirection;
+	CComboBox m_wndCmbTariff;
 };

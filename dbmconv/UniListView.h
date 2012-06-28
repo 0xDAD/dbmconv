@@ -162,11 +162,25 @@ public:
 					CString strValue;
 					if((*it)->GetPropertyValueText(i, strValue)){
 						SetItemText(nItem, nSi, strValue);
+						SetItemData(nItem, (*it)->GetID());
 					}
 				}	
 			}
 		}		
 		AdjustColumnWidths();
+	}
+
+	void GetSelectedItemIds(vector<int>& rvctItemIDs){
+		ATLASSERT(IsWindow());
+		rvctItemIDs.clear();
+		int nItem = GetNextItem(-1, LVIS_SELECTED);
+		while (nItem != -1) {
+			int nItemID = (int)GetItemData(nItem);
+			ATLASSERT(ITEM_ID_INVALID != nItemID);
+			if (ITEM_ID_INVALID != nItemID)
+				rvctItemIDs.push_back(nItemID);
+			nItem = GetNextItem(nItem, LVIS_SELECTED);
+		}
 	}
 protected:
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)

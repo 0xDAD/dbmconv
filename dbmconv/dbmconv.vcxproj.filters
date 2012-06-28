@@ -122,9 +122,15 @@
     <ClInclude Include="ResourceHolder.h">
       <Filter>DataModel</Filter>
     </ClInclude>
+    <ClInclude Include="dlsres.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dbmconv.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
+    <ResourceCompile Include="DataLinkServer.rc">
       <Filter>Resource Files</Filter>
     </ResourceCompile>
   </ItemGroup>

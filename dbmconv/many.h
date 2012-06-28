@@ -7,15 +7,19 @@
 
 
 struct conv{
-	virtual std::wstring operator() (const boost::any* lpany) const = 0;
+	virtual std::wstring to_string (const boost::any* lpany) const = 0;
+	virtual boost::any from_string(std::wstring& str) = 0;
 	virtual ~conv(){}
 };
 
 template <class T>
 struct pod_conv : public conv
 {
-	std::wstring operator() (const boost::any* lpany) const{
+	std::wstring to_string(const boost::any* lpany) const{
 		return boost::lexical_cast<std::wstring>(boost::any_cast<T>(*lpany));
+	}
+	boost::any from_string(std::wstring& str){
+		return boost::any(boost::lexical_cast<T>(str));	
 	}
 };
 
@@ -43,7 +47,19 @@ public:
 		std::wstring to_string() const { 	
 			if(pFnPtr == NULL)
 				return L"";
-			return (*pFnPtr)(this);
+			return pFnPtr->to_string(this);
+		}
+		bool from_string(const wchar_t* pStr){
+			std::wstring str(pStr);
+			if(pFnPtr == NULL)
+				return false;
+			try{
+				boost::any::swap(pFnPtr->from_string(str));
+			}
+			catch(boost::bad_lexical_cast&){
+				return false;
+			}
+			return true;
 		}
 		many & operator=(many rhs)
 		{

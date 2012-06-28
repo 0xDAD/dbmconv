@@ -19,13 +19,14 @@ int main()
 	float f = 2.1;
 	vctm.push_back(many(f));
 	vctm.push_back(many(-5.4));
-	vctm.push_back(many(CString(L"kakulenok")));
+	//vctm.push_back(many(CString(L"kakulenok")));
 
 	setlocale(LC_ALL, ".1251");
 	std::for_each(vctm.begin(), vctm.end(), opr());
 
-	int i;
-	wcin >> i;
+	wstring str;
+	wcin >> str;
+	vctm[0].from_string(str.c_str());
 
-	return i;
+	return 0;
 }

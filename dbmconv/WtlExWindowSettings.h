@@ -20,8 +20,8 @@
 	#error wtlregpos.h requires C++ compilation (use a .cpp suffix)
 #endif
 
-#include <atlmisc.h>
-#include <atlctrls.h>
+//#include <atlmisc.h>
+//#include <atlctrls.h>
 
 ///////////////////////////////////////////////////////////////////////////////
 // Classes in this file:

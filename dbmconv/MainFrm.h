@@ -6,7 +6,9 @@
 #include "MultiPaneStatusBarEx.h"
 #include "UniListView.h"
 #include "UniTreeView.h"
+#include "WtlExResizePropertySheet.h"
 #include "PropertyPageTagClass.h"
+
 
 
 class CMainFrame : 
@@ -29,7 +31,6 @@ public:
 	CUniListView m_wndItemList;
 
 	CPaneContainer m_wndPaneOutput;
-	//CViewOutput m_wndOutputView;
 
 	virtual BOOL PreTranslateMessage(MSG* pMsg)
 	{
@@ -65,6 +66,7 @@ public:
 		COMMAND_ID_HANDLER(ID_VIEW_TOOLBAR, OnViewToolBar)
 		COMMAND_ID_HANDLER(ID_VIEW_STATUS_BAR, OnViewStatusBar)
 		COMMAND_ID_HANDLER(ID_APP_ABOUT, OnAppAbout)
+		COMMAND_ID_HANDLER(ID_ITEM_PROPS1, OnItemProps1)
 
 		COMMAND_ID_HANDLER(ID_POPUP_CNV_MAKETAGS, OnMakeTagClasses)
 
@@ -89,7 +91,16 @@ protected:
 		UISetText(1, strSel);
 	}
 protected:
-
+	LRESULT OnItemProps1(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		CPropertySheetResize PropertySheet(L"Свойства");
+		vector<int> vctSelIds;
+		m_wndItemList.GetSelectedItemIds(vctSelIds);
+		CPropertyPageTagClass TagClass(vctSelIds);
+		PropertySheet.AddPage(TagClass);
+		int nRes = PropertySheet.DoModal();
+		return 0;
+	}
 	LRESULT OnInternalNotify(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/){
 		int nItemId = (int)lParam;
 		switch(wParam){
