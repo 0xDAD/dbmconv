@@ -38,6 +38,6 @@ public:
 	}
 };
 
-typedef CTreeNode<NewImplNode> CNewImplNode;
-typedef CTreeNode<OldImplNode> COldImplNode;
-typedef CTreeNode<TagClassNode> CTagClassNode;
+typedef CTreeNode<ItemTypeNewImplNode> CNewImplNode;
+typedef CTreeNode<ItemTypeOldImplNode> COldImplNode;
+typedef CTreeNode<ItemTypeTagClassNode> CTagClassNode;

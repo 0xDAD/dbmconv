@@ -12,22 +12,22 @@ protected:
 public:
 	static bool CreateItem(int nType, int nId, int nParentId, IItemPtr& rpItem){
 		switch(nType){
-		case ItemDevice:
+		case ItemTypeDevice:
 			rpItem = IItemPtr(new CItemDevice(nId, nParentId));
 			break;
-		case ItemTag:
+		case ItemTypeTag:
 			rpItem = IItemPtr(new CItemTag(nId, nParentId));
 			break;
-		case OldImplNode:
+		case ItemTypeOldImplNode:
 			rpItem = IItemPtr(new COldImplNode(nId, nParentId));
 			break;
-		case NewImplNode:
+		case ItemTypeNewImplNode:
 			rpItem = IItemPtr( new CNewImplNode(nId, nParentId));
 			break;
-		case TagClassNode:
+		case ItemTypeTagClassNode:
 			rpItem = IItemPtr( new CTagClassNode(nId, nParentId));
 			break;
-		case ItemTagClass:
+		case ItemTypeTagClass:
 			rpItem = IItemPtr( new CItemTagClass(nId, nParentId));
 			break;
 		default:

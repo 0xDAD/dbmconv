@@ -27,6 +27,7 @@ int main()
 	wstring str;
 	wcin >> str;
 	vctm[0].from_string(str.c_str());
-
+	int j = 4;
+	int p = boost::lexical_cast<int>(boost::any_cast<int>(vctm[2]));
 	return 0;
 }

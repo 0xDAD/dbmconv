@@ -38,13 +38,13 @@ protected:
 			else
 			{
 				IItemPtr ptrNode;
-				m_instance.CreateItem(OldImplNode, ITEM_ID_ROOT, ptrNode);
+				m_instance.CreateItem(ItemTypeOldImplNode, ITEM_ID_ROOT, ptrNode);
 				ptrNode->SetPropertyValue(BasePropName, many(wstring(L"Old Implementation")));
 				int i = 1;
 				while (S_OK == (hr = cmdMeter.MoveNext()))
 				{
 					IItemPtr ptrDev;
-					if(m_instance.CreateItem(ItemDevice, ptrNode->GetID(), ptrDev)){
+					if(m_instance.CreateItem(ItemTypeDevice, ptrNode->GetID(), ptrDev)){
 						ptrDev->SetPropertyValue(DevicePropUid, many(cmdMeter.m_nID));
 						ptrDev->SetPropertyValue(DevicePropTypeName, many(wstring(cmdMeter.m_szName)));
 						ptrDev->SetPropertyValue(DevicePropSubClass, many(cmdMeter.m_nSubClass));
@@ -64,7 +64,7 @@ protected:
 						while (S_OK == (hr = cmdParam.MoveNext()) && cmdParam.m_nIDStatus != DBSTATUS_S_ISNULL)
 						{
 							IItemPtr ptrParam;
-							if(m_instance.CreateItem(ItemTag, ptrDev->GetID(), ptrParam)){
+							if(m_instance.CreateItem(ItemTypeTag, ptrDev->GetID(), ptrParam)){
 								ptrParam->SetPropertyValue(TagPropName, many(wstring(cmdParam.m_szName)));
 								if (cmdParam.m_nIDStatus == DBSTATUS_S_OK)
 									ATLVERIFY(ptrParam->SetPropertyValue(TagPropGuid,  many(cmdParam.m_nID)));
@@ -205,17 +205,17 @@ public:
 	}
 	bool CollectTagClasses(){
 		ItemList ilist;
-		if(!m_instance.GetChildItems(ITEM_ID_ROOT, OldImplNode, ilist))
+		if(!m_instance.GetChildItems(ITEM_ID_ROOT, ItemTypeOldImplNode, ilist))
 			return false;
 		if(!ilist.size() || ilist.size() > 1)
 			return false;
-		if(!m_instance.GetChildItems(ilist.front()->GetID(), ItemDevice, ilist))
+		if(!m_instance.GetChildItems(ilist.front()->GetID(), ItemTypeDevice, ilist))
 			return false;
 		
 		map<CString,vector<int>> mapTagClassRef;
 		for (auto it = ilist.begin(); it != ilist.end(); ++it){
 			ItemList tagList;
-			if(!m_instance.GetChildItems((*it)->GetID(), ItemTag, tagList))
+			if(!m_instance.GetChildItems((*it)->GetID(), ItemTypeTag, tagList))
 				return false;
 			for(auto ti = tagList.begin(); ti != tagList.end(); ++ti){
 				vector<int>& vctIds = mapTagClassRef[(*ti)->GetName()];
@@ -224,9 +224,9 @@ public:
 		}
 
 		IItemPtr ptrNewNode;
-		ATLVERIFY(m_instance.CreateItem(NewImplNode, ITEM_ID_ROOT, ptrNewNode));			
+		ATLVERIFY(m_instance.CreateItem(ItemTypeNewImplNode, ITEM_ID_ROOT, ptrNewNode));			
 		ptrNewNode->SetName(L"New Implementation");
-		ATLVERIFY(m_instance.CreateItem(TagClassNode, ptrNewNode->GetID(), ptrNewNode));			
+		ATLVERIFY(m_instance.CreateItem(ItemTypeTagClassNode, ptrNewNode->GetID(), ptrNewNode));			
 		ptrNewNode->SetName(L"Tag Classes");
 		int nTagClassNodeId = ptrNewNode->GetID();
 
@@ -234,7 +234,7 @@ public:
 
 			IItemPtr ptr;
 			
-			if(!m_instance.CreateItem(ItemTagClass, nTagClassNodeId, ptr))
+			if(!m_instance.CreateItem(ItemTypeTagClass, nTagClassNodeId, ptr))
 				return false;
 
 			ptr->SetName(it->first);
@@ -244,6 +244,10 @@ public:
 			CString strValue;
 			if(GetMultiItemPropertyValueStr(it->second, TagPropType, strValue, bDifferent) && !bDifferent){
 				if (!_SetItemValue(ptr, TagClassPropType, wstring(strValue.GetBuffer()))) 
+					return false;
+			}
+			if(GetMultiItemPropertyValueStr(it->second, TagPropAssignment, strValue, bDifferent) && !bDifferent){
+				if (!_SetItemValue(ptr, TagClassAssignment,  wstring(strValue.GetBuffer()))) 
 					return false;
 			}
 
@@ -276,7 +280,36 @@ protected:
 			return false;
 		return _SetItemValue(ptr, nPropId, tval);
 	}
-
+public:
+	bool GetMultiItemPropertyValue(vector<int>& vctIds, int nPropId, many& rValue, bool& rbDifferent){
+		rbDifferent = false;
+		wstring locVal;
+		many val;
+		size_t nSucceded = 0;
+		for(auto it = vctIds.begin(); it != vctIds.end(); ++it){
+			IItemPtr ptrItem;
+			if(GetItem(*it, ptrItem)){
+				CString strVal;
+				if(ptrItem->GetPropertyValue(nPropId, val)){
+					if(nSucceded == 0){
+						locVal = val.to_string();
+						nSucceded++;
+					}
+					else{
+						if(val.to_string() != locVal){
+							rbDifferent = true;
+							return true;
+						}
+						nSucceded++;
+					}
+				}
+			}
+		}
+		if(!nSucceded)
+			return false;
+		rValue = locVal;
+		return true;
+	}
 	bool GetMultiItemPropertyValueStr(vector<int>& vctIds, int nPropId, CString& rstrValue, bool& rbDifferent){
 		rbDifferent = false;
 		rstrValue.Empty();

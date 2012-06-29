@@ -10,12 +10,12 @@ using namespace boost;
 
 enum ItemType{
 	ItemTypeNone,
-	ItemDevice,
-	ItemTag,
-	OldImplNode,
-	NewImplNode,
-	TagClassNode,
-	ItemTagClass,
+	ItemTypeDevice,
+	ItemTypeTag,
+	ItemTypeOldImplNode,
+	ItemTypeNewImplNode,
+	ItemTypeTagClassNode,
+	ItemTypeTagClass,
 
 };
 enum BaseProperties{

@@ -49,9 +49,9 @@ public:
 	CDeviceProperties(){}
 };
 
-class CItemDevice: public IItemImpl<CItemDevice, ItemDevice, CDeviceProperties>
+class CItemDevice: public IItemImpl<CItemDevice, ItemTypeDevice, CDeviceProperties>
 {
-	typedef IItemImpl<CItemDevice, ItemDevice, CDeviceProperties> _Base;
+	typedef IItemImpl<CItemDevice, ItemTypeDevice, CDeviceProperties> _Base;
 public:
 	CItemDevice (int nId, int nParent):_Base(nId, nParent){
 

@@ -24,25 +24,25 @@ LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
 // Dialog
 //
 
-IDD_PP_TAGCLASS DIALOGEX 0, 0, 292, 226
+IDD_PP_TAGCLASS DIALOGEX 0, 0, 267, 225
 STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_CHILD | WS_CAPTION
 CAPTION "Dialog"
 FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
     RTEXT           "Название:",IDC_STATIC,7,7,73,14,SS_CENTERIMAGE
-    EDITTEXT        IDC_EDIT_NAME,84,7,201,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_NAME,84,7,176,14,ES_AUTOHSCROLL
     RTEXT           "Идентификатор:",IDC_STATIC,7,24,73,14,SS_CENTERIMAGE
-    EDITTEXT        IDC_EDIT_UID,84,24,201,14,ES_AUTOHSCROLL | ES_READONLY
-    RTEXT           "Тип:",IDC_STATIC,7,41,73,14,SS_CENTERIMAGE
-    COMBOBOX        IDC_COMBO_TYPE,84,41,201,13,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    RTEXT           "Класс:",IDC_STATIC,7,58,73,14,SS_CENTERIMAGE
-    COMBOBOX        IDC_COMBO_CLASS,84,58,201,13,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    RTEXT           "Семейство:",IDC_STATIC,7,75,73,14,SS_CENTERIMAGE
-    COMBOBOX        IDC_COMBO_FAMILY,84,75,201,13,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    RTEXT           "Направление:",IDC_STATIC,7,92,73,14,SS_CENTERIMAGE
-    COMBOBOX        IDC_COMBO_DIRECTION,84,92,201,13,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
-    RTEXT           "Тариф:",IDC_STATIC,7,109,73,14,SS_CENTERIMAGE
-    COMBOBOX        IDC_COMBO_TARIFF,84,109,201,13,CBS_DROPDOWN | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    EDITTEXT        IDC_EDIT_UID,84,24,176,14,ES_AUTOHSCROLL
+    RTEXT           "Тип:",IDC_STATIC,7,56,73,14,SS_CENTERIMAGE
+    COMBOBOX        IDC_COMBO_TYPE,84,56,176,13,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Класс:",IDC_STATIC,7,73,73,14,SS_CENTERIMAGE
+    COMBOBOX        IDC_COMBO_CLASS,84,73,176,13,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Семейство:",IDC_STATIC,7,90,73,14,SS_CENTERIMAGE
+    COMBOBOX        IDC_COMBO_FAMILY,84,90,176,13,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Направление:",IDC_STATIC,7,169,73,14,SS_CENTERIMAGE
+    COMBOBOX        IDC_COMBO_DIRECTION,84,169,176,13,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
+    RTEXT           "Тариф:",IDC_STATIC,7,186,73,14,SS_CENTERIMAGE
+    COMBOBOX        IDC_COMBO_TARIFF,84,186,176,13,CBS_DROPDOWNLIST | CBS_SORT | WS_VSCROLL | WS_TABSTOP
 END
 
 
@@ -57,11 +57,11 @@ BEGIN
     IDD_PP_TAGCLASS, DIALOG
     BEGIN
         LEFTMARGIN, 7
-        RIGHTMARGIN, 285
+        RIGHTMARGIN, 260
         VERTGUIDE, 80
         VERTGUIDE, 84
         TOPMARGIN, 7
-        BOTTOMMARGIN, 219
+        BOTTOMMARGIN, 218
     END
 END
 #endif    // APSTUDIO_INVOKED
@@ -76,40 +76,6 @@ END
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-
-#ifdef APSTUDIO_INVOKED
-/////////////////////////////////////////////////////////////////////////////
-//
-// TEXTINCLUDE
-//
-
-1 TEXTINCLUDE 
-BEGIN
-    "resource.h\0"
-END
-
-2 TEXTINCLUDE 
-BEGIN
-    "#include ""atlres.h""\r\n"
-    "\0"
-END
-
-3 TEXTINCLUDE 
-BEGIN
-    "\0"
-END
-
-#endif    // APSTUDIO_INVOKED
-
-
-/////////////////////////////////////////////////////////////////////////////
-//
-// Icon
-//
-
-// Icon with lowest ID value placed first to ensure application icon
-// remains consistent on all systems.
-IDR_MAINFRAME           ICON                    "res\\dbmconv.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -151,6 +117,40 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""atlres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\dbmconv.ico"
 
 /////////////////////////////////////////////////////////////////////////////
 //

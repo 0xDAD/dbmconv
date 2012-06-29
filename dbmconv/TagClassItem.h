@@ -192,6 +192,7 @@ public:
 		case TagClassPropHar: return L"Haracter";
 		case TagClassTariff: return L"Tariff";
 		case TagClassDirection: return L"Dir";
+		case TagClassAssignment: return L"Assign";
 		case TagClassPropAddress: return L"Address";
 		case TagClassPropRefCnt: return L"RefCnt";
 		default: throw;
@@ -201,9 +202,9 @@ public:
 	CTagClassProperties(){}
 };
 	  
-class CItemTagClass: public IItemImpl<CItemTagClass, ItemTagClass, CTagClassProperties>
+class CItemTagClass: public IItemImpl<CItemTagClass, ItemTypeTagClass, CTagClassProperties>
 {
-	typedef IItemImpl<CItemTagClass, ItemTagClass, CTagClassProperties> _Base;
+	typedef IItemImpl<CItemTagClass, ItemTypeTagClass, CTagClassProperties> _Base;
 public:
 	CItemTagClass (int nId, int nParent):_Base(nId, nParent){
 	}

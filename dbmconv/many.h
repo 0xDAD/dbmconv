@@ -4,7 +4,7 @@
 #include <string>
 #include <atlstr.h>
 #include <boost/shared_ptr.hpp>
-
+#include <typeinfo>
 
 struct conv{
 	virtual std::wstring to_string (const boost::any* lpany) const = 0;
@@ -61,6 +61,41 @@ public:
 			}
 			return true;
 		}
+		int to_int() const{
+			int nRet = 0;
+			if(typeid(nRet) == _base::type())
+				return boost::any_cast<int>(*this);
+			else
+				return boost::lexical_cast<int>(to_string());
+		}
+
+		template <typename ValueType>
+		ValueType value_cast(){
+			try{
+				return boost::any_cast<ValueType>(*this);
+			}
+			catch (boost::bad_any_cast&){
+				return boost::lexical_cast<ValueType>(to_string());
+			}
+		}
+
+		template <typename ValueType>
+		bool cast(ValueType& rval){
+			try{
+				if(typeid(ValueType) == _base::type())
+					rval = boost::any_cast<ValueType>(*this);
+				else
+					rval = boost::lexical_cast<ValueType>(to_string());
+			}
+			catch (boost::bad_any_cast&){
+				return false;
+			}
+			catch (boost::bad_lexical_cast&){
+				return false;
+			}
+			return true;
+		}
+
 		many & operator=(many rhs)
 		{
 			rhs.swap(*((_base*)this));

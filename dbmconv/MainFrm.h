@@ -96,9 +96,17 @@ protected:
 		CPropertySheetResize PropertySheet(L"Свойства");
 		vector<int> vctSelIds;
 		m_wndItemList.GetSelectedItemIds(vctSelIds);
-		CPropertyPageTagClass TagClass(vctSelIds);
-		PropertySheet.AddPage(TagClass);
+		int nType = -1;		
+		GetModel().GetMultiItemType(vctSelIds, nType);
+
+		switch(nType){
+		case ItemTypeTagClass:
+			CPropertyPageTagClass TagClass(vctSelIds);
+			PropertySheet.AddPage(TagClass);
+			break;			
+		}
 		int nRes = PropertySheet.DoModal();
+		
 		return 0;
 	}
 	LRESULT OnInternalNotify(UINT /*uMsg*/, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/){

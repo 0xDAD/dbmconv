@@ -65,16 +65,16 @@ public:
 		IItemPtr pParent;		
 		if(GetModel().GetItem(nParent, pParent)){
 			switch(pParent->GetType()){
-			case OldImplNode:			
+			case ItemTypeOldImplNode:			
 				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CItemDevice, CDeviceProperties>(nParent));
 				return true;
-			case NewImplNode:			
+			case ItemTypeNewImplNode:			
 				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CNewImplNode, CEmptyProperties>(nParent));
 				return true;
-			case TagClassNode:
+			case ItemTypeTagClassNode:
 				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CItemTagClass, CTagClassProperties>(nParent));
 				return true;
-			case ItemDevice:
+			case ItemTypeDevice:
 				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CItemTag, CTagProperties>(nParent));
 				return true;
 

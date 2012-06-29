@@ -49,9 +49,9 @@ public:
 	CTagProperties(){}
 };
 
-class CItemTag: public IItemImpl<CItemTag, ItemTag, CTagProperties>
+class CItemTag: public IItemImpl<CItemTag, ItemTypeTag, CTagProperties>
 {
-	typedef IItemImpl<CItemTag, ItemTag, CTagProperties> _Base;
+	typedef IItemImpl<CItemTag, ItemTypeTag, CTagProperties> _Base;
 public:
 	CItemTag (int nId, int nParent):_Base(nId, nParent){
 	}
