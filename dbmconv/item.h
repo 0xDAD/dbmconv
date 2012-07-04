@@ -4,6 +4,7 @@
 #include <boost/shared_ptr.hpp>
 #include <typeinfo>
 #include <map>
+#include <list>
 
 using namespace std;
 using namespace boost;

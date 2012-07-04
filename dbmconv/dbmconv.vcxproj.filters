@@ -39,6 +39,9 @@
     <ClCompile Include="DataModel.cpp">
       <Filter>DataModel</Filter>
     </ClCompile>
+    <ClCompile Include="TagClassItem.cpp">
+      <Filter>DataModel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">

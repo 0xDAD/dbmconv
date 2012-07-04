@@ -300,6 +300,8 @@ BEGIN
     IDR_MAINFRAME           "dbmconv"
     ID_STATUSBARPANE_LVINFO "Выбрано: %d"
     ID_STATUSBARPANE_PROG   "xx"
+    IDP_SAVE_CHANGES        "Вы хотите сохранить изменения?"
+    IDS_DOC_CLOSING         "Закрытие проекта"
 END
 
 STRINGTABLE

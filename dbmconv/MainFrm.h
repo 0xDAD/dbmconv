@@ -19,6 +19,9 @@ class CMainFrame :
 public:
 	DECLARE_FRAME_WND_CLASS(NULL, IDR_MAINFRAME)
 
+protected:
+	CString m_strDocFileName;
+
 	CCommandBarCtrl m_CmdBar;
 	CMPSBarWithProgress m_wndStatusBar;
 	CSplitterWindow m_wndSplitterVert;
@@ -43,7 +46,7 @@ public:
 		UIUpdateStatusBar();
 		return FALSE;
 	}
-
+public:
 	BEGIN_UPDATE_UI_MAP(CMainFrame)
 		UPDATE_ELEMENT(ID_VIEW_TOOLBAR, UPDUI_MENUPOPUP)
 		UPDATE_ELEMENT(ID_VIEW_STATUS_BAR, UPDUI_MENUPOPUP)
@@ -89,6 +92,97 @@ protected:
 		CString strSel;
 		strSel.Format(ID_STATUSBARPANE_LVINFO, m_wndItemList.GetSelectedCount());
 		UISetText(1, strSel);
+	}
+	void _UpdateTitle(){
+		// Update title
+		CString strTitle;
+		ATLVERIFY(strTitle.LoadString(IDR_MAINFRAME));
+
+		CString strTitleNew;
+		if (m_strDocFileName.IsEmpty())
+			strTitleNew = "dbmconv";
+		else
+		{
+			TCHAR szPath[64] = { 0 };
+			ATLVERIFY(AtlCompactPath(szPath, m_strDocFileName, _countof(szPath)));
+			strTitleNew = szPath;
+		}
+		if (GetModel().IsModified())
+			strTitleNew += _T("*");
+		strTitleNew += _T(" - ");
+		strTitleNew += strTitle;
+		SetWindowText(strTitleNew);
+	}
+	bool _FileSave(LPCTSTR pszPath = NULL)
+	{
+		if (NULL == pszPath)
+			pszPath = _T("");
+		CString strFilePath;
+		//GetNamespace().GetConfigFileName(strFilePath);
+		//if (!GetNamespace().IsModified() && !strFilePath.IsEmpty() && strFilePath == pszPath)
+		//	return true;
+
+		CString strPath(pszPath);
+		if (strPath.IsEmpty())
+		{
+			//CFileDialogFilter strFltr;
+			//ATLVERIFY(strFltr.SetFilter(IDS_FILTER_MDB_XML));
+			LPCTSTR pszDefExt = _T("xml");
+			CFileDialog dlg(FALSE, pszDefExt, NULL, OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files\0*.xml");
+			INT_PTR nRes = dlg.DoModal();
+			ATLASSERT(nRes > 0);
+			if (nRes != IDOK)
+				return false;
+			strPath = dlg.m_szFileName;
+		}
+
+		CWaitCursor wc;
+		if (FAILED(GetModel().SaveToXML(strPath)))
+		{
+			AtlMessageBox(m_hWnd, L"Unable to save", IDR_MAINFRAME, MB_OK | MB_ICONSTOP);
+			return false;
+		}
+		_UpdateTitle();
+		return true;
+	}
+	bool _FileClose(){
+		if(GetModel().IsModified()){
+			int nRes =  AtlMessageBox(NULL, IDP_SAVE_CHANGES, IDS_DOC_CLOSING, MB_YESNOCANCEL);
+			if (nRes == IDOK)
+				GetModel().SaveToXML(m_strDocFileName);
+			else if(nRes == IDNO)
+				GetModel().ClearModel();
+			else
+				return false;
+		}
+			
+		m_strDocFileName = L"";
+		_UpdateTitle();
+		return true;
+	}
+	bool _FileOpen(LPCTSTR pszPath = NULL){
+		if(pszPath == NULL)
+			pszPath = L"";
+		CString strPath = pszPath;
+		if(strPath.IsEmpty()){
+			LPCTSTR pszDefExt = _T("xml");
+			CFileDialog dlg(TRUE, pszDefExt, NULL, OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST, L"XML-פאיכû (*.xml)\0*.xml\0");
+			INT_PTR nRes = dlg.DoModal();
+			ATLASSERT(nRes > 0);
+			if (nRes != IDOK)
+				return 0;	
+			strPath = dlg.m_szFileName;
+		}
+		if(SUCCEEDED(GetModel().LoadFromXML(strPath))){			
+			m_wndItemTree.InitView();
+			m_wndItemList.SetParentId(ITEM_ID_ROOT);
+			m_strDocFileName = strPath;
+		}
+		else{
+			AtlMessageBox(NULL, L"Unknown error occured while parsing xml");
+			return false;
+		}
+		return true;
 	}
 protected:
 	LRESULT OnItemProps1(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
@@ -304,19 +398,8 @@ protected:
 	}
 	LRESULT OnFileOpen(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
-		LPCTSTR pszDefExt = _T("xml");
-		CFileDialog dlg(TRUE, pszDefExt, NULL, OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST, L"XML-פאיכû (*.xml)\0*.xml\0");
-		INT_PTR nRes = dlg.DoModal();
-		ATLASSERT(nRes > 0);
-		if (nRes != IDOK)
-			return 0;	
-		if(SUCCEEDED(GetModel().LoadFromXML(dlg.m_szFileName))){			
-			m_wndItemTree.InitView();
-			m_wndItemList.SetParentId(ITEM_ID_ROOT);
-		}
-		else
-			AtlMessageBox(NULL, L"Unknown error occured while parsing xml");
-	
+		
+		
 		return 0;
 	}
 	LRESULT OnLoadDBM(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
@@ -338,7 +421,8 @@ protected:
 
 	LRESULT OnFileNew(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
-		// TODO: add code to initialize document
+		_FileClose();
+		_FileOpen();
 
 		return 0;
 	}
@@ -385,37 +469,6 @@ protected:
 		return 0;
 	}
 
-	bool _FileSave(LPCTSTR pszPath = NULL)
-	{
-		if (NULL == pszPath)
-			pszPath = _T("");
-		CString strFilePath;
-		//GetNamespace().GetConfigFileName(strFilePath);
-		//if (!GetNamespace().IsModified() && !strFilePath.IsEmpty() && strFilePath == pszPath)
-		//	return true;
 
-		CString strPath(pszPath);
-		if (strPath.IsEmpty())
-		{
-			//CFileDialogFilter strFltr;
-			//ATLVERIFY(strFltr.SetFilter(IDS_FILTER_MDB_XML));
-			LPCTSTR pszDefExt = _T("xml");
-			CFileDialog dlg(FALSE, pszDefExt, NULL, OFN_PATHMUSTEXIST | OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, L"XML Files\0*.xml");
-			INT_PTR nRes = dlg.DoModal();
-			ATLASSERT(nRes > 0);
-			if (nRes != IDOK)
-				return false;
-			strPath = dlg.m_szFileName;
-		}
-
-		CWaitCursor wc;
-		if (FAILED(GetModel().SaveToXML(strPath)))
-		{
-			AtlMessageBox(m_hWnd, L"Unable to save", IDR_MAINFRAME, MB_OK | MB_ICONSTOP);
-			return false;
-		}
-		//_UpdateWindowTitle();
-		return true;
-	}
 	
 };

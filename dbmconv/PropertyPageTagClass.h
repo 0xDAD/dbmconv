@@ -61,6 +61,11 @@ protected:
 	BEGIN_DLGRESIZE_MAP(CPropertyPageTagClass)
 		DLGRESIZE_CONTROL(IDC_EDIT_NAME, DLSZ_SIZE_X)
 		DLGRESIZE_CONTROL(IDC_COMBO_TYPE, DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_EDIT_UID, DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_COMBO_CLASS, DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_COMBO_FAMILY, DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_COMBO_DIRECTION, DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_COMBO_TARIFF, DLSZ_SIZE_X)
 		//DLGRESIZE_CONTROL(IDC_EDT_DESCRIPTION, DLSZ_SIZE_X | DLSZ_SIZE_Y)
 		//DLGRESIZE_CONTROL(IDC_CHK_DISABLED, DLSZ_MOVE_Y)
 	END_DLGRESIZE_MAP()
@@ -89,6 +94,7 @@ public:
 		DoDataExchange(DDX_LOAD);
 		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
 		InitCombo(m_wndCmbAssignment, TagAssignmentNone, TagAssignment96, &CItemTagClass::Assignment2String);
+		InitCombo(m_wndCmbClass, TagClassInvalid, TagClassBase2, &CItemTagClass::Class2String);
 		/*InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
 		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
 		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);*/
@@ -191,8 +197,7 @@ public:
 
 				m_strName = ptr->GetName();
 
-				many val;	
-				
+				many val;				
 				m_nID = 0;
 				if(ptr->GetPropertyValue(TagClassPropGuid, val))
 					ATLVERIFY(val.cast(m_nID));
@@ -205,7 +210,22 @@ public:
 						m_wndCmbType.SelectString(0, strVal);
 					}
 				}
-
+				if(ptr->GetPropertyValue(TagClassPropClass, val)){
+					int nClass = -2;
+					if(val.cast(nClass)){
+						CString strVal;
+						CItemTagClass::Class2String(nClass, strVal);
+						m_wndCmbClass.SelectString(0, strVal);
+					}
+				}
+				if(ptr->GetPropertyValue(TagClassPropAssignment, val)){
+					int nAss = -2;
+					if(val.cast(nAss)){
+						CString strVal;
+						CItemTagClass::Assignment2String(nAss, strVal);
+						m_wndCmbAssignment.SelectString(0, strVal);
+					}
+				}
 			}
 			/*if (GetNamespace().GetItem(m_rvctItemIDs.front(), &spItem)) {
 			m_strName = spItem->GetName();

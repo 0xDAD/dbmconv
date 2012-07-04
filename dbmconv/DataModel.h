@@ -145,6 +145,11 @@ public:
 		return m_instance;
 	}
 public:
+	void ClearModel(){
+		m_mapItems.clear();
+		m_treeItems.clear();
+		
+	}
 	bool GetChildItems(int nParentId, int nItemType, ItemList& listItems){
 		if(!HasChilds(nParentId))
 			return false;
@@ -242,12 +247,24 @@ public:
 			
 			bool bDifferent = false;
 			CString strValue;
+
 			if(GetMultiItemPropertyValueStr(it->second, TagPropType, strValue, bDifferent) && !bDifferent){
 				if (!_SetItemValue(ptr, TagClassPropType, wstring(strValue.GetBuffer()))) 
 					return false;
 			}
+
 			if(GetMultiItemPropertyValueStr(it->second, TagPropAssignment, strValue, bDifferent) && !bDifferent){
-				if (!_SetItemValue(ptr, TagClassAssignment,  wstring(strValue.GetBuffer()))) 
+				if (!_SetItemValue(ptr, TagClassPropAssignment,  wstring(strValue.GetBuffer()))) 
+					return false;
+			}
+
+			if(GetMultiItemPropertyValueStr(it->second, TagPropClass, strValue, bDifferent) && !bDifferent){
+				if (!_SetItemValue(ptr, TagClassPropClass,  wstring(strValue.GetBuffer()))) 
+					return false;
+			}
+
+			if(GetMultiItemPropertyValueStr(it->second, TagPropUnitsType, strValue, bDifferent) && !bDifferent){
+				if (!_SetItemValue(ptr, TagClassPropUnitsType,  wstring(strValue.GetBuffer()))) 
 					return false;
 			}
 
@@ -263,7 +280,6 @@ public:
 	}
 
 protected:
-
 	template <class Type>
 	bool _SetItemValue(IItemPtr& ptr, int nPropId, const Type& tval){
 		if(ptr->SetPropertyValue(nPropId, many(tval))){
@@ -272,7 +288,6 @@ protected:
 		}
 		return false;
 	}
-
 	template <class Type>
 	bool _SetItemValue(int nID, int nPropId, const Type& tval){		
 		IItemPtr ptr;
@@ -431,6 +446,7 @@ public:
 
 		return S_OK;
 	}
+protected:
 	HRESULT SaveItems(CXMLDOMDocument& rDoc, IXMLDOMNode* pParent, ItemList& rlstItems){
 		HRESULT hr;
 		CString strValue;
@@ -478,22 +494,22 @@ public:
 			return hr;		
 		return S_OK;
 	}
-
 private:
 	void _SetModified(bool bModified){
 		m_bModified = bModified;
 	}
-	bool _GetModified()
-	{
+public:
+	bool IsModified(){
 		return m_bModified;
 	}
-
 protected:
 	ItemMap m_mapItems;
 	ItemTree m_treeItems;
 private:
 	int m_nNextId;
 	bool m_bModified;
+	int m_nNextTagClassId;
+	int m_nNextDevClassId;
 };
 
 CDataModel& GetModel();

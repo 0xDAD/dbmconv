@@ -6,6 +6,8 @@
 #define IDD_MAINDLG                     129
 #define ID_STATUSBARPANE_LVINFO         129
 #define ID_STATUSBARPANE_PROG           130
+#define IDP_SAVE_CHANGES                131
+#define IDS_DOC_CLOSING                 132
 #define IDD_PP_TAGCLASS                 201
 #define IDC_EDIT1                       1000
 #define IDC_BUTTON1                     1001

@@ -1,6 +1,7 @@
 #pragma once
 #include "item.h"
 #include "TagInfo.h"
+#include "dlsres.h"
 
 enum ItemTagClassProperty {		
 	TagClassPropName = BasePropName,
@@ -8,16 +9,17 @@ enum ItemTagClassProperty {
 	TagClassPropRefCnt,
 	TagClassPropType,
 	TagClassPropClass,
-	TagClassPropUnitsTypeId,	
+	TagClassPropUnitsType,
+	TagClassPropValUnits,
 	TagClassPropHar,
-	TagClassAssignment,
-	TagClassDirection,
-	TagClassTariff,
+	TagClassPropAssignment,
+	TagClassPropDirection,
+	TagClassPropTariff,
 
-	TagClassPropAddress,
+	TagClassPropColAddress,
 
 	TagClassPropFirst = BasePropName,
-	TagClassPropLast = TagClassPropAddress
+	TagClassPropLast = TagClassPropColAddress
 };
 
 enum ItemTagType {
@@ -188,12 +190,13 @@ public:
 		case TagClassPropName: return L"Name";
 		case TagClassPropType: return L"Type";
 		case TagClassPropClass: return L"Class";
-		case TagClassPropUnitsTypeId: return L"Units";
+		case TagClassPropUnitsType: return L"UType";
+		case TagClassPropValUnits: return L"Units";
 		case TagClassPropHar: return L"Haracter";
-		case TagClassTariff: return L"Tariff";
-		case TagClassDirection: return L"Dir";
-		case TagClassAssignment: return L"Assign";
-		case TagClassPropAddress: return L"Address";
+		case TagClassPropTariff: return L"Tariff";
+		case TagClassPropDirection: return L"Dir";
+		case TagClassPropAssignment: return L"Assign";
+		case TagClassPropColAddress: return L"Address";
 		case TagClassPropRefCnt: return L"RefCnt";
 		default: throw;
 		}
@@ -207,8 +210,9 @@ class CItemTagClass: public IItemImpl<CItemTagClass, ItemTypeTagClass, CTagClass
 	typedef IItemImpl<CItemTagClass, ItemTypeTagClass, CTagClassProperties> _Base;
 public:
 	CItemTagClass (int nId, int nParent):_Base(nId, nParent){
+		SetPropertyValue(TagClassPropGuid, many(sc_nNextUID++));
 	}
-public:
+
 public:
 	static void Type2String(int nValue, CString& str) {
 		switch(nValue) {
@@ -401,4 +405,9 @@ public:
 			break;
 		}
 	}
+
+private:
+	static int sc_nNextUID;
 };
+
+
