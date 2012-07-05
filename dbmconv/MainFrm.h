@@ -398,7 +398,7 @@ protected:
 	}
 	LRESULT OnFileOpen(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
-		
+		_FileOpen();
 		
 		return 0;
 	}
