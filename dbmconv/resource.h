@@ -9,6 +9,8 @@
 #define IDP_SAVE_CHANGES                131
 #define IDS_DOC_CLOSING                 132
 #define IDD_PP_TAGCLASS                 201
+#define IDD_DIALOG1                     202
+#define IDD_PP_DEV_                     202
 #define IDC_EDIT1                       1000
 #define IDC_BUTTON1                     1001
 #define IDC_EDIT_UID                    1001
@@ -36,7 +38,7 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        202
+#define _APS_NEXT_RESOURCE_VALUE        203
 #define _APS_NEXT_COMMAND_VALUE         32782
 #define _APS_NEXT_CONTROL_VALUE         1011
 #define _APS_NEXT_SYMED_VALUE           5001

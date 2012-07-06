@@ -4,12 +4,12 @@
 enum ItemTagProperty {		
 	TagPropName = BasePropName,
 	TagPropGuid = UserPropsStart,
-	TagPropType,
-	TagPropClass,
-	TagPropUnitsType,
+	TagPropType,//
+	TagPropClass,//
+	TagPropUnitsType,//
 	TagPropUnitsName,
 	TagPropCharacter,
-	TagPropAssignment,
+	TagPropAssignment,//
 	TagPropAddressInMeter,
 
 	TagPropAddress,
