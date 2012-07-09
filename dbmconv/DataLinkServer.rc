@@ -196,7 +196,7 @@ BEGIN
     IDS_TAG_CLASS_INVALID   "не задано"
     IDS_TAG_CLASS_BASE      "основной"
     IDS_TAG_CLASS_OPTIONAL  "дополнительный"
-    IDS_TAG_CLASS_BASE2     "основной 2"
+    IDS_TAG_CLASS_BASE2     "основной Пром"
     IDS_TAG_UNITS_TYPE_INVALID "не задано"
     IDS_TAG_UNITS_TYPE_ANALOG "аналоговый"
     IDS_TAG_UNITS_TYPE_DISCRETE "дискретный"

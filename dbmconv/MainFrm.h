@@ -182,6 +182,7 @@ protected:
 			AtlMessageBox(NULL, L"Unknown error occured while parsing xml");
 			return false;
 		}
+		_UpdateTitle();
 		return true;
 	}
 protected:
@@ -390,9 +391,11 @@ protected:
 	}
 	LRESULT OnMakeTagClasses(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
-		if(GetModel().CollectTagClasses())
-		{
+		if(GetModel().CollectTagClasses()){
 			m_wndItemTree.InitView();
+		}
+		else{
+			AtlMessageBox(NULL, L"Failed to make classes");			
 		}
 		return 0;
 	}

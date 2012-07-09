@@ -223,8 +223,15 @@ public:
 			if(!m_instance.GetChildItems((*it)->GetID(), ItemTypeTag, tagList))
 				return false;
 			for(auto ti = tagList.begin(); ti != tagList.end(); ++ti){
-				vector<int>& vctIds = mapTagClassRef[(*ti)->GetName()];
-				vctIds.push_back((*ti)->GetID());				
+				const IItemPtr& ptr = *ti;
+				many val;
+				if(ptr->GetPropertyValue(TagPropClass, val)){
+					int nClass = -1;
+					if(val.cast(nClass) && nClass == 1)
+						continue;
+				}
+				vector<int>& vctIds = mapTagClassRef[ptr->GetName()];
+				vctIds.push_back(ptr->GetID());				
 			}
 		}
 
@@ -246,25 +253,34 @@ public:
 			_SetItemValue(ptr, TagClassPropRefCnt, it->second.size());			
 			
 			bool bDifferent = false;
-			CString strValue;
-
-			if(GetMultiItemPropertyValueStr(it->second, TagPropType, strValue, bDifferent) && !bDifferent){
+			CString strValue;			
+			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropType, strValue, bDifferent));
+			if (!bDifferent){
 				if (!_SetItemValue(ptr, TagClassPropType, wstring(strValue.GetBuffer()))) 
 					return false;
 			}
 
-			if(GetMultiItemPropertyValueStr(it->second, TagPropAssignment, strValue, bDifferent) && !bDifferent){
+			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropAssignment, strValue, bDifferent));
+			if(!bDifferent){
 				if (!_SetItemValue(ptr, TagClassPropAssignment,  wstring(strValue.GetBuffer()))) 
 					return false;
 			}
 
-			if(GetMultiItemPropertyValueStr(it->second, TagPropClass, strValue, bDifferent) && !bDifferent){
+			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropClass, strValue, bDifferent));
+			if(!bDifferent){
 				if (!_SetItemValue(ptr, TagClassPropClass,  wstring(strValue.GetBuffer()))) 
 					return false;
 			}
 
-			if(GetMultiItemPropertyValueStr(it->second, TagPropUnitsType, strValue, bDifferent) && !bDifferent){
+			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropUnitsType, strValue, bDifferent));
+			if(!bDifferent){
 				if (!_SetItemValue(ptr, TagClassPropUnitsType,  wstring(strValue.GetBuffer()))) 
+					return false;
+			}
+
+			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropAddress, strValue, bDifferent));
+			if(!bDifferent){
+				if (!_SetItemValue(ptr, TagClassPropColAddress,  wstring(strValue.GetBuffer()))) 
 					return false;
 			}
 
