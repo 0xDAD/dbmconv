@@ -23,12 +23,17 @@ struct pod_conv : public conv
 	}
 };
 
-//struct atlstr_conv : public conv
-//{
-//	std::wstring operator() (const boost::any* lpany) const{
-//		return std::wstring(boost::any_cast<CString>(*lpany).GetBuffer());
-//	}
-//};
+template <class T>
+struct vct_conv : public conv
+{
+	std::wstring to_string(const boost::any* lpany) const{
+		const std::vector<T>& rvct = boost::any_cast<std::vector<T>>(*lpany);
+		return boost::lexical_cast<wstring>(rvct);
+	}
+	boost::any from_string(std::wstring& str){
+		return boost::any(boost::lexical_cast<vector<T>>(str));	
+	}
+};
 class many: public boost::any
 {
 	typedef boost::any _base;

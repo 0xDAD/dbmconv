@@ -10,7 +10,7 @@ enum ItemTagClassProperty {
 	TagClassPropType,
 	TagClassPropClass,
 	TagClassPropUnitsType,
-	TagClassPropValUnits,
+	TagClassPropUnits,
 	TagClassPropHar,
 	TagClassPropAssignment,
 	TagClassPropDirection,
@@ -44,9 +44,27 @@ enum ItemTagUnitsType {
 	TagUnitsTypeInvalid = -1,
 	TagUnitsTypeAnalog = 0,
 	TagUnitsTypeDiscrete = 1,
-	TagUnitsTypeSpecial = 2
+	TagUnitsTypeSpecial = 2,
+
+	TagUnitsTypeFirst = TagUnitsTypeInvalid,
+	TagUnitsTypeLast = TagUnitsTypeSpecial
 };
 
+//////////////////////////////////////////////////////////////////////////
+
+enum ItemTagUnits {
+	TagUnitsNone = -1,
+	TagUnitsKWh = 0,
+	TagUnitsKW,
+	TagUnitsV,
+	TagUnitsA,
+	TagUnitsHz,
+	TagUnitsGr,
+	TagUnitsDT,
+
+	TagUnitsFirst = TagUnitsNone,
+	TagUnitsLast = TagUnitsDT
+};
 //////////////////////////////////////////////////////////////////////////
 
 enum ItemTagCharacter {
@@ -60,6 +78,9 @@ enum ItemTagCharacter {
 	TagCharacterBeginOfMonth = 6,
 	TagCharacterSummary = 7,
 	TagCharacterBeginOfDay = 8,
+
+	TagCharacterFirst = TagCharacterInvalid,
+	TagCharacterLast = TagCharacterBeginOfDay
 };
 
 
@@ -89,86 +110,86 @@ TagAssignment6 =  	6 ,	// Активная+ тариф 5
 TagAssignment7 =  	7 ,	// Активная+ тариф 6
 TagAssignment8 =  	8 ,	// Активная+ тариф 7
 TagAssignment9 =	9 ,	// Активная+ тариф 8
-TagAssignment10 = 	10,	// Реактивная+
-TagAssignment11 = 	11,	// Реактивная+ тариф 1
-TagAssignment12 = 	12,	// Реактивная+ тариф 2
-TagAssignment13 = 	13,	// Реактивная+ тариф 3
-TagAssignment14 = 	14,	// Реактивная+ тариф 4
-TagAssignment15 = 	15,	// Реактивная+ тариф 5
-TagAssignment16 = 	16,	// Реактивная+ тариф 6
-TagAssignment17 = 	17,	// Реактивная+ тариф 7
-TagAssignment18 = 	18,	// Реактивная+ тариф 8
-TagAssignment19 = 	19,	// Тепловая энергия
-TagAssignment20 = 	20,	// Объемный расход теплоносителя
-TagAssignment21 = 	21,	// Накопленный объем теплоносителя
-TagAssignment22 = 	22,	// Температура теплоносителя по 1-му каналу
-TagAssignment23 = 	23,	// Температура теплоносителя по 2-му каналу
-TagAssignment24 = 	24,	// Время наработки прибора учета
-TagAssignment25 = 	25,	// Накопленный объем холодной воды
-TagAssignment26 = 	26,	// Накопленный объем горячей воды
-TagAssignment27 = 	27,	// Накопленный объем газа
-TagAssignment28 = 	28,	// Активная-
-TagAssignment29 = 	29,	// Активная- тариф 1
-TagAssignment30 = 	30,	// Активная- тариф 2
-TagAssignment31 = 	31,	// Активная- тариф 3
-TagAssignment32 = 	32,	// Активная- тариф 4
-TagAssignment33 = 	33,	// Активная- тариф 5
-TagAssignment34 = 	34,	// Активная- тариф 6
-TagAssignment35 = 	35,	// Активная- тариф 7
-TagAssignment36 = 	36,	// Активная- тариф 8
-TagAssignment37 = 	37,	// Реактивная-
-TagAssignment38 = 	38,	// Реактивная- тариф 1
-TagAssignment39 = 	39,	// Реактивная- тариф 2
-TagAssignment40 = 	40,	// Реактивная- тариф 3
-TagAssignment41 = 	41,	// Реактивная- тариф 4
-TagAssignment42 = 	42,	// Реактивная- тариф 5
-TagAssignment43 = 	43,	// Реактивная- тариф 6
-TagAssignment44 = 	44,	// Реактивная- тариф 7
-TagAssignment45 = 	45,	// Реактивная- тариф 8
-TagAssignment46 = 	46,	// Активная мощность фаза A
-TagAssignment47 = 	47,	// Активная мощность фаза B
-TagAssignment48 = 	48,	// Активная мощность фаза C
-TagAssignment49 = 	49,	// Реактивная мощность фаза A
-TagAssignment50 = 	50,	// Реактивная мощность фаза B
-TagAssignment51 = 	51,	// Реактивная мощность фаза C
-TagAssignment52 = 	52,	// Ток фаза A
-TagAssignment53 = 	53,	// Ток фаза B
-TagAssignment54 = 	54,	// Ток фаза C
-TagAssignment55 = 	55,	// Напряжение фаза A
-TagAssignment56 = 	56,	// Напряжение фаза B
-TagAssignment57 = 	57,	// Напряжение фаза C
-TagAssignment61 = 	61,	// Макс активная мощность+ тариф 1
-TagAssignment62 = 	62,	// Макс активная мощность+ тариф 2
-TagAssignment63 = 	63,	// Макс активная мощность+ тариф 3
-TagAssignment64 = 	64,	// Макс активная мощность+ тариф 4
-TagAssignment65 = 	65,	// Макс активная мощность+ тариф 5
-TagAssignment66 = 	66,	// Макс активная мощность+ тариф 6
-TagAssignment67 = 	67,	// Макс активная мощность+ тариф 7
-TagAssignment68 = 	68,	// Макс активная мощность+ тариф 8
-TagAssignment69 = 	69,	// Макс активная мощность+ общая
-TagAssignment70 = 	70,	// Макс активная мощность- общая
-TagAssignment71 = 	71,	// Макс активная мощность- тариф 1
-TagAssignment72 = 	72,	// Макс активная мощность- тариф 2
-TagAssignment73 = 	73,	// Макс активная мощность- тариф 3
-TagAssignment74 = 	74,	// Макс активная мощность- тариф 4
-TagAssignment75 = 	75,	// Макс активная мощность- тариф 5
-TagAssignment76 = 	76,	// Макс активная мощность- тариф 6
-TagAssignment77 = 	77,	// Макс активная мощность- тариф 7
-TagAssignment78 = 	78,	// Макс активная мощность- тариф 8
-TagAssignment79 = 	79,	// Макс реактивная мощность+ общая
-TagAssignment80 = 	80,	// Макс реактивная мощность+ тариф 1
-TagAssignment81 = 	81,	// Макс реактивная мощность+ тариф 2
-TagAssignment82 = 	82,	// Макс реактивная мощность+ тариф 3
-TagAssignment83 = 	83,	// Макс реактивная мощность+ тариф 4
-TagAssignment84 = 	84,	// Макс реактивная мощность+ тариф 5
-TagAssignment85 = 	85,	// Макс реактивная мощность+ тариф 6
-TagAssignment86 = 	86,	// Макс реактивная мощность+ тариф 7
-TagAssignment87 = 	87,	// Макс реактивная мощность+ тариф 8
-TagAssignment88 = 	88,	// Макс реактивная мощность- общая
-TagAssignment89 = 	89,	// Макс реактивная мощность- тариф 1
-TagAssignment90 = 	90,	// Макс реактивная мощность- тариф 2
-TagAssignment91 = 	91,	// Макс реактивная мощность- тариф 3
-TagAssignment92 = 	92,	// Макс реактивная мощность- тариф 4
+TagAssignment10 =	10,	// Реактивная+
+TagAssignment11 =	11,	// Реактивная+ тариф 1
+TagAssignment12 =	12,	// Реактивная+ тариф 2
+TagAssignment13 =	13,	// Реактивная+ тариф 3
+TagAssignment14 =	14,	// Реактивная+ тариф 4
+TagAssignment15 =	15,	// Реактивная+ тариф 5
+TagAssignment16 =	16,	// Реактивная+ тариф 6
+TagAssignment17 =	17,	// Реактивная+ тариф 7
+TagAssignment18 =	18,	// Реактивная+ тариф 8
+TagAssignment19 =	19,	// Тепловая энергия
+TagAssignment20 =	20,	// Объемный расход теплоносителя
+TagAssignment21 =	21,	// Накопленный объем теплоносителя
+TagAssignment22 =	22,	// Температура теплоносителя по 1-му каналу
+TagAssignment23 =	23,	// Температура теплоносителя по 2-му каналу
+TagAssignment24 =	24,	// Время наработки прибора учета
+TagAssignment25 =	25,	// Накопленный объем холодной воды
+TagAssignment26 =	26,	// Накопленный объем горячей воды
+TagAssignment27 =	27,	// Накопленный объем газа
+TagAssignment28 =	28,	// Активная-
+TagAssignment29 =	29,	// Активная- тариф 1
+TagAssignment30 =	30,	// Активная- тариф 2
+TagAssignment31 =	31,	// Активная- тариф 3
+TagAssignment32 =	32,	// Активная- тариф 4
+TagAssignment33 =	33,	// Активная- тариф 5
+TagAssignment34 =	34,	// Активная- тариф 6
+TagAssignment35 =	35,	// Активная- тариф 7
+TagAssignment36 =	36,	// Активная- тариф 8
+TagAssignment37 =	37,	// Реактивная-
+TagAssignment38 =	38,	// Реактивная- тариф 1
+TagAssignment39 =	39,	// Реактивная- тариф 2
+TagAssignment40 =	40,	// Реактивная- тариф 3
+TagAssignment41 =	41,	// Реактивная- тариф 4
+TagAssignment42 =	42,	// Реактивная- тариф 5
+TagAssignment43 =	43,	// Реактивная- тариф 6
+TagAssignment44 =	44,	// Реактивная- тариф 7
+TagAssignment45 =	45,	// Реактивная- тариф 8
+TagAssignment46 =	46,	// Активная мощность фаза A
+TagAssignment47 =	47,	// Активная мощность фаза B
+TagAssignment48 =	48,	// Активная мощность фаза C
+TagAssignment49 =	49,	// Реактивная мощность фаза A
+TagAssignment50 =	50,	// Реактивная мощность фаза B
+TagAssignment51 =	51,	// Реактивная мощность фаза C
+TagAssignment52 =	52,	// Ток фаза A
+TagAssignment53 =	53,	// Ток фаза B
+TagAssignment54 =	54,	// Ток фаза C
+TagAssignment55 =	55,	// Напряжение фаза A
+TagAssignment56 =	56,	// Напряжение фаза B
+TagAssignment57 =	57,	// Напряжение фаза C
+TagAssignment61 =	61,	// Макс активная мощность+ тариф 1
+TagAssignment62 =	62,	// Макс активная мощность+ тариф 2
+TagAssignment63 =	63,	// Макс активная мощность+ тариф 3
+TagAssignment64 =	64,	// Макс активная мощность+ тариф 4
+TagAssignment65 =	65,	// Макс активная мощность+ тариф 5
+TagAssignment66 =	66,	// Макс активная мощность+ тариф 6
+TagAssignment67 =	67,	// Макс активная мощность+ тариф 7
+TagAssignment68 =	68,	// Макс активная мощность+ тариф 8
+TagAssignment69 =	69,	// Макс активная мощность+ общая
+TagAssignment70 =	70,	// Макс активная мощность- общая
+TagAssignment71 =	71,	// Макс активная мощность- тариф 1
+TagAssignment72 =	72,	// Макс активная мощность- тариф 2
+TagAssignment73 =	73,	// Макс активная мощность- тариф 3
+TagAssignment74 =	74,	// Макс активная мощность- тариф 4
+TagAssignment75 =	75,	// Макс активная мощность- тариф 5
+TagAssignment76 =	76,	// Макс активная мощность- тариф 6
+TagAssignment77 =	77,	// Макс активная мощность- тариф 7
+TagAssignment78 =	78,	// Макс активная мощность- тариф 8
+TagAssignment79 =	79,	// Макс реактивная мощность+ общая
+TagAssignment80 =	80,	// Макс реактивная мощность+ тариф 1
+TagAssignment81 =	81,	// Макс реактивная мощность+ тариф 2
+TagAssignment82 =	82,	// Макс реактивная мощность+ тариф 3
+TagAssignment83 =	83,	// Макс реактивная мощность+ тариф 4
+TagAssignment84 =	84,	// Макс реактивная мощность+ тариф 5
+TagAssignment85 =	85,	// Макс реактивная мощность+ тариф 6
+TagAssignment86 =	86,	// Макс реактивная мощность+ тариф 7
+TagAssignment87 =	87,	// Макс реактивная мощность+ тариф 8
+TagAssignment88 =	88,	// Макс реактивная мощность- общая
+TagAssignment89 =	89,	// Макс реактивная мощность- тариф 1
+TagAssignment90 =	90,	// Макс реактивная мощность- тариф 2
+TagAssignment91 =	91,	// Макс реактивная мощность- тариф 3
+TagAssignment92 =	92,	// Макс реактивная мощность- тариф 4
 TagAssignment93 =	93,	// Макс реактивная мощность- тариф 5
 TagAssignment94 =	94,	// Макс реактивная мощность- тариф 6
 TagAssignment95 =	95,	// Макс реактивная мощность- тариф 7
@@ -191,7 +212,7 @@ public:
 		case TagClassPropType: return L"Type";
 		case TagClassPropClass: return L"Class";
 		case TagClassPropUnitsType: return L"UType";
-		case TagClassPropValUnits: return L"Units";
+		case TagClassPropUnits: return L"Units";
 		case TagClassPropHar: return L"Haracter";
 		case TagClassPropTariff: return L"Tariff";
 		case TagClassPropDirection: return L"Dir";
@@ -263,6 +284,37 @@ public:
 		case TagUnitsTypeDiscrete:
 			str.LoadString(IDS_TAG_UNITS_TYPE_DISCRETE);
 			break;
+		default:
+			str.Format(_T("%d"), nValue);
+			break;
+		}
+	}
+	static void Units2String(int nValue, CString& str) {
+		switch(nValue) {
+		case TagUnitsNone:
+			str.LoadString(IDS_TAG_UNITS_TYPE_INVALID);
+			break;
+		case TagUnitsKWh:
+			str = _T("кВт*ч");
+			break;
+		case TagUnitsKW:
+			str = _T("кВт");
+			break;
+		case TagUnitsV:
+			str = _T("В");
+			break;
+		case TagUnitsA:
+			str = _T("А");
+			break;
+		case TagUnitsHz:
+			str = _T("Гц");
+			break;
+		case TagUnitsGr:
+			str = _T("°C");
+			break;
+		case TagUnitsDT:
+			str = _T("дата/время");
+			break;				
 		default:
 			str.Format(_T("%d"), nValue);
 			break;

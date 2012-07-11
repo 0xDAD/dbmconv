@@ -9,12 +9,12 @@
 #define IDP_SAVE_CHANGES                131
 #define IDS_DOC_CLOSING                 132
 #define IDD_PP_TAGCLASS                 201
-#define IDD_DIALOG1                     202
 #define IDD_PP_DEV_                     202
 #define IDC_EDIT1                       1000
 #define IDC_BUTTON1                     1001
 #define IDC_EDIT_UID                    1001
 #define IDC_BUTTON2                     1002
+#define IDC_EDIT_COLADDR                1002
 #define IDC_EDIT2                       1003
 #define IDC_BUTTON3                     1004
 #define IDC_BUTTON4                     1005
@@ -27,6 +27,10 @@
 #define IDC_COMBO_FAMILY                1013
 #define IDC_COMBO_DIRECTION             1014
 #define IDC_COMBO_TARIFF                1015
+#define IDC_COMBO_UNITS                 1016
+#define IDC_COMBO_UNITS2                1017
+#define IDC_COMBO_UNITTYPE              1017
+#define IDC_COMBO_CHARACTER             1018
 #define ID_FILE_32775                   32775
 #define ID_POPUP_LOADMDB                32776
 #define ID_32778                        32778

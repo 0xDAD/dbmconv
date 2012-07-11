@@ -66,12 +66,18 @@ protected:
 		DLGRESIZE_CONTROL(IDC_COMBO_FAMILY, DLSZ_SIZE_X)
 		DLGRESIZE_CONTROL(IDC_COMBO_DIRECTION, DLSZ_SIZE_X)
 		DLGRESIZE_CONTROL(IDC_COMBO_TARIFF, DLSZ_SIZE_X)
+
+		DLGRESIZE_CONTROL(IDC_COMBO_TARIFF, DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_COMBO_UNITS, DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_COMBO_UNITTYPE, DLSZ_SIZE_X)
+		DLGRESIZE_CONTROL(IDC_COMBO_CHARACTER, DLSZ_SIZE_X)
 		//DLGRESIZE_CONTROL(IDC_EDT_DESCRIPTION, DLSZ_SIZE_X | DLSZ_SIZE_Y)
 		//DLGRESIZE_CONTROL(IDC_CHK_DISABLED, DLSZ_MOVE_Y)
 	END_DLGRESIZE_MAP()
 
 	BEGIN_DDX_MAP(CPropertyPageTagClass)
 		DDX_TEXT(IDC_EDIT_NAME, m_strName)
+		DDX_TEXT(IDC_EDIT_COLADDR, m_strColAddr)
 		DDX_INT(IDC_EDIT_UID, m_nID)
 
 		DDX_CONTROL_HANDLE(IDC_COMBO_TYPE, m_wndCmbType)
@@ -79,6 +85,9 @@ protected:
 		DDX_CONTROL_HANDLE(IDC_COMBO_FAMILY, m_wndCmbAssignment)
 		DDX_CONTROL_HANDLE(IDC_COMBO_DIRECTION, m_wndCmbDirection)
 		DDX_CONTROL_HANDLE(IDC_COMBO_TARIFF, m_wndCmbTariff)
+		DDX_CONTROL_HANDLE(IDC_COMBO_UNITS, m_wndCmbUnits)
+		DDX_CONTROL_HANDLE(IDC_COMBO_UNITTYPE, m_wndCmbUnitType)
+		DDX_CONTROL_HANDLE(IDC_COMBO_CHARACTER, m_wndCmbCharact)
 		//DDX_TEXT(IDC_EDT_FULL_NAME, m_strFullName)
 		//DDX_TEXT(IDC_EDT_DESCRIPTION, m_strDescription)
 		//DDX_CHECK(IDC_CHK_DISABLED, m_nDisabled)
@@ -92,12 +101,14 @@ public:
 		DlgResize_Init(false);
 		// Initialize data exchange
 		DoDataExchange(DDX_LOAD);
+
 		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
 		InitCombo(m_wndCmbAssignment, TagAssignmentNone, TagAssignment96, &CItemTagClass::Assignment2String);
 		InitCombo(m_wndCmbClass, TagClassInvalid, TagClassBase2, &CItemTagClass::Class2String);
-		/*InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
-		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
-		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);*/
+		InitCombo(m_wndCmbUnits, TagUnitsFirst, TagUnitsLast, &CItemTagClass::Units2String);
+		InitCombo(m_wndCmbUnitType, TagUnitsTypeFirst, TagUnitsTypeLast, &CItemTagClass::UnitsType2String);
+		InitCombo(m_wndCmbCharact, TagCharacterFirst, TagCharacterLast, &CItemTagClass::Character2String);
+
 		InitData();
 		m_nChanged = 0;
 		SetModified(FALSE);
@@ -187,6 +198,19 @@ public:
 		}
 	}
 
+	bool SetComboValue(CComboBox& rBox, IItemPtr& ptr, int nPropID, boost::function<void (int, CString&)> f){
+		int nData = DIFF_ARGS_IDX;
+		many val;
+		if(ptr->GetPropertyValue(nPropID, val)){			
+			if(val.cast(nData)){
+				CString strVal;
+				f(nData, strVal);
+				rBox.SelectString(0, strVal);
+				return true;
+			}
+		}
+		return false;
+	}
 	void InitData() 
 	{
 
@@ -201,31 +225,38 @@ public:
 				m_nID = 0;
 				if(ptr->GetPropertyValue(TagClassPropGuid, val))
 					ATLVERIFY(val.cast(m_nID));
-					
-				if(ptr->GetPropertyValue(TagClassPropType, val)){
+				if(ptr->GetPropertyValue(TagClassPropColAddress, val))
+					m_strColAddr = val.to_string().c_str();
+	/*			if(ptr->GetPropertyValue(TagClassPropType, val)){
 					int nType = -2;
 					if(val.cast(nType)){
 						CString strVal;
 						CItemTagClass::Type2String(nType, strVal);
 						m_wndCmbType.SelectString(0, strVal);
 					}
+				}*/
+				/*			if(ptr->GetPropertyValue(TagClassPropClass, val)){
+				int nClass = -2;
+				if(val.cast(nClass)){
+				CString strVal;
+				CItemTagClass::Class2String(nClass, strVal);
+				m_wndCmbClass.SelectString(0, strVal);
 				}
-				if(ptr->GetPropertyValue(TagClassPropClass, val)){
-					int nClass = -2;
-					if(val.cast(nClass)){
-						CString strVal;
-						CItemTagClass::Class2String(nClass, strVal);
-						m_wndCmbClass.SelectString(0, strVal);
-					}
-				}
-				if(ptr->GetPropertyValue(TagClassPropAssignment, val)){
+				}*/
+				/*if(ptr->GetPropertyValue(TagClassPropAssignment, val)){
 					int nAss = -2;
 					if(val.cast(nAss)){
 						CString strVal;
 						CItemTagClass::Assignment2String(nAss, strVal);
 						m_wndCmbAssignment.SelectString(0, strVal);
 					}
-				}
+				}*/
+				ATLVERIFY(SetComboValue(m_wndCmbType, ptr, TagClassPropType, &CItemTagClass::Type2String));
+				ATLVERIFY(SetComboValue(m_wndCmbClass, ptr, TagClassPropClass, &CItemTagClass::Class2String));
+				ATLVERIFY(SetComboValue(m_wndCmbAssignment, ptr, TagClassPropAssignment, &CItemTagClass::Assignment2String));
+				ATLVERIFY(SetComboValue(m_wndCmbUnitType, ptr, TagClassPropUnitsType, &CItemTagClass::UnitsType2String));
+				ATLVERIFY(SetComboValue(m_wndCmbUnits, ptr, TagClassPropUnits, &CItemTagClass::Units2String));
+
 			}
 			/*if (GetNamespace().GetItem(m_rvctItemIDs.front(), &spItem)) {
 			m_strName = spItem->GetName();
@@ -281,12 +312,17 @@ protected:
 	int m_nChanged;
 protected:
 	CString m_strName;
+	CString m_strColAddr;
 	int m_nID;
 	
 protected:
 	CComboBox m_wndCmbType;
 	CComboBox m_wndCmbClass;
 	CComboBox m_wndCmbAssignment;
+	CComboBox m_wndCmbCharact;
+	CComboBox m_wndCmbUnitType;
+	CComboBox m_wndCmbUnits;
+
 	CComboBox m_wndCmbDirection;
 	CComboBox m_wndCmbTariff;
 };

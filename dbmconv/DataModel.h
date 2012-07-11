@@ -221,7 +221,7 @@ public:
 		for (auto it = ilist.begin(); it != ilist.end(); ++it){
 			ItemList tagList;
 			if(!m_instance.GetChildItems((*it)->GetID(), ItemTypeTag, tagList))
-				return false;
+				continue;
 			for(auto ti = tagList.begin(); ti != tagList.end(); ++ti){
 				const IItemPtr& ptr = *ti;
 				many val;

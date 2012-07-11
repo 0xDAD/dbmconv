@@ -182,6 +182,12 @@ public:
 			nItem = GetNextItem(nItem, LVIS_SELECTED);
 		}
 	}
+	void InitView(){
+		m_nParentId = ITEM_ID_INVALID;
+		DeleteAllItems();
+		DeleteAllColumns();
+		RedrawWindow();
+	}
 protected:
 	LRESULT OnCreate(UINT uMsg, WPARAM wParam, LPARAM lParam, BOOL& /*bHandled*/)
 	{

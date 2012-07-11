@@ -170,7 +170,6 @@ public:
 private:
 	int m_nID;
 	int m_nParentID;
-	CString m_strName;
 	TProperties m_PropertiesHolder;
 };
 

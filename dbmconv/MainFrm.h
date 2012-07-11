@@ -113,6 +113,10 @@ protected:
 		strTitleNew += strTitle;
 		SetWindowText(strTitleNew);
 	}
+	void _RefreshWindow(){
+		m_wndItemTree.InitView();
+		m_wndItemList.InitView();
+	}
 	bool _FileSave(LPCTSTR pszPath = NULL)
 	{
 		if (NULL == pszPath)
@@ -142,6 +146,7 @@ protected:
 			AtlMessageBox(m_hWnd, L"Unable to save", IDR_MAINFRAME, MB_OK | MB_ICONSTOP);
 			return false;
 		}
+		m_strDocFileName = strPath;
 		_UpdateTitle();
 		return true;
 	}
@@ -149,13 +154,14 @@ protected:
 		if(GetModel().IsModified()){
 			int nRes =  AtlMessageBox(NULL, IDP_SAVE_CHANGES, IDS_DOC_CLOSING, MB_YESNOCANCEL);
 			if (nRes == IDOK)
-				GetModel().SaveToXML(m_strDocFileName);
-			else if(nRes == IDNO)
-				GetModel().ClearModel();
-			else
+				if(!_FileSave(m_strDocFileName))
+					return false;
+			else if(nRes == IDCANCEL){
 				return false;
+			}
 		}
-			
+		GetModel().ClearModel();
+		_RefreshWindow();
 		m_strDocFileName = L"";
 		_UpdateTitle();
 		return true;
@@ -425,7 +431,7 @@ protected:
 	LRESULT OnFileNew(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
 		_FileClose();
-		_FileOpen();
+		//_FileOpen();
 
 		return 0;
 	}
