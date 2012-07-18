@@ -127,6 +127,7 @@
     </ClCompile>
     <ClCompile Include="TagClassItem.cpp" />
     <ClInclude Include="ContentHandler.h" />
+    <ClInclude Include="DeviceObject.h" />
     <ClInclude Include="dlsres.h" />
     <ClInclude Include="helpersXML.h" />
     <ClInclude Include="ItemFactory.h" />

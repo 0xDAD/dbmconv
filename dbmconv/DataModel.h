@@ -76,7 +76,7 @@ protected:
 									ATLVERIFY(ptrParam->SetPropertyValue(TagPropUnitsType, many(cmdParam.m_nUnitsType)));
 								ATLVERIFY(ptrParam->SetPropertyValue(TagPropUnitsName, many(wstring(cmdParam.m_szUnitsName))));
 								ATLVERIFY(ptrParam->SetPropertyValue(TagPropCharacter, many(cmdParam.m_nCharacter)));
-								ATLVERIFY(ptrParam->SetPropertyValue(TagPropAssignment, many(cmdParam.m_nAssignment)));
+								ATLVERIFY(ptrParam->SetPropertyValue(TagPropAssignment, many(cmdParam.m_nAssignment)));					
 								// Set collector address
 								ATLVERIFY(ptrParam->SetPropertyValue(TagPropAddress,  many(wstring(cmdParam.m_szAddressInCollector))));
 
@@ -283,7 +283,7 @@ public:
 				if (!_SetItemValue(ptr, TagClassPropColAddress,  wstring(strValue.GetBuffer()))) 
 					return false;
 			}
-
+			_SetItemValue(ptr, TagClassPropUnits, 0);
 			for (auto ti = it->second.begin(); ti != it->second.end(); ++ti){
 				IItemPtr ptrTag;
 				if(GetItem(*ti, ptrTag)){
