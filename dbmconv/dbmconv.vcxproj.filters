@@ -131,6 +131,9 @@
     <ClInclude Include="DeviceObject.h">
       <Filter>DataModel</Filter>
     </ClInclude>
+    <ClInclude Include="DeviceTag.h">
+      <Filter>DataModel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="dbmconv.rc">

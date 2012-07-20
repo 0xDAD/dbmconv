@@ -17,6 +17,9 @@ enum ItemType{
 	ItemTypeNewImplNode,
 	ItemTypeTagClassNode,
 	ItemTypeTagClass,
+	ItemTypeDeviceObject,
+	ItemTypeDevObjNode,
+	ItemTypeDeviceTag,
 
 };
 enum BaseProperties{

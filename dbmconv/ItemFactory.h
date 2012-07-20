@@ -4,6 +4,8 @@
 #include "DeviceInfo.h"
 #include "TagInfo.h"
 #include "TagClassItem.h"
+#include "DeviceObject.h"
+#include "DeviceTag.h"
 
 class CItemFactory{
 protected:
@@ -29,6 +31,15 @@ public:
 			break;
 		case ItemTypeTagClass:
 			rpItem = IItemPtr( new CItemTagClass(nId, nParentId));
+			break;
+		case ItemTypeDevObjNode:
+			rpItem = IItemPtr( new CDevObjNode(nId, nParentId));
+			break;
+		case ItemTypeDeviceTag:
+			rpItem = IItemPtr( new CItemDeviceTag(nId, nParentId));
+			break;
+		case ItemTypeDeviceObject:
+			rpItem = IItemPtr( new CItemDeviceObj(nId, nParentId));
 			break;
 		default:
 			return false;

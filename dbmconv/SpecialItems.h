@@ -41,3 +41,4 @@ public:
 typedef CTreeNode<ItemTypeNewImplNode> CNewImplNode;
 typedef CTreeNode<ItemTypeOldImplNode> COldImplNode;
 typedef CTreeNode<ItemTypeTagClassNode> CTagClassNode;
+typedef CTreeNode<ItemTypeDevObjNode> CDevObjNode;

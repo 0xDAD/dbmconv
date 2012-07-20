@@ -77,7 +77,12 @@ public:
 			case ItemTypeDevice:
 				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CItemTag, CTagProperties>(nParent));
 				return true;
-
+			case ItemTypeDevObjNode:
+				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CItemDeviceObj, CDeviceObjProperties>(nParent));
+				return true;
+			case ItemTypeDeviceObject:
+				ptr = ILVDataManagerPtr(new ILVDataManagerImpl<CItemDeviceTag, CDeviceTagProperties>(nParent));
+				return true;
 			default:
 				return false;
 			}

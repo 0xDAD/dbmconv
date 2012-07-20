@@ -153,6 +153,7 @@ public:
 	bool GetChildItems(int nParentId, int nItemType, ItemList& listItems){
 		if(!HasChilds(nParentId))
 			return false;
+		listItems.clear();
 		const ItemList& listChilds = m_treeItems[nParentId];
 		for(auto x = listChilds.begin(); x!=listChilds.end();++x){
 			const IItemPtr& ptr = *x;
@@ -208,91 +209,146 @@ public:
 		}
 		m_nNextId = nMaxId + 1;	
 	}
-	bool CollectTagClasses(){
-		ItemList ilist;
-		if(!m_instance.GetChildItems(ITEM_ID_ROOT, ItemTypeOldImplNode, ilist))
-			return false;
-		if(!ilist.size() || ilist.size() > 1)
-			return false;
-		if(!m_instance.GetChildItems(ilist.front()->GetID(), ItemTypeDevice, ilist))
-			return false;
-		
-		map<CString,vector<int>> mapTagClassRef;
-		for (auto it = ilist.begin(); it != ilist.end(); ++it){
-			ItemList tagList;
-			if(!m_instance.GetChildItems((*it)->GetID(), ItemTypeTag, tagList))
-				continue;
-			for(auto ti = tagList.begin(); ti != tagList.end(); ++ti){
-				const IItemPtr& ptr = *ti;
-				many val;
-				if(ptr->GetPropertyValue(TagPropClass, val)){
-					int nClass = -1;
-					if(val.cast(nClass) && nClass == 1)
-						continue;
-				}
-				vector<int>& vctIds = mapTagClassRef[ptr->GetName()];
-				vctIds.push_back(ptr->GetID());				
-			}
-		}
+	bool Old2New(){
 
 		IItemPtr ptrNewNode;
-		ATLVERIFY(m_instance.CreateItem(ItemTypeNewImplNode, ITEM_ID_ROOT, ptrNewNode));			
+		ATLVERIFY(CreateItem(ItemTypeNewImplNode, ITEM_ID_ROOT, ptrNewNode));			
 		ptrNewNode->SetName(L"New Implementation");
-		ATLVERIFY(m_instance.CreateItem(ItemTypeTagClassNode, ptrNewNode->GetID(), ptrNewNode));			
+		int nNewImplId = ptrNewNode->GetID();
+
+		ATLVERIFY(CreateItem(ItemTypeTagClassNode, nNewImplId, ptrNewNode));			
 		ptrNewNode->SetName(L"Tag Classes");
 		int nTagClassNodeId = ptrNewNode->GetID();
 
+		ATLVERIFY(CreateItem(ItemTypeDevObjNode, nNewImplId, ptrNewNode));			
+		ptrNewNode->SetName(L"DevObjects");
+		int nDevObjectsId = ptrNewNode->GetID();
+
+		ItemList ilist;
+		ATLVERIFY(GetChildItems(ITEM_ID_ROOT, ItemTypeOldImplNode, ilist));
+		if(!ilist.size() || ilist.size() > 1)
+			return false;
+		ATLVERIFY(GetChildItems(ilist.front()->GetID(), ItemTypeDevice, ilist));		
+
+		map<CString, int> mapTagNameRef;
+		map<int,  vector<int>> mapTagClassRef;
+
+		for (auto it = ilist.begin(); it != ilist.end(); ++it){
+			IItemPtr ptrDevObj;
+			ATLVERIFY(CreateItem(ItemTypeDeviceObject, nDevObjectsId, ptrDevObj));
+			ATLVERIFY(DevInfo2DevObj(*it, ptrDevObj));
+
+			ItemList tagList;
+			ATLVERIFY(GetChildItems((*it)->GetID(), ItemTypeTag, tagList));
+
+			for(auto ti = tagList.begin(); ti != tagList.end(); ++ti){	
+				const IItemPtr& ptr = *ti;
+
+				IItemPtr pDevTag;
+				ATLVERIFY(CreateItem(ItemTypeDeviceTag, ptrDevObj->GetID(), pDevTag));
+				ATLVERIFY(pDevTag->SetPropertyValue(DeviceTagRefOld, many(ptr->GetID())));
+								
+				many val;
+				if(ptr->GetPropertyValue(TagPropClass, val)){
+					int nClass = -1;
+					if(val.cast(nClass) && nClass == 1) //пока только основные + основные пром параметры
+						continue;
+				}
+				int nTagClassId = ITEM_ID_INVALID;
+				auto nameid = mapTagNameRef.find(ptr->GetName());
+				if(nameid == mapTagNameRef.end()){
+					IItemPtr ptrTagClass;			
+					ATLVERIFY(CreateItem(ItemTypeTagClass, nTagClassNodeId, ptrTagClass));
+					ptrTagClass->SetName(ptr->GetName());
+					nTagClassId = ptrTagClass->GetID();
+				} 
+				else 
+					nTagClassId = nameid->second;
+
+				vector<int>& vctIds = mapTagClassRef[nTagClassId];
+				vctIds.push_back(ptr->GetID());
+
+				ATLVERIFY(pDevTag->SetPropertyValue(DeviceTagClassId, many(nTagClassId)));
+				
+			}
+		}
+		
 		for (auto it = mapTagClassRef.begin(); it != mapTagClassRef.end(); ++it){
 
-			IItemPtr ptr;
-			
-			if(!m_instance.CreateItem(ItemTypeTagClass, nTagClassNodeId, ptr))
-				return false;
+			IItemPtr ptrTagClass;
+			ATLVERIFY(GetItem(it->first, ptrTagClass));
+			ATLVERIFY(TagInfo2TagClass(it->second, ptrTagClass));
 
-			ptr->SetName(it->first);
-			_SetItemValue(ptr, TagClassPropRefCnt, it->second.size());			
-			
-			bool bDifferent = false;
-			CString strValue;			
-			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropType, strValue, bDifferent));
-			if (!bDifferent){
-				if (!_SetItemValue(ptr, TagClassPropType, wstring(strValue.GetBuffer()))) 
-					return false;
-			}
-
-			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropAssignment, strValue, bDifferent));
-			if(!bDifferent){
-				if (!_SetItemValue(ptr, TagClassPropAssignment,  wstring(strValue.GetBuffer()))) 
-					return false;
-			}
-
-			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropClass, strValue, bDifferent));
-			if(!bDifferent){
-				if (!_SetItemValue(ptr, TagClassPropClass,  wstring(strValue.GetBuffer()))) 
-					return false;
-			}
-
-			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropUnitsType, strValue, bDifferent));
-			if(!bDifferent){
-				if (!_SetItemValue(ptr, TagClassPropUnitsType,  wstring(strValue.GetBuffer()))) 
-					return false;
-			}
-
-			ATLVERIFY(GetMultiItemPropertyValueStr(it->second, TagPropAddress, strValue, bDifferent));
-			if(!bDifferent){
-				if (!_SetItemValue(ptr, TagClassPropColAddress,  wstring(strValue.GetBuffer()))) 
-					return false;
-			}
-			_SetItemValue(ptr, TagClassPropUnits, 0);
 			for (auto ti = it->second.begin(); ti != it->second.end(); ++ti){
 				IItemPtr ptrTag;
 				if(GetItem(*ti, ptrTag)){
-					_SetItemValue(ptrTag, TagPropRef, ptr->GetID());									
+					ATLVERIFY(_SetItemValue(ptrTag, TagPropRef, ptrTagClass->GetID()));
 				}
 			}
 		}
 		return true;
+	}
+	bool TagInfo2TagClass(vector<int>& vctTagInfoIds, IItemPtr& ptr){
+		
+		_SetItemValue(ptr, TagClassPropRefCnt, vctTagInfoIds.size());			
 
+		bool bDifferent = false;
+		CString strValue;			
+		ATLVERIFY(GetMultiItemPropertyValueStr(vctTagInfoIds, TagPropType, strValue, bDifferent));
+		if (!bDifferent){
+			if (!_SetItemValue(ptr, TagClassPropType, wstring(strValue.GetBuffer()))) 
+				return false;
+		}
+
+		ATLVERIFY(GetMultiItemPropertyValueStr(vctTagInfoIds, TagPropAssignment, strValue, bDifferent));
+		if(!bDifferent){
+			if (!_SetItemValue(ptr, TagClassPropAssignment,  wstring(strValue.GetBuffer()))) 
+				return false;
+		}
+
+		ATLVERIFY(GetMultiItemPropertyValueStr(vctTagInfoIds, TagPropClass, strValue, bDifferent));
+		if(!bDifferent){
+			if (!_SetItemValue(ptr, TagClassPropClass,  wstring(strValue.GetBuffer()))) 
+				return false;
+		}
+
+		ATLVERIFY(GetMultiItemPropertyValueStr(vctTagInfoIds, TagPropUnitsType, strValue, bDifferent));
+		if(!bDifferent){
+			if (!_SetItemValue(ptr, TagClassPropUnitsType,  wstring(strValue.GetBuffer()))) 
+				return false;
+		}
+
+		ATLVERIFY(GetMultiItemPropertyValueStr(vctTagInfoIds, TagPropAddress, strValue, bDifferent));
+		if(!bDifferent){
+			if (!_SetItemValue(ptr, TagClassPropColAddress,  wstring(strValue.GetBuffer()))) 
+				return false;
+		}
+
+		_SetItemValue(ptr, TagClassPropUnits, 0);
+		return true;
+	}
+	bool DevInfo2DevObj(const IItemPtr& rcDevInfo, IItemPtr& rDevObj){
+
+		rDevObj->SetName(rcDevInfo->GetName());
+
+		many val;
+		ATLVERIFY(rcDevInfo->GetPropertyValue(DevicePropSubClass, val));
+		ATLVERIFY(rDevObj->SetPropertyValue(DeviceObjPropSubClass, val));
+
+		ATLVERIFY(rcDevInfo->GetPropertyValue(DevicePropClass, val));
+		ATLVERIFY(rDevObj->SetPropertyValue(DeviceObjPropClass, val));
+
+		ATLVERIFY(rcDevInfo->GetPropertyValue(DevicePropResource, val));
+		ATLVERIFY(rDevObj->SetPropertyValue(DeviceObjPropResource, val));
+
+		ATLVERIFY(rcDevInfo->GetPropertyValue(DevicePropProtoId, val));
+		ATLVERIFY(rDevObj->SetPropertyValue(DeviceObjPropProtoId, val));
+
+		ATLVERIFY(rcDevInfo->GetPropertyValue(DevicePropSelfPower, val));
+		ATLVERIFY(rDevObj->SetPropertyValue(DeviceObjPropSelfPower, val));
+
+		rDevObj->SetPropertyValue(DeviceObjRefDeviceInfo, many(rcDevInfo->GetID()));
+		return true;
 	}
 
 protected:

@@ -397,7 +397,7 @@ protected:
 	}
 	LRESULT OnMakeTagClasses(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
-		if(GetModel().CollectTagClasses()){
+		if(GetModel().Old2New()){
 			m_wndItemTree.InitView();
 		}
 		else{
