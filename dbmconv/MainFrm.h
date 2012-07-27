@@ -194,7 +194,8 @@ protected:
 protected:
 	LRESULT OnItemProps1(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	{
-		CPropertySheetResize PropertySheet(L"Свойства");
+		//CPropertySheetResize PropertySheet(L"Свойства");
+		CPropertySheet PropertySheet(L"Свойства");
 		vector<int> vctSelIds;
 		m_wndItemList.GetSelectedItemIds(vctSelIds);
 		int nType = -1;		

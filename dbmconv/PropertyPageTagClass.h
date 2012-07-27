@@ -44,17 +44,27 @@ public:
 		cPropHar = 0x0040,
 		cDirection = 0x0080,
 		cTariff = 0x0100,
-		cPropAddress = 0x0200
+		cPropAddress = 0x0200,
+		cPropUnits = 0x400,
+		cPropFamily = 0x800,
 	};
 
 protected:
 	BEGIN_MSG_MAP(CPropertyPageTagClass)
 		MESSAGE_HANDLER(WM_INITDIALOG, OnInitDialog)
-		//COMMAND_HANDLER(IDC_EDT_NAME, EN_CHANGE, OnChangeEditName)
+		COMMAND_HANDLER(IDC_EDIT_NAME, EN_CHANGE, OnChangeEditName)
 		//COMMAND_HANDLER(IDC_EDT_DESCRIPTION, EN_CHANGE, OnChangeEditDescription)
 		//COMMAND_HANDLER(IDC_CHK_DISABLED, BN_CLICKED, OnChangeCheckDisabled)
 		CHAIN_MSG_MAP(baseResizeClass)
-		CHAIN_MSG_MAP(baseClass)
+		CHAIN_MSG_MAP(baseClass)		
+		COMMAND_HANDLER(IDC_EDIT_UID, EN_CHANGE, OnEnChangeEditUid)
+		COMMAND_HANDLER(IDC_COMBO_TYPE, CBN_SELCHANGE, OnCbnSelchangeComboType)
+		COMMAND_HANDLER(IDC_COMBO_CLASS, CBN_SELCHANGE, OnCbnSelchangeComboClass)
+		COMMAND_HANDLER(IDC_COMBO_FAMILY, CBN_SELCHANGE, OnCbnSelchangeComboFamily)
+		COMMAND_HANDLER(IDC_COMBO_UNITTYPE, CBN_SELCHANGE, OnCbnSelchangeComboUnittype)
+		COMMAND_HANDLER(IDC_COMBO_UNITS, CBN_SELCHANGE, OnCbnSelchangeComboUnits)
+		COMMAND_HANDLER(IDC_COMBO_CHARACTER, CBN_SELCHANGE, OnCbnSelchangeComboCharacter)
+		COMMAND_HANDLER(IDC_EDIT_COLADDR, EN_CHANGE, OnEnChangeEditColaddr)
 		REFLECT_NOTIFICATIONS()
 	END_MSG_MAP()
 
@@ -102,24 +112,87 @@ public:
 		// Initialize data exchange
 		DoDataExchange(DDX_LOAD);
 
-		InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
-		InitCombo(m_wndCmbAssignment, TagAssignmentNone, TagAssignment96, &CItemTagClass::Assignment2String);
-		InitCombo(m_wndCmbClass, TagClassInvalid, TagClassBase2, &CItemTagClass::Class2String);
-		InitCombo(m_wndCmbUnits, TagUnitsFirst, TagUnitsLast, &CItemTagClass::Units2String);
-		InitCombo(m_wndCmbUnitType, TagUnitsTypeFirst, TagUnitsTypeLast, &CItemTagClass::UnitsType2String);
-		InitCombo(m_wndCmbCharact, TagCharacterFirst, TagCharacterLast, &CItemTagClass::Character2String);
+		_InitCombo(m_wndCmbType, TagTypeInvalid, TagTypeEvent, &CItemTagClass::Type2String);
+		_InitCombo(m_wndCmbAssignment, TagAssignmentNone, TagAssignment96, &CItemTagClass::Assignment2String);
+		_InitCombo(m_wndCmbClass, TagClassInvalid, TagClassBase2, &CItemTagClass::Class2String);
+		_InitCombo(m_wndCmbUnits, TagUnitsFirst, TagUnitsLast, &CItemTagClass::Units2String);
+		_InitCombo(m_wndCmbUnitType, TagUnitsTypeFirst, TagUnitsTypeLast, &CItemTagClass::UnitsType2String);
+		_InitCombo(m_wndCmbCharact, TagCharacterFirst, TagCharacterLast, &CItemTagClass::Character2String);
 
 		InitData();
 		m_nChanged = 0;
 		SetModified(FALSE);
 		return TRUE;
 	}
-	//LRESULT OnChangeEditName(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
-	//{
-	//	m_nChanged |= cName;
-	//	SetModified();
-	//	return 0;
-	//}
+	LRESULT OnChangeEditName(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		m_nChanged |= cPropName;
+		SetModified();
+		return 0;
+	}
+	LRESULT CPropertyPageTagClass::OnEnChangeEditUid(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)	
+	{
+		m_nChanged |= cPropGuid;
+		SetModified();
+		return 0;
+	}
+
+
+	LRESULT CPropertyPageTagClass::OnCbnSelchangeComboType(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		m_nChanged |= cPropType;
+		SetModified();		
+		return 0;
+	}
+
+
+	LRESULT CPropertyPageTagClass::OnCbnSelchangeComboClass(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		m_nChanged |= cPropClass;
+		SetModified();
+		return 0;
+	}
+
+
+	LRESULT CPropertyPageTagClass::OnCbnSelchangeComboFamily(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		m_nChanged |= cPropFamily;
+		SetModified();
+		return 0;
+	}
+
+
+	LRESULT CPropertyPageTagClass::OnCbnSelchangeComboUnittype(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		m_nChanged |= cPropUnitsTypeId;
+		SetModified();
+		return 0;
+	}
+
+
+	LRESULT CPropertyPageTagClass::OnCbnSelchangeComboUnits(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		m_nChanged |= cPropUnits;
+		SetModified();
+		return 0;
+	}
+
+
+	LRESULT CPropertyPageTagClass::OnCbnSelchangeComboCharacter(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		m_nChanged |= cPropHar;
+		SetModified();
+		return 0;
+	}
+
+
+	LRESULT CPropertyPageTagClass::OnEnChangeEditColaddr(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
+	{
+		m_nChanged |= cPropAddress;
+		SetModified();
+		return 0;
+	}
+
 	//LRESULT OnChangeEditDescription(WORD /*wNotifyCode*/, WORD /*wID*/, HWND /*hWndCtl*/, BOOL& /*bHandled*/)
 	//{
 	//	m_nChanged |= cDescription;
@@ -181,40 +254,10 @@ public:
 		// PSNRET_INVALID_NOCHANGEPAGE = apply not OK, don't change focus
 		return PSNRET_NOERROR;
 	}
-
-
-	void InitCombo(CComboBox& rBox, int nStart, int nEnd, boost::function<void (int, CString&)> f) 
-	{
-		int nItem = 0;
-		CString str;
-		if(!IsSingleItemSelected())	{
-			nItem = rBox.AddString(str);
-			rBox.SetItemData(nItem, DIFF_ARGS_IDX);
-		}		
-		for (auto i = nStart; i <= nEnd ;i++){
-			f(i, str);
-			nItem = rBox.AddString(str);
-			rBox.SetItemData(nItem, i);
-		}
-	}
-
-	bool SetComboValue(CComboBox& rBox, IItemPtr& ptr, int nPropID, boost::function<void (int, CString&)> f){
-		int nData = DIFF_ARGS_IDX;
-		many val;
-		if(ptr->GetPropertyValue(nPropID, val)){			
-			if(val.cast(nData)){
-				CString strVal;
-				f(nData, strVal);
-				rBox.SelectString(0, strVal);
-				return true;
-			}
-		}
-		return false;
-	}
+protected:
 	void InitData() 
 	{
-
-			// Is single item selected?
+		// Is single item selected?
 		if (IsSingleItemSelected()) {
 			IItemPtr ptr;
 			if(GetModel().GetItem(m_rvctItemIDs.front(), ptr) && ptr->GetType() == ItemTypeTagClass){				
@@ -226,80 +269,42 @@ public:
 				if(ptr->GetPropertyValue(TagClassPropGuid, val))
 					ATLVERIFY(val.cast(m_nID));
 				if(ptr->GetPropertyValue(TagClassPropColAddress, val))
-					m_strColAddr = val.to_string().c_str();
-	/*			if(ptr->GetPropertyValue(TagClassPropType, val)){
-					int nType = -2;
-					if(val.cast(nType)){
-						CString strVal;
-						CItemTagClass::Type2String(nType, strVal);
-						m_wndCmbType.SelectString(0, strVal);
-					}
-				}*/
-				/*			if(ptr->GetPropertyValue(TagClassPropClass, val)){
-				int nClass = -2;
-				if(val.cast(nClass)){
-				CString strVal;
-				CItemTagClass::Class2String(nClass, strVal);
-				m_wndCmbClass.SelectString(0, strVal);
-				}
-				}*/
-				/*if(ptr->GetPropertyValue(TagClassPropAssignment, val)){
-					int nAss = -2;
-					if(val.cast(nAss)){
-						CString strVal;
-						CItemTagClass::Assignment2String(nAss, strVal);
-						m_wndCmbAssignment.SelectString(0, strVal);
-					}
-				}*/
-				ATLVERIFY(SetComboValue(m_wndCmbType, ptr, TagClassPropType, &CItemTagClass::Type2String));
-				ATLVERIFY(SetComboValue(m_wndCmbClass, ptr, TagClassPropClass, &CItemTagClass::Class2String));
-				ATLVERIFY(SetComboValue(m_wndCmbAssignment, ptr, TagClassPropAssignment, &CItemTagClass::Assignment2String));
-				ATLVERIFY(SetComboValue(m_wndCmbUnitType, ptr, TagClassPropUnitsType, &CItemTagClass::UnitsType2String));
-				ATLVERIFY(SetComboValue(m_wndCmbUnits, ptr, TagClassPropUnits, &CItemTagClass::Units2String));
+					m_strColAddr.Format(L"%s", val.to_string().c_str());
+	
+				ATLVERIFY(_SetComboValue(m_wndCmbType, ptr, TagClassPropType, &CItemTagClass::Type2String));
+				ATLVERIFY(_SetComboValue(m_wndCmbClass, ptr, TagClassPropClass, &CItemTagClass::Class2String));
+				ATLVERIFY(_SetComboValue(m_wndCmbAssignment, ptr, TagClassPropAssignment, &CItemTagClass::Assignment2String));
+				ATLVERIFY(_SetComboValue(m_wndCmbUnitType, ptr, TagClassPropUnitsType, &CItemTagClass::UnitsType2String));
+				ATLVERIFY(_SetComboValue(m_wndCmbUnits, ptr, TagClassPropUnits, &CItemTagClass::Units2String));
 
 			}
-			/*if (GetNamespace().GetItem(m_rvctItemIDs.front(), &spItem)) {
-			m_strName = spItem->GetName();
-			m_strFullName  = GetNamespace().GetItemFullNameSimple(m_rvctItemIDs.front());
-			m_strDescription = spItem->GetDescription();
-			m_nDisabled = spItem->IsDisabled()? 1 : 0;
 
-			CEdit wndEdtControl;
-			wndEdtControl = GetDlgItem(IDC_EDT_NAME);
-			ATLASSERT(wndEdtControl.IsWindow());
-			if (GetNamespace().CanModifyItem(spItem->GetID(), OPCTL::ItemPropName))
-			ATLVERIFY(wndEdtControl.SetReadOnly(FALSE));
-			else
-			ATLVERIFY(wndEdtControl.SetReadOnly(TRUE));
+		//	_EnableWindow(IDC_EDIT_NAME, false);
 
-			wndEdtControl = GetDlgItem(IDC_EDT_DESCRIPTION);
-			ATLASSERT(wndEdtControl.IsWindow());
-			if (GetNamespace().CanModifyItem(spItem->GetID(), OPCTL::ItemPropDescription))
-			ATLVERIFY(wndEdtControl.SetReadOnly(FALSE));
-			else
-			ATLVERIFY(wndEdtControl.SetReadOnly(TRUE));
-			}*/
 		}
 		else {
 			m_strName = CResourceHolder::GetControlTextUnavailableStr();
-			//m_strFullName = CResourceHolder::GetControlTextUnavailableStr();
 
-			//CComVariant vValue;
-			//bool bDifferent = false;
+			many val;				
+			m_nID = 0;
+			bool bDiff = false;
 
-			//ATLVERIFY(GetNamespace().GetMultiItemPropertyValueStr(m_rvctItemIDs, OPCTL::ItemPropDescription, m_strDescription, OPCTL::ItemPropGetTypeAlways, bDifferent));
-			//ATLVERIFY(GetNamespace().GetMultiItemPropertyValue(m_rvctItemIDs, OPCTL::ItemPropDisabled, vValue, OPCTL::ItemPropGetTypeAlways, bDifferent));
-			//if (bDifferent || FAILED(vValue.ChangeType(VT_BOOL)))
-			//	m_nDisabled = 2;
-			//else
-			//	m_nDisabled = (V_BOOL(&vValue) != VARIANT_FALSE)? 1: 0;
+			if(GetModel().GetMultiItemPropertyValue(m_rvctItemIDs, TagClassPropColAddress, val, bDiff)){
+				if(!bDiff)
+					m_strColAddr = val.to_string().c_str();
+				else
+					m_strColAddr = CResourceHolder::GetControlTextUnavailableStr();
+			}
 
-			//// Disable some controls
-			//CWindow wndControl;
-			//wndControl = GetDlgItem(IDC_EDT_NAME);
-			//ATLASSERT(wndControl.IsWindow());
-			//wndControl.EnableWindow(FALSE);
+			ATLVERIFY(_SetComboValueMult(m_wndCmbType, TagClassPropType, &CItemTagClass::Type2String));
+			ATLVERIFY(_SetComboValueMult(m_wndCmbClass, TagClassPropClass, &CItemTagClass::Class2String));
+			ATLVERIFY(_SetComboValueMult(m_wndCmbAssignment, TagClassPropAssignment, &CItemTagClass::Assignment2String));
+			ATLVERIFY(_SetComboValueMult(m_wndCmbUnitType, TagClassPropUnitsType, &CItemTagClass::UnitsType2String));
+			ATLVERIFY(_SetComboValueMult(m_wndCmbUnits, TagClassPropUnits, &CItemTagClass::Units2String));
 
+			// Disable some controls
+			_EnableWindow(IDC_EDIT_NAME, false);
+			_EnableWindow(IDC_EDIT_UID, false);
 			//wndControl = GetDlgItem(IDC_EDT_FULL_NAME);
 			//ATLASSERT(wndControl.IsWindow());
 			//wndControl.EnableWindow(FALSE);
@@ -307,9 +312,62 @@ public:
 		DoDataExchange(DDX_LOAD);
 	}
 
+	void _InitCombo(CComboBox& rBox, int nStart, int nEnd, boost::function<void (int, CString&)> f) 
+	{
+		int nItem = 0;		
+		if(!IsSingleItemSelected())	{
+			nItem = rBox.AddString(CResourceHolder::GetControlTextUnavailableStr());
+			rBox.SetItemData(nItem, DIFF_ARGS_IDX);
+		}		
+		for (auto i = nStart; i <= nEnd ;i++){
+			CString str;
+			f(i, str);
+			nItem = rBox.AddString(str);
+			rBox.SetItemData(nItem, i);
+		}
+	}
+	bool _SetComboValue(CComboBox& rBox, IItemPtr& ptr, int nPropID, boost::function<void (int, CString&)> f){
+		int nData = DIFF_ARGS_IDX;
+		many val;
+		if(ptr->GetPropertyValue(nPropID, val)){			
+			if(val.cast(nData)){
+				CString strVal;
+				f(nData, strVal);
+				rBox.SelectString(0, strVal);
+				return true;
+			}
+		}
+		return false;
+	}	
+	bool _SetComboValueMult(CComboBox& rBox, int nPropID, boost::function<void (int, CString&)> f){
+		int nData = DIFF_ARGS_IDX;
+		bool bDiff = FALSE;
+		many val;
+		if(GetModel().GetMultiItemPropertyValue(m_rvctItemIDs, nPropID, val, bDiff)){		
+			if(bDiff){
+				rBox.SelectString(0, CResourceHolder::GetControlTextUnavailableStr());
+				return true;
+			}
+			if(val.cast(nData)){
+				CString strVal;
+				f(nData, strVal);
+				rBox.SelectString(0, strVal);
+				return true;
+			}
+		}
+		return false;
+	}	
+	bool _EnableWindow(UINT nID, bool bEnable = true){
+		CWindow wndControl;
+		wndControl = GetDlgItem(nID);
+		ATLASSERT(wndControl.IsWindow());
+		return wndControl.EnableWindow(bEnable);
+	}
+
 protected:
 	const std::vector<int>& m_rvctItemIDs;
 	int m_nChanged;
+
 protected:
 	CString m_strName;
 	CString m_strColAddr;
@@ -325,4 +383,6 @@ protected:
 
 	CComboBox m_wndCmbDirection;
 	CComboBox m_wndCmbTariff;
+
 };
+;

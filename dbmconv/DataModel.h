@@ -242,18 +242,18 @@ public:
 			ATLVERIFY(GetChildItems((*it)->GetID(), ItemTypeTag, tagList));
 
 			for(auto ti = tagList.begin(); ti != tagList.end(); ++ti){	
-				const IItemPtr& ptr = *ti;
-
-				IItemPtr pDevTag;
-				ATLVERIFY(CreateItem(ItemTypeDeviceTag, ptrDevObj->GetID(), pDevTag));
-				ATLVERIFY(pDevTag->SetPropertyValue(DeviceTagRefOld, many(ptr->GetID())));
-								
+				const IItemPtr& ptr = *ti;								
 				many val;
 				if(ptr->GetPropertyValue(TagPropClass, val)){
 					int nClass = -1;
 					if(val.cast(nClass) && nClass == 1) //пока только основные + основные пром параметры
 						continue;
 				}
+
+				IItemPtr pDevTag;
+				ATLVERIFY(CreateItem(ItemTypeDeviceTag, ptrDevObj->GetID(), pDevTag));
+				ATLVERIFY(pDevTag->SetPropertyValue(DeviceTagRefOld, many(ptr->GetID())));
+
 				int nTagClassId = ITEM_ID_INVALID;
 				auto nameid = mapTagNameRef.find(ptr->GetName());
 				if(nameid == mapTagNameRef.end()){
@@ -261,6 +261,7 @@ public:
 					ATLVERIFY(CreateItem(ItemTypeTagClass, nTagClassNodeId, ptrTagClass));
 					ptrTagClass->SetName(ptr->GetName());
 					nTagClassId = ptrTagClass->GetID();
+					mapTagNameRef.insert(make_pair(ptr->GetName(), nTagClassId));
 				} 
 				else 
 					nTagClassId = nameid->second;
@@ -368,7 +369,7 @@ protected:
 		return _SetItemValue(ptr, nPropId, tval);
 	}
 public:
-	bool GetMultiItemPropertyValue(vector<int>& vctIds, int nPropId, many& rValue, bool& rbDifferent){
+	bool GetMultiItemPropertyValue(const vector<int>& vctIds, int nPropId, many& rValue, bool& rbDifferent){
 		rbDifferent = false;
 		wstring locVal;
 		many val;
@@ -397,7 +398,7 @@ public:
 		rValue = locVal;
 		return true;
 	}
-	bool GetMultiItemPropertyValueStr(vector<int>& vctIds, int nPropId, CString& rstrValue, bool& rbDifferent){
+	bool GetMultiItemPropertyValueStr(const vector<int>& vctIds, int nPropId, CString& rstrValue, bool& rbDifferent){
 		rbDifferent = false;
 		rstrValue.Empty();
 		CString strLocValue;
